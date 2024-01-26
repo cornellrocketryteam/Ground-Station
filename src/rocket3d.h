@@ -27,4 +27,14 @@ class RocketModel {
          * Initializes the size methods, the camera, and the rocket's position.
         */
        RocketModel(); 
+
+       /**
+        * moves the Rocket based on data
+       */
+      void moveRocket(); 
+
+      /**
+       * Reset the rocket position
+      */
+      void resetRocketPosition(); 
 }; 

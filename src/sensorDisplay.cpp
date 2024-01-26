@@ -9,6 +9,8 @@ Graph createGraph(float x, float y, float width, float height, Color color){
 
 void drawGraph(Graph graph){
     DrawRectangleRec(graph.bounds, graph.color); 
+    //DrawRectangle(graph.bounds.x,graph.bounds.y,graph.bounds.width,graph.bounds.height,graph.color);
+
 }
 
 textDisplay createTextDisplay(float x, float y, float width, float height, Color color, const char* name){
@@ -26,25 +28,25 @@ void drawTextDisplay(textDisplay textdisplay){
 }
 
 SensorDisplay::SensorDisplay(){
-    //initialize all text displays and add them to the text displays vector 
-    textDisplayWidth= GetScreenHeight() / 1400; 
+    //initialize all text displays and add them to the text displays vector
+
+    textDisplayWidth= 100;
     textDisplayHeight = textDisplayWidth / 2; 
 
-    latitude = createTextDisplay(100,300,textDisplayWidth,textDisplayHeight,WHITE, "Latitude");
+    latitude = createTextDisplay(100,300,textDisplayWidth,textDisplayHeight,RAYWHITE, "Latitude");
     longitude = createTextDisplay(200,300,textDisplayWidth,textDisplayHeight,WHITE, "Longitude");
     elevation = createTextDisplay(300,300,textDisplayWidth,textDisplayHeight,WHITE, "Elevation");
     accel_x = createTextDisplay(400,300,textDisplayWidth,textDisplayHeight,WHITE, "Accel_X");
     accel_y = createTextDisplay(500,300,textDisplayWidth,textDisplayHeight,WHITE, "Accel_Y");
     accel_z = createTextDisplay(600,300,textDisplayWidth,textDisplayHeight,WHITE, "Accel_Z");
-    gyro_x = createTextDisplay(700,300,textDisplayWidth,textDisplayHeight,WHITE, "Gyro_X");
-    gyro_y = createTextDisplay(800,300,textDisplayWidth,textDisplayHeight,WHITE, "Gyro_Y");
-    gyro_z = createTextDisplay(900,300,textDisplayWidth,textDisplayHeight,WHITE, "Gyro_Z");
-    mag_x = createTextDisplay(1000,300,textDisplayWidth,textDisplayHeight,WHITE, "Mag_X");
-    mag_y = createTextDisplay(1100,300,textDisplayWidth,textDisplayHeight,WHITE, "Mag_Y");
-    mag_z = createTextDisplay(1200,300,textDisplayWidth,textDisplayHeight,WHITE, "Mag_Z");
-    temp = createTextDisplay(1300,300,textDisplayWidth,textDisplayHeight,WHITE, "Temperature");
+    gyro_x = createTextDisplay(100,400,textDisplayWidth,textDisplayHeight,WHITE, "Gyro_X");
+    gyro_y = createTextDisplay(200,400,textDisplayWidth,textDisplayHeight,WHITE, "Gyro_Y");
+    gyro_z = createTextDisplay(300,400,textDisplayWidth,textDisplayHeight,WHITE, "Gyro_Z");
+    mag_x = createTextDisplay(400,400,textDisplayWidth,textDisplayHeight,WHITE, "Mag_X");
+    mag_y = createTextDisplay(500,400,textDisplayWidth,textDisplayHeight,WHITE, "Mag_Y");
+    mag_z = createTextDisplay(600,400,textDisplayWidth,textDisplayHeight,WHITE, "Mag_Z");
+    temp = createTextDisplay(700,400,textDisplayWidth,textDisplayHeight,WHITE, "Temperature");
     
-
     textdisplays.push_back(latitude); 
     textdisplays.push_back(longitude); 
     textdisplays.push_back(accel_x); 
@@ -60,6 +62,11 @@ SensorDisplay::SensorDisplay(){
     textdisplays.push_back(temp); 
 
     //initialize all graphs and add them to the graphs vector
+    elevationGraph = createGraph(700,0,700, 475,RAYWHITE); 
+    temperatureGraph = createGraph(700,500,700, 475,RAYWHITE); 
+
+    graphs.push_back(elevationGraph);
+    graphs.push_back(temperatureGraph); 
 }
 
 void SensorDisplay::drawComponents(){
