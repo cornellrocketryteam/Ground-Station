@@ -20,4 +20,9 @@ if (APPLE)
     target_link_libraries(${PROJECT_NAME} "-framework IOKit")
     target_link_libraries(${PROJECT_NAME} "-framework Cocoa")
     target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
+<<<<<<< HEAD
 endif()
+=======
+endif()
+
+>>>>>>> eaa79b56007b3856001b751e24c79410ec173bec
