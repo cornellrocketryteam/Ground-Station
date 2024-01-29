@@ -14,8 +14,21 @@ class RocketModel {
         float rocketHeight; 
         float rocketLength; 
 
+        //Rocket's models and textures. 
+        Model rocketModel;
+        Texture2D rocketTexture; 
+
+        //Terrain model and textures
+        Model terrainModel; 
+        Texture2D terrainTexture; 
+
         // represents how big the map's grid will be 
         float mapSize; 
+
+        float xRotation;
+        float yRotation; 
+        float zRotation; 
+
 
     public:
         /**
@@ -37,4 +50,25 @@ class RocketModel {
        * Reset the rocket position
       */
       void resetRocketPosition(); 
+
+        /**
+         * Returns a string of the Rocket's elevation in the format "Elevation: x"
+        */
+      std::string getRocketElevation();
+
+        /**
+         * Displays all of the necessary rocket text information
+        */
+      void displayRocketTexts(); 
+
+      /**
+       * Loads the terrain
+      */
+     void loadTerrain(); 
+
+      /**
+       * Unloads the terrain
+      */
+     void unloadTerrain(); 
+
 }; 

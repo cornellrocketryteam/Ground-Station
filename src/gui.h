@@ -60,16 +60,15 @@ private:
     Button titleButton; 
 
     // the enumeration of game states 
-    GameScreen currentScreen; 
+    GameScreen currentScreen;  
 
+
+public:
     // the rocket gui 
     RocketModel rocketModel; 
 
     // the sensor gui 
-    SensorDisplay sensorDisplay; 
-
-
-public:
+    SensorDisplay sensorDisplay;
     /**
      * Initializes the width and height, makes the window resizable, and 
      * creates the window. Also sets the target FPS to 60. 

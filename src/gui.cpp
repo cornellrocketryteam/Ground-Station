@@ -38,6 +38,9 @@ void GUI::drawGUI(){
             DrawText("Live 3D Model", 20, 20, 60, WHITE);
             drawButton(titleButton); 
 
+            //Draw the rocket data in the bottom right of the screen
+            rocketModel.displayRocketTexts();
+
             // navigation back to title page 
             if (checkClicked(titleButton)){
                 currentScreen = TITLE; 
@@ -78,14 +81,14 @@ GUI::GUI(){
     screenHeight = 1000;
 
     // initialize the buttons for the title screen 
-    sensorButton = createButton(100, 100, 200, 100, WHITE, "go to sensor page");
-    rocket3DButton = createButton(400, 100, 200, 100, WHITE, "go to a 3d model of the rocket");
-    titleButton = createButton(100, 100, 200, 100, WHITE, "go back to title");
+    sensorButton = createButton(100, 100, 200, 100, WHITE, "Sensor Page");
+    rocket3DButton = createButton(400, 100, 200, 100, WHITE, "3D Model");
+    titleButton = createButton(100, 100, 200, 100, WHITE, "Back to Title Page");
 
     // initialize the colors 
     backgroundColor = {56, 55, 52}; 
 
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT );
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT  );
 
     InitWindow(screenWidth, screenHeight, "Ground Station");
 
