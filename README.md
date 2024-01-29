@@ -1,5 +1,7 @@
 # Ground Station
 
+The GUI for the Ground Station.
+
 [Confluence](https://confluence.cornell.edu/display/crt/Ground+Station+Software)
 
 ## Depenendencies Required
@@ -10,9 +12,7 @@
 
 ## Running
 
-To generate build files in separate directory and build the project, use these commands:
-
-```shell
-cmake -B build && cmake --build build
-```
+1. Create a top-level ```build/``` directory
+2. Run ```cmake -B build && cmake --build build``` from within ```build```
+3. Run the executable by typing ```./GroundStation```
 
