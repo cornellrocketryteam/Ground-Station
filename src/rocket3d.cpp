@@ -34,17 +34,6 @@ RocketModel::RocketModel(){
 
 void RocketModel::draw(){
     BeginMode3D(camera);
-        // load in terrain's object and textures
-        loadTerrain(); 
-
-        // Load the Rocket's models and textures
-        rocketModel = LoadModel("GroundStation2.0/img/rocketModel.obj"); 
-        rocketTexture = LoadTexture("GroundStation2.0/img/rocket.png"); 
-        rocketModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = rocketTexture;  
-
-        // Draw a grid of the rocket
-        // DrawGrid(mapSize, 1.0f);
-
         // rotates the rocket. 
         rocketModel.transform = MatrixRotateXYZ((Vector3){ DEG2RAD*xRotation, DEG2RAD*yRotation, DEG2RAD*zRotation });
         
@@ -53,13 +42,6 @@ void RocketModel::draw(){
         DrawModel(terrainModel,(Vector3){0,-10,0},50.0f,WHITE); 
 
         moveRocket(); 
-
-        // need to unload to avoid linker errors 
-        UnloadModel(rocketModel);
-        UnloadTexture(rocketTexture);
-
-        unloadTerrain();
-
     EndMode3D();
 
 }
@@ -113,4 +95,19 @@ void RocketModel::loadTerrain(){
 
 void RocketModel::unloadTerrain(){
     UnloadModel(terrainModel); 
+    UnloadTexture(terrainTexture);
+}
+
+void RocketModel::loadRocket(){
+// Load the Rocket's models and textures
+        rocketModel = LoadModel("GroundStation2.0/img/rocketModel.obj"); 
+        rocketTexture = LoadTexture("GroundStation2.0/img/rocket.png"); 
+        rocketModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = rocketTexture;  
+
+}
+
+void RocketModel::unloadRocket(){
+    UnloadModel(rocketModel);
+     UnloadTexture(rocketTexture);
+
 }

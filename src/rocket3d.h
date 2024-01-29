@@ -71,4 +71,14 @@ class RocketModel {
       */
      void unloadTerrain(); 
 
+      /**
+       * Loads the rocket models and textures
+      */
+     void loadRocket(); 
+
+      /**
+       * Unloads the rocket models and textures
+      */
+     void unloadRocket(); 
+
 }; 

@@ -15,14 +15,24 @@
 //------------------------------------------------------------------------------------
 int main(void)
 {   
+    //Create GUI object
     GUI gui; 
-    // Main game loop
+
+    // Load in textures only once 
+    gui.rocketModel.loadTerrain(); 
+    gui.rocketModel.loadRocket();
+     // Main game loop
+
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
         // Draw
         //----------------------------------------------------------------------------------
         gui.drawGUI(); 
     }
+
+    // Clean up all data, textures, and models 
+    gui.rocketModel.unloadTerrain();
+    gui.rocketModel.unloadRocket(); 
     CloseWindow();        // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 
