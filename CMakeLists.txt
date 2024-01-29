@@ -4,7 +4,7 @@ project(GroundStation)
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(raylib 5.0 REQUIRED) # Requires at least version 3.0
+find_package(raylib 3.0 REQUIRED) # Requires at least version 3.0
 
 # Create the executable
 add_executable(${PROJECT_NAME} src/main.cpp
