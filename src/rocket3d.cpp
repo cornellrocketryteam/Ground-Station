@@ -7,7 +7,7 @@ RocketModel::RocketModel(){
     camera = { 0 };
 
     // initializes the camera's fields 
-    camera.position = (Vector3){ 25.0f, 10.0f, 25.0f }; // Camera position
+    camera.position = (Vector3){ 30.0f, 15.0f, 30.0f }; // Camera position
     camera.target = (Vector3){ 0.0f, 5.0f, 0.0f };      // Camera looking at point
     camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
     camera.fovy = 45.0f;                                // Camera field-of-view Y
@@ -15,11 +15,6 @@ RocketModel::RocketModel(){
 
     // the rocket's initial position 
     rocketPosition = { 0.0f, 2.0f, 0.0f };
-
-    // the rocket's width, height, and length 
-    rocketWidth = 1.0f;
-    rocketHeight = 4.0f; 
-    rocketLength = 1.0f; 
 
     // sets the size of the map 
     mapSize = 1000.0f; 
@@ -31,6 +26,9 @@ RocketModel::RocketModel(){
 
 }
 
+/**
+ * Drawing methods for the rocket
+*/
 
 void RocketModel::draw(){
     BeginMode3D(camera);
@@ -41,10 +39,37 @@ void RocketModel::draw(){
         DrawModel(rocketModel, rocketPosition,0.01f,WHITE); 
         DrawModel(terrainModel,(Vector3){0,-10,0},50.0f,WHITE); 
 
+        //Draw the path of the rocket
+        drawRocketPath();
+
         moveRocket(); 
     EndMode3D();
 
 }
+
+
+void RocketModel::updateCorners(){
+    
+}
+
+void RocketModel::drawRocketPath(){
+    updateCorners();
+    
+    // TODO: Fix this to push back only the Corners 
+    //pathPositions.push_back(rocketPosition); 
+    pathPositions.push_back(rocketPosition);
+
+    // Draws all of the past path positions
+    for (auto i : pathPositions){
+        DrawSphere(i,0.15,RED); 
+    }
+}
+
+
+
+/**
+ * Movement functions for the rocket
+*/
 
 void RocketModel::moveRocket(){
     if (IsKeyDown(KEY_UP)){
@@ -76,7 +101,15 @@ void RocketModel::resetRocketPosition(){
     xRotation = 270; 
     yRotation = 0;
     zRotation = 0; 
+
+    pathPositions.clear();
 }
+
+
+/**
+ * The loading and unloading methods for models and textures
+*/
+
 
 std::string RocketModel::getRocketElevation(){
     return "Elevation: " + std::to_string(rocketPosition.y);

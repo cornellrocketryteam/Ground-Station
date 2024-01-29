@@ -48,6 +48,9 @@ class SensorDisplay {
 
     std::vector<textDisplay> textdisplays; 
 
+    /**
+     * The text boxes that will display rocket data.
+    */
     textDisplay latitude; 
     textDisplay longitude; 
     textDisplay elevation;  
@@ -67,6 +70,9 @@ class SensorDisplay {
     int fontSize; 
 
     public: 
+    // TODO CHANGE THESE
+    const int screenWidth = 1600; 
+    const int screenHeight = 1000;
     /**
      * Initializes the displays. 
     */

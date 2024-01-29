@@ -10,10 +10,6 @@ class RocketModel {
         // the rocket's representation 
         Vector3 rocketPosition; 
 
-        float rocketWidth; 
-        float rocketHeight; 
-        float rocketLength; 
-
         //Rocket's models and textures. 
         Model rocketModel;
         Texture2D rocketTexture; 
@@ -25,10 +21,15 @@ class RocketModel {
         // represents how big the map's grid will be 
         float mapSize; 
 
+      // The rotation angles of the rocket in degrees
         float xRotation;
         float yRotation; 
         float zRotation; 
 
+        // vector to store the past positions of the rocket for drawing
+        std::vector<Vector3> pathPositions; 
+
+        Vector3 rocketModelCorner; // store the rocket model's corner
 
     public:
         /**
@@ -81,4 +82,13 @@ class RocketModel {
       */
      void unloadRocket(); 
 
+     /**
+      * Draws the rocket's path of movement
+     */
+    void drawRocketPath(); 
+
+    /**
+     * updates the corners of the rocket's current position
+    */
+   void updateCorners(); 
 }; 

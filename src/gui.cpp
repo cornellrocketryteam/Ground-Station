@@ -14,7 +14,7 @@ void GUI::drawGUI(){
             sensorButton.clicked = false;
             rocket3DButton.clicked = false; 
 
-            DrawText("Welcome to the Cornell Rocketry Ground Station", 10, 10, 50, WHITE);
+            DrawText("Cornell Rocketry Ground Station", 10, screenHeight/2, 60, WHITE);
 
             drawButton(sensorButton); 
             drawButton(rocket3DButton); 
@@ -81,8 +81,8 @@ GUI::GUI(){
     screenHeight = 1000;
 
     // initialize the buttons for the title screen 
-    sensorButton = createButton(100, 100, 200, 100, WHITE, "Sensor Page");
-    rocket3DButton = createButton(400, 100, 200, 100, WHITE, "3D Model");
+    sensorButton = createButton(100, screenHeight/2 + 100, 200, 100, WHITE, "Sensor Page");
+    rocket3DButton = createButton(400, screenHeight/2 + 100, 200, 100, WHITE, "3D Model");
     titleButton = createButton(100, 100, 200, 100, WHITE, "Back to Title Page");
 
     // initialize the colors 
