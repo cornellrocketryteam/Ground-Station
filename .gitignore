@@ -1,8 +1,11 @@
+# remove build folder
+build
+
+# remove vscode folder
+.vscode
+
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,macos,linux,windows,cmake,c++,clion+all
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,macos,linux,windows,cmake,c++,clion+all
-
-# remove build folder 
-build
 
 ### C++ ###
 # Prerequisites
