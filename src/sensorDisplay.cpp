@@ -1,4 +1,5 @@
 #include "sensorDisplay.h"
+#include "dataprocessing.h"
 
 Graph createGraph(float x, float y, float width, float height, Color color){
     Graph graph; 
@@ -22,7 +23,7 @@ textDisplay createTextDisplay(float x, float y, float width, float height, Color
 }
 
 void drawTextDisplay(textDisplay textdisplay){
-    DrawRectangleRec(textdisplay.bounds, textdisplay.color); 
+    DrawRectangleRec(textdisplay.bounds, textdisplay.color);
     DrawText(textdisplay.text, (int)(textdisplay.bounds.x + textdisplay.bounds.width / 2 - MeasureText(textdisplay.text, 20) / 2),
                  (int)(textdisplay.bounds.y + textdisplay.bounds.height / 2 - 10), 20, WHITE);
 }
@@ -45,20 +46,6 @@ SensorDisplay::SensorDisplay(){
     mag_y = createTextDisplay(300,600,textDisplayWidth,textDisplayHeight,WHITE, "Mag_Y");
     mag_z = createTextDisplay(300,700,textDisplayWidth,textDisplayHeight,WHITE, "Mag_Z");
     temp = createTextDisplay(300,800,textDisplayWidth,textDisplayHeight,WHITE, "Temperature");
-    
-    textdisplays.push_back(latitude); 
-    textdisplays.push_back(longitude); 
-    textdisplays.push_back(accel_x); 
-    textdisplays.push_back(accel_y); 
-    textdisplays.push_back(accel_z); 
-    textdisplays.push_back(gyro_x); 
-    textdisplays.push_back(gyro_y); 
-    textdisplays.push_back(gyro_z); 
-    textdisplays.push_back(elevation); 
-    textdisplays.push_back(mag_x); 
-    textdisplays.push_back(mag_y); 
-    textdisplays.push_back(mag_z); 
-    textdisplays.push_back(temp); 
 
     //initialize all graphs and add them to the graphs vector
     elevationGraph = createGraph(screenWidth/2,0,screenWidth/2, screenHeight/2 - 25,RAYWHITE); 
@@ -69,10 +56,28 @@ SensorDisplay::SensorDisplay(){
 }
 
 void SensorDisplay::drawComponents(){
+    // read in the sensor values 
+    SerialRead::updateSerialValues(); 
+
+    //update the texts boxes based on the new sensor values 
+    updateValues(); 
+    std::cout << latitude.text << std::endl;
+
     // draw all of the text displays 
-    for (int i = 0; i < textdisplays.size(); i++){
-        drawTextDisplay(textdisplays.at(i)); 
-    }
+
+    drawTextDisplay(latitude);
+    drawTextDisplay(longitude); 
+    drawTextDisplay(accel_x); 
+    drawTextDisplay(accel_y); 
+    drawTextDisplay(accel_z);
+    drawTextDisplay(gyro_x);
+    drawTextDisplay(gyro_y); 
+    drawTextDisplay(gyro_z); 
+    drawTextDisplay(elevation); 
+    drawTextDisplay(mag_x); 
+    drawTextDisplay(mag_y); 
+    drawTextDisplay(mag_z); 
+    drawTextDisplay(temp); 
 
     // draw all of the graphs 
     for (int i = 0; i < graphs.size(); i++){
@@ -85,4 +90,19 @@ void SensorDisplay::drawComponents(){
 void SensorDisplay::updateSizes(){
     textDisplayWidth= 1600 / 1600; 
     textDisplayHeight = textDisplayWidth / 2;
+}
+
+void SensorDisplay::updateValues(){
+    //latitude.text = std::to_string(SerialRead::serialValues["latitude"]).c_str();
+
+    char buffer[20];
+
+    int result = snprintf(buffer, sizeof(buffer), "%f", SerialRead::serialValues["latitude"]);
+
+    const char* floatStr = buffer;
+
+    latitude.text = floatStr; 
+
+    std::cout << latitude.text << std::endl;
+
 }

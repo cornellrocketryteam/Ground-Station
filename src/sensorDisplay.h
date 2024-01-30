@@ -46,8 +46,6 @@ class SensorDisplay {
     Graph elevationGraph; 
     Graph temperatureGraph; 
 
-    std::vector<textDisplay> textdisplays; 
-
     /**
      * The text boxes that will display rocket data.
     */
@@ -87,4 +85,9 @@ class SensorDisplay {
     * Update the sizes of boxes. 
    */
    void updateSizes(); 
+
+   /**
+    * Update serial Values
+   */
+    void updateValues(); 
 }; 
