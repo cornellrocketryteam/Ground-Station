@@ -1,4 +1,6 @@
-#include <iostream> 
+#pragma once
+
+#include <iostream>
 #include <map> 
 
 /**
@@ -11,7 +13,7 @@ class SerialRead {
         /**
          * Stores the values that are read from RATS. 
         */
-        static std::map<std::string, float> serialValues; 
+        static std::unordered_map<std::string, float> serialValues;
         /**
          * Updates the serialValues map by reading in data. 
         */

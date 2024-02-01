@@ -13,7 +13,13 @@ add_executable(${PROJECT_NAME} src/main.cpp
                 src/dataprocessing.cpp
                 src/gui.cpp
                 src/rocket3d.cpp
-                src/sensorDisplay.cpp)
+                src/sensorDisplay.cpp
+        src/components/button.cpp
+        src/components/button.h
+        src/components/textDisplay.cpp
+        src/components/textDisplay.h
+        src/components/graph.cpp
+        src/components/graph.h)
 
 target_link_libraries(${PROJECT_NAME} raylib)
 

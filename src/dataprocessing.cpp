@@ -1,22 +1,20 @@
 #include "dataprocessing.h"
 
-// define the static member serialValues
-std::map<std::string, float> SerialRead::serialValues;  
+std::unordered_map<std::string, float> SerialRead::serialValues;
 
-
-void SerialRead::updateSerialValues(){
-
-    SerialRead::serialValues["latitude"] = 0; 
-    SerialRead::serialValues["longitude"] = 0; 
-    SerialRead::serialValues["elevation"] = 0; 
-    SerialRead::serialValues["accel_x"] = 0; 
-    SerialRead::serialValues["accel_y"] = 0; 
-    SerialRead::serialValues["accel_z"] = 0; 
-    SerialRead::serialValues["gyro_x"] = 0; 
-    SerialRead::serialValues["gyro_y"] = 0; 
-    SerialRead::serialValues["gyro_z"] = 0; 
-    SerialRead::serialValues["mag_x"] = 0; 
-    SerialRead::serialValues["mag_y"] = 0; 
-    SerialRead::serialValues["mag_z"] = 0; 
-    SerialRead::serialValues["temp"] = 0; 
+void SerialRead::updateSerialValues()
+{
+    serialValues["latitude"] = 0;
+    serialValues["longitude"] = 0;
+    serialValues["elevation"] = 0;
+    serialValues["accel_x"] = 0;
+    serialValues["accel_y"] = 0;
+    serialValues["accel_z"] = 0;
+    serialValues["gyro_x"] = 0;
+    serialValues["gyro_y"] = 0;
+    serialValues["gyro_z"] = 0;
+    serialValues["mag_x"] = 0;
+    serialValues["mag_y"] = 0;
+    serialValues["mag_z"] = 0;
+    serialValues["temp"] = 0;
 }

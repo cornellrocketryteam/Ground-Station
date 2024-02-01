@@ -1,7 +1,18 @@
 #include "rocket3d.h"
 #include "raymath.h"
 
-RocketModel::RocketModel(){
+RocketScreen::RocketScreen()
+{
+    //loadTerrain();
+    terrainModel = LoadModel("GroundStation2.0/img/desert.obj");
+    terrainTexture = LoadTexture("GroundStation2.0/img/as_ao.png");
+    terrainModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = terrainTexture;
+
+    //loadRocket();
+    rocketModel = LoadModel("GroundStation2.0/img/rocketModel.obj");
+    rocketTexture = LoadTexture("GroundStation2.0/img/rocket.png");
+    rocketModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = rocketTexture;
+
     std::cout << "WORKING DIRECTORY = " << GetWorkingDirectory() << std::endl; 
 
     camera = { 0 };
@@ -23,14 +34,22 @@ RocketModel::RocketModel(){
     xRotation = 270;
     yRotation = 0; 
     zRotation = 0; 
-
 }
+
+RocketScreen::~RocketScreen()
+{
+    UnloadModel(terrainModel);
+    UnloadTexture(terrainTexture);
+    UnloadModel(rocketModel);
+    UnloadTexture(rocketTexture);
+}
+
 
 /**
  * Drawing methods for the rocket
 */
-
-void RocketModel::draw(){
+void RocketScreen::draw()
+{
     BeginMode3D(camera);
         // rotates the rocket. 
         rocketModel.transform = MatrixRotateXYZ((Vector3){ DEG2RAD*xRotation, DEG2RAD*yRotation, DEG2RAD*zRotation });
@@ -48,14 +67,9 @@ void RocketModel::draw(){
 }
 
 
-void RocketModel::updateCorners(){
-    
-}
-
-void RocketModel::drawRocketPath(){
-    updateCorners();
-    
-    // TODO: Fix this to push back only the Corners 
+void RocketScreen::drawRocketPath()
+{
+    // TODO: Fix this to push back only the Corners
     //pathPositions.push_back(rocketPosition); 
     pathPositions.push_back(rocketPosition);
 
@@ -65,13 +79,12 @@ void RocketModel::drawRocketPath(){
     }
 }
 
-
-
 /**
  * Movement functions for the rocket
 */
 
-void RocketModel::moveRocket(){
+void RocketScreen::moveRocket()
+{
     if (IsKeyDown(KEY_UP)){
         rocketPosition.y += 1; 
         camera.position.y += 1;
@@ -89,7 +102,8 @@ void RocketModel::moveRocket(){
     }
 }
 
-void RocketModel::resetRocketPosition(){
+void RocketScreen::resetRocketPosition()
+{
     rocketPosition.x = 0.0; 
     rocketPosition.y = 0.0; 
     rocketPosition.z = 0.0; 
@@ -109,38 +123,12 @@ void RocketModel::resetRocketPosition(){
 /**
  * The loading and unloading methods for models and textures
 */
-
-
-std::string RocketModel::getRocketElevation(){
+std::string RocketScreen::getRocketElevation()
+{
     return "Elevation: " + std::to_string(rocketPosition.y);
 }
 
-void RocketModel::displayRocketTexts(){
-    DrawText((getRocketElevation()).c_str(),1300,900,25,BLACK);
-}
-
-
-void RocketModel::loadTerrain(){
-    terrainModel = LoadModel("GroundStation2.0/img/desert.obj");
-    terrainTexture = LoadTexture("GroundStation2.0/img/as_ao.png");
-    terrainModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = terrainTexture; 
-}
-
-void RocketModel::unloadTerrain(){
-    UnloadModel(terrainModel); 
-    UnloadTexture(terrainTexture);
-}
-
-void RocketModel::loadRocket(){
-// Load the Rocket's models and textures
-        rocketModel = LoadModel("GroundStation2.0/img/rocketModel.obj"); 
-        rocketTexture = LoadTexture("GroundStation2.0/img/rocket.png"); 
-        rocketModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = rocketTexture;  
-
-}
-
-void RocketModel::unloadRocket(){
-    UnloadModel(rocketModel);
-     UnloadTexture(rocketTexture);
-
+void RocketScreen::displayRocketTexts()
+{
+    DrawText(getRocketElevation().c_str(),1300,900,25,BLACK);
 }
