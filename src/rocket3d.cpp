@@ -1,45 +1,44 @@
 #include "rocket3d.h"
 #include "raymath.h"
 
-RocketScreen::RocketScreen()
-{
-    //loadTerrain();
-    terrainModel = LoadModel("Ground-Station/img/desert.obj");
-    terrainTexture = LoadTexture("Ground-Station/img/as_ao.png");
-    terrainModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = terrainTexture;
-
-    //loadRocket();
-    rocketModel = LoadModel("Ground-Station/img/rocketModel.obj");
-    rocketTexture = LoadTexture("Ground-Station/img/rocket.png");
-    rocketModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = rocketTexture;
-
-    std::cout << "WORKING DIRECTORY = " << GetWorkingDirectory() << std::endl; 
-
+RocketScreen::RocketScreen() {
     camera = { 0 };
 
-    // initializes the camera's fields 
+    // initializes the camera's fields
     camera.position = (Vector3){ 30.0f, 15.0f, 30.0f }; // Camera position
     camera.target = (Vector3){ 0.0f, 5.0f, 0.0f };      // Camera looking at point
     camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
     camera.fovy = 45.0f;                                // Camera field-of-view Y
     camera.projection = CAMERA_PERSPECTIVE; 
 
-    // the rocket's initial position 
+    // the rocket's initial position
     rocketPosition = { 0.0f, 2.0f, 0.0f };
 
-    // sets the size of the map 
-    mapSize = 1000.0f; 
+    // sets the size of the map
+    mapSize = 1000.0f;
 
-    // 270 is used to make the rocket vertical. 
+    // 270 is used to make the rocket vertical.
     xRotation = 270;
-    yRotation = 0; 
-    zRotation = 0; 
+    yRotation = 0;
+    zRotation = 0;
+
+    std::cout << "WORKING DIRECTORY = " << GetWorkingDirectory() << std::endl;
+
+    //loadTerrain();
+    terrainModel = LoadModel("img/desert.obj");
+    terrainTexture = LoadTexture("img/as_ao.png");
+    terrainModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = terrainTexture;
+
+    //loadRocket();
+    rocketModel = LoadModel("img/rocketModel.obj");
+    rocketTexture = LoadTexture("img/rocket.png");
+    rocketModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = rocketTexture;
 }
 
 RocketScreen::~RocketScreen()
 {
-    UnloadModel(terrainModel);
-    UnloadTexture(terrainTexture);
+    // UnloadModel(terrainModel);
+    // UnloadTexture(terrainTexture);
     UnloadModel(rocketModel);
     UnloadTexture(rocketTexture);
 }
@@ -56,7 +55,7 @@ void RocketScreen::draw()
         
         //Draw the model of the rocket
         DrawModel(rocketModel, rocketPosition,0.01f,WHITE); 
-        DrawModel(terrainModel,(Vector3){0,-10,0},50.0f,WHITE); 
+        // DrawModel(terrainModel,(Vector3){0,-10,0},50.0f,WHITE);
 
         //Draw the path of the rocket
         drawRocketPath();

@@ -8,12 +8,18 @@
 
 int main()
 {
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT);
+    InitWindow(1600, 1000, "Ground Station");
+    SetTargetFPS(60);
+
     auto gui = GUI(1600, 1000);
 
-    while (!gui.shouldClose())
+    while (!WindowShouldClose())
     {
         gui.draw();
     }
+
+    CloseWindow();
 
     return 0;
 }

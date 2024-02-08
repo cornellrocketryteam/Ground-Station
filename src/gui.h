@@ -10,9 +10,7 @@ typedef enum GameScreen { TITLE, ROCKET3D, SENSORVALUES } GameScreen;
 class GUI {
 public:
     GUI(int screenWidth, int screenHeight);
-    ~GUI();
     void draw();
-    bool shouldClose();
 
 private:
     // the Colors for the window

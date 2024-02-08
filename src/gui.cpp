@@ -6,14 +6,6 @@ GUI::GUI(int screenWidth, int screenHeight) : currentScreen(TITLE),
              titleButton(100, 100, 200, 100, WHITE, "Back to Title Page"),
              backgroundColor({56, 55, 52})
 {
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT);
-    InitWindow(screenWidth, screenHeight, "Ground Station");
-    SetTargetFPS(60);
-}
-
-GUI::~GUI()
-{
-    CloseWindow();
 }
 
 void GUI::draw()
@@ -81,9 +73,4 @@ void GUI::draw()
     }
 
     EndDrawing();
-}
-
-bool GUI::shouldClose()
-{
-    return WindowShouldClose();
 }
