@@ -4,13 +4,13 @@
 RocketScreen::RocketScreen()
 {
     //loadTerrain();
-    terrainModel = LoadModel("GroundStation2.0/img/desert.obj");
-    terrainTexture = LoadTexture("GroundStation2.0/img/as_ao.png");
+    terrainModel = LoadModel("Ground-Station/img/desert.obj");
+    terrainTexture = LoadTexture("Ground-Station/img/as_ao.png");
     terrainModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = terrainTexture;
 
     //loadRocket();
-    rocketModel = LoadModel("GroundStation2.0/img/rocketModel.obj");
-    rocketTexture = LoadTexture("GroundStation2.0/img/rocket.png");
+    rocketModel = LoadModel("Ground-Station/img/rocketModel.obj");
+    rocketTexture = LoadTexture("Ground-Station/img/rocket.png");
     rocketModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = rocketTexture;
 
     std::cout << "WORKING DIRECTORY = " << GetWorkingDirectory() << std::endl; 
