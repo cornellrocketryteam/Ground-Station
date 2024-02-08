@@ -15,6 +15,11 @@ public:
     void draw();
 
     /**
+     * Draw the miniature version of the rocket screen
+    */
+   void drawMiniVersion(); 
+
+    /**
      * moves the Rocket based on data
     */
     void moveRocket();
@@ -39,12 +44,23 @@ public:
     */
     void drawRocketPath();
 
+    /**
+     * Toggles the state of the mini value
+    */
+   void toggleMiniState();
+
+    // States whether the rocket display is in mini mode or fullscreen mode
+    bool isMini; 
+
 private:
     // the 3D camera
     Camera3D camera;
 
     // the rocket's representation
     Vector3 rocketPosition;
+
+    // the terrain position
+    Vector3 terrainPosition; 
 
     //Rocket's models and textures.
     Model rocketModel;
@@ -53,6 +69,8 @@ private:
     //Terrain model and textures
     Model terrainModel;
     Texture2D terrainTexture;
+
+   
 
     // represents how big the map's grid will be
     float mapSize;

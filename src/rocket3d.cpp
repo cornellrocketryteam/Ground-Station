@@ -14,6 +14,11 @@ RocketScreen::RocketScreen() {
     // the rocket's initial position
     rocketPosition = { 0.0f, 2.0f, 0.0f };
 
+    terrainPosition = {0.0, -10,0}; 
+
+    //starts as unmovable
+    isMini = false; 
+
     // sets the size of the map
     mapSize = 1000.0f;
 
@@ -50,12 +55,13 @@ RocketScreen::~RocketScreen()
 void RocketScreen::draw()
 {
     BeginMode3D(camera);
+        
         // rotates the rocket. 
         rocketModel.transform = MatrixRotateXYZ((Vector3){ DEG2RAD*xRotation, DEG2RAD*yRotation, DEG2RAD*zRotation });
         
         //Draw the model of the rocket
         DrawModel(rocketModel, rocketPosition,0.01f,WHITE); 
-        DrawModel(terrainModel,(Vector3){0,-10,0},50.0f,WHITE);
+        DrawModel(terrainModel,terrainPosition,50.0f,WHITE);
 
         //Draw the path of the rocket
         drawRocketPath();
@@ -63,6 +69,22 @@ void RocketScreen::draw()
         moveRocket(); 
     EndMode3D();
 
+}
+
+void RocketScreen::drawMiniVersion(){
+    BeginMode3D(camera);
+        // rotates the rocket. 
+        rocketModel.transform = MatrixRotateXYZ((Vector3){ DEG2RAD*xRotation, DEG2RAD*yRotation, DEG2RAD*zRotation });
+
+        //Draw the model of the rocket
+        DrawModel(rocketModel, rocketPosition,0.005f,WHITE); 
+        DrawModel(terrainModel,terrainPosition,1.5f,WHITE);
+
+        //Draw the path of the rocket
+        //drawRocketPath();
+
+        moveRocket(); 
+    EndMode3D();
 }
 
 
@@ -84,6 +106,9 @@ void RocketScreen::drawRocketPath()
 
 void RocketScreen::moveRocket()
 {
+    if (isMini){
+        return;
+    }
     if (IsKeyDown(KEY_UP)){
         rocketPosition.y += 1; 
         camera.position.y += 1;
@@ -130,4 +155,34 @@ std::string RocketScreen::getRocketElevation()
 void RocketScreen::displayRocketTexts()
 {
     DrawText(getRocketElevation().c_str(),1300,900,25,BLACK);
+}
+
+void RocketScreen::toggleMiniState(){
+    if (isMini){
+        // we enter full screen state 
+        isMini = false; 
+      
+        camera.position.y -= 10; 
+        camera.position.z += 10; 
+
+        camera.target.y +=13; 
+        camera.target.z -= 13;
+
+        terrainPosition.y -= 2; 
+        
+    } else {
+        // we now enter the mini state 
+        isMini = true; 
+
+        camera.position.y += 10; 
+        camera.position.z -= 10; 
+
+        camera.target.y -= 13; 
+        camera.target.z += 13; 
+
+        terrainPosition.y += 2;
+
+        
+        
+    }
 }

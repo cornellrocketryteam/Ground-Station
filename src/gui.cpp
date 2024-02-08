@@ -1,8 +1,8 @@
 #include "gui.h"
 
 GUI::GUI(int screenWidth, int screenHeight) : currentScreen(TITLE),
-             sensorButton(100, screenHeight / 2 + 100, 200, 100, WHITE, "Sensor Page"),
-             rocket3DButton(400, screenHeight / 2 + 100, 200, 100, WHITE, "3D Model"),
+             sensorButton(100, screenHeight / 2 , 200, 100, WHITE, "Sensor Page"),
+             rocket3DButton(screenWidth - 210, screenHeight - 110 , 200, 100, WHITE, "3D Model"),
              titleButton(100, 100, 200, 100, WHITE, "Back to Title Page"),
              backgroundColor({56, 55, 52})
 {
@@ -22,11 +22,17 @@ void GUI::draw()
     switch (currentScreen)
     {
     case TITLE:
-        DrawText("Cornell Rocketry Ground Station", 10, screenHeight / 2, 60, WHITE);
+        DrawText("Cornell Rocketry Ground Station", 10, 10, 60, WHITE);
+
+        // toggles the mini state. Starts as true 
+        if (rocketModel.isMini == false){
+        rocketModel.toggleMiniState();
+        } 
 
         sensorButton.draw();
         rocket3DButton.draw();
 
+        rocketModel.drawMiniVersion();
         // Button press logic
         if (sensorButton.isClicked())
         {
@@ -38,6 +44,10 @@ void GUI::draw()
         }
         break;
     case ROCKET3D:
+        if (rocketModel.isMini == true){
+        rocketModel.toggleMiniState();
+        } 
+
         // draws the 3d map of the rocket
         rocketModel.draw();
 
