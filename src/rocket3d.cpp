@@ -25,20 +25,20 @@ RocketScreen::RocketScreen() {
     std::cout << "WORKING DIRECTORY = " << GetWorkingDirectory() << std::endl;
 
     //loadTerrain();
-    terrainModel = LoadModel("img/desert.obj");
-    terrainTexture = LoadTexture("img/as_ao.png");
+    terrainModel = LoadModel("GroundStation2.0/img/desert.obj");
+    terrainTexture = LoadTexture("GroundStation2.0/img/as_ao.png");
     terrainModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = terrainTexture;
 
     //loadRocket();
-    rocketModel = LoadModel("img/rocketModel.obj");
-    rocketTexture = LoadTexture("img/rocket.png");
+    rocketModel = LoadModel("GroundStation2.0/img/rocketModel.obj");
+    rocketTexture = LoadTexture("GroundStation2.0/img/rocket.png");
     rocketModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = rocketTexture;
 }
 
 RocketScreen::~RocketScreen()
 {
-    // UnloadModel(terrainModel);
-    // UnloadTexture(terrainTexture);
+    UnloadModel(terrainModel);
+    UnloadTexture(terrainTexture);
     UnloadModel(rocketModel);
     UnloadTexture(rocketTexture);
 }
@@ -55,7 +55,7 @@ void RocketScreen::draw()
         
         //Draw the model of the rocket
         DrawModel(rocketModel, rocketPosition,0.01f,WHITE); 
-        // DrawModel(terrainModel,(Vector3){0,-10,0},50.0f,WHITE);
+        DrawModel(terrainModel,(Vector3){0,-10,0},50.0f,WHITE);
 
         //Draw the path of the rocket
         drawRocketPath();
