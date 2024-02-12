@@ -8,12 +8,12 @@ SensorScreen::SensorScreen() : latitude(100, 300, 1, 0, RAYWHITE, "Latitude"),
                                accel_y(100, 700, 1, 0,RAYWHITE, "Accel_Y"),
                                accel_z(100, 800, 1, 0,WHITE, "Accel_Z"),
                                gyro_x(100, 900, 1, 0,WHITE, "Gyro_X"),
-                               gyro_y(300, 300, 1, 0,WHITE, "Gyro_Y"),
-                               gyro_z(300, 400, 1, 0,WHITE, "Gyro_Z"),
-                               mag_x(300, 500, 1, 0,WHITE, "Mag_X"),
-                               mag_y(300, 600, 1, 0,WHITE, "Mag_Y"),
-                               mag_z(300, 700, 1, 0,WHITE, "Mag_Z"),
-                               temp(300, 800, 1, 0,WHITE, "Temperature"),
+                               gyro_y(350, 300, 1, 0,WHITE, "Gyro_Y"),
+                               gyro_z(350, 400, 1, 0,WHITE, "Gyro_Z"),
+                               mag_x(350, 500, 1, 0,WHITE, "Mag_X"),
+                               mag_y(350, 600, 1, 0,WHITE, "Mag_Y"),
+                               mag_z(350, 700, 1, 0,WHITE, "Mag_Z"),
+                               temp(350, 800, 1, 0,WHITE, "Temperature"),
                                elevationGraph(screenWidth/2, 0, screenWidth/2, screenHeight/2-25, WHITE),
                                temperatureGraph(screenWidth/2, 0, screenHeight/2, screenHeight/2-25, WHITE)
 {
@@ -56,5 +56,41 @@ void SensorScreen::drawComponents()
 void SensorScreen::updateValues()
 {
     float lat = SerialRead::serialValues["latitude"];
-    latitude.setText(std::to_string(lat));
+    latitude.setText("Latitude: " + std::to_string(lat));
+
+    float longi = SerialRead::serialValues["longitude"]; 
+    longitude.setText("Latitude: " + std::to_string(longi)); 
+
+    float accx = SerialRead::serialValues["accel_x"]; 
+    accel_x.setText("Accel_X: " + std::to_string(accx)); 
+
+    float accy = SerialRead::serialValues["accel_y"]; 
+    accel_y.setText("Accel_Y: " + std::to_string(accy)); 
+
+    float accz = SerialRead::serialValues["accel_z"]; 
+    accel_z.setText("Accel_Z: " + std::to_string(accz)); 
+
+    float gyrox = SerialRead::serialValues["gyro_x"]; 
+    gyro_x.setText("Gyro_X: " + std::to_string(gyrox)); 
+
+    float gyroy = SerialRead::serialValues["gyro_y"]; 
+    gyro_y.setText("Gyro_Y: " + std::to_string(gyroy)); 
+    
+    float gyroz = SerialRead::serialValues["gyro_z"]; 
+    gyro_z.setText("Gyro_Z: " + std::to_string(gyroz)); 
+    
+    float elev = SerialRead::serialValues["elevation"]; 
+    elevation.setText("Elevation: " + std::to_string(elev)); 
+
+    float magx = SerialRead::serialValues["mag_x"]; 
+    mag_x.setText("Mag_X: " + std::to_string(magx)); 
+
+    float magy = SerialRead::serialValues["mag_y"]; 
+    mag_y.setText("Mag_Y: " + std::to_string(magy)); 
+
+    float magz = SerialRead::serialValues["mag_z"]; 
+    mag_z.setText("Mag_Z: " + std::to_string(magz)); 
+
+    float temper = SerialRead::serialValues["temp"]; 
+    temp.setText("Temperature: " + std::to_string(temper)); 
 }

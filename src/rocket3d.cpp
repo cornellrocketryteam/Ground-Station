@@ -182,7 +182,7 @@ void RocketScreen::toggleMiniState(){
 
         terrainPosition.y += 2;
 
-        
+    
         
     }
 }
