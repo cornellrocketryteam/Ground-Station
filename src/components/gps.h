@@ -3,6 +3,7 @@
 #include "raylib.h"
 
 class GPS {
+    // LAUNCH SITE COORDINATES: (32.9398594, -106.9115652) 
     private:
     /**
      * The Image variable to store the image of the launch site

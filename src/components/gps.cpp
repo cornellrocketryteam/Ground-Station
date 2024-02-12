@@ -1,5 +1,5 @@
 #include "gps.h"
-#include "dataprocessing.cpp"
+#include "../dataprocessing.h"
 
 void GPS::drawLaunchSite(){
 
@@ -15,5 +15,5 @@ void GPS::updatePosition(){
 }
 
 GPS::GPS(){
-    
+
 }
