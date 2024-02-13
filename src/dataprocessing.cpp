@@ -1,5 +1,37 @@
 #include "dataprocessing.h"
 
+/**
+Format of Data to unpack:
+
+56 bytes in total
+6 bytes: Metadata
+3 bits: flight mode
+10 bits: Sensor statuses (2 bits each)
+1 bit: SD state
+1 bit: key armed
+1 bit: altitude armed
+4 bytes: timestamp
+2 bytes: Events
+(Will come up with enumeration)
+52 bytes: Sensor readings (4 bytes each)
+Altitude
+Latitude
+Longitude
+Elevation
+Accel X
+Accel Y
+Accel Z
+Gyro X
+Gyro Y
+Gyro Z
+Mag X
+Mag Y
+Mag Z 
+*/
+
+
+
+
 std::unordered_map<std::string, float> SerialRead::serialValues;
 
 void SerialRead::updateSerialValues()
@@ -17,4 +49,8 @@ void SerialRead::updateSerialValues()
     serialValues["mag_y"] = 0;
     serialValues["mag_z"] = 0;
     serialValues["temp"] = 0;
+}
+
+void SerialRead::unpack(){
+    
 }
