@@ -12,6 +12,16 @@ typedef enum ElevationState { ELEVATION_SUCESS, ELEVATION_FAILURE} ElevationStat
  * The enumeration that will allow a failure mode in case the GPS fails.
 */
 typedef enum GPSState { GPS_SUCCESS, GPS_FAILURE} GPSState; 
+/**
+ * The type of the package
+*/
+typedef unsigned char uchar;
+
+/**
+ * Converts 4 unsigned char bytes to a float value 
+*/
+float bytesToFloat(uchar b0, uchar b1, uchar b2, uchar b3);
+
 
 /**
  * The Class that stores the static member function that will read serial data, and then
@@ -22,7 +32,7 @@ class SerialRead {
         /**
          * Byte array that we will have to unpack 
         */
-       static char package[56]; 
+       static uchar package[56]; 
 
         /**
          * Will represent the current altimeter state 
@@ -38,13 +48,14 @@ class SerialRead {
         */
         static std::unordered_map<std::string, float> serialValues;
         /**
-         * Updates the serialValues map by reading in data. 
+         * Updates the serialValues map by reading in data from the package 
         */
         static void updateSerialValues(); 
         /**
-         * Will unpack all of the bytes 
+         * Will set the package received from RATS to be the [package] member 
+         * via reading serial data  
         */
-        static void unpack();  
+        static void setPack();  
         
 
 }; 

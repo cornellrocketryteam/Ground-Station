@@ -34,6 +34,7 @@ Mag Z
 
 std::unordered_map<std::string, float> SerialRead::serialValues;
 
+// Need to read in data from the package 
 void SerialRead::updateSerialValues()
 {
     serialValues["latitude"] = 0;
@@ -51,6 +52,18 @@ void SerialRead::updateSerialValues()
     serialValues["temp"] = 0;
 }
 
-void SerialRead::unpack(){
-    
+void SerialRead::setPack(){
+
+}
+
+float bytesToFloat(uchar b0, uchar b1, uchar b2, uchar b3)
+{
+    float output;
+
+    *((uchar*)(&output) + 3) = b0;
+    *((uchar*)(&output) + 2) = b1;
+    *((uchar*)(&output) + 1) = b2;
+    *((uchar*)(&output) + 0) = b3;
+
+    return output;
 }
