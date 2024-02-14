@@ -50,20 +50,21 @@ void SerialRead::updateSerialValues()
     serialValues["mag_y"] = 0;
     serialValues["mag_z"] = 0;
     serialValues["temp"] = 0;
+    
 }
 
 void SerialRead::setPack(){
 
 }
-
-float bytesToFloat(uchar b0, uchar b1, uchar b2, uchar b3)
+// try (float) casting 
+float bytesToFloat(std::byte b0, std::byte b1, std::byte b2, std::byte b3)
 {
     float output;
 
-    *((uchar*)(&output) + 3) = b0;
-    *((uchar*)(&output) + 2) = b1;
-    *((uchar*)(&output) + 1) = b2;
-    *((uchar*)(&output) + 0) = b3;
+    *((std::byte*)(&output) + 3) = b0;
+    *((std::byte*)(&output) + 2) = b1;
+    *((std::byte*)(&output) + 1) = b2;
+    *((std::byte*)(&output) + 0) = b3;
 
     return output;
 }

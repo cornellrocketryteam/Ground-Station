@@ -14,11 +14,9 @@ SensorScreen::SensorScreen() : latitude(100, 300, 1, 0, RAYWHITE, "Latitude"),
                                mag_y(350, 600, 1, 0,WHITE, "Mag_Y"),
                                mag_z(350, 700, 1, 0,WHITE, "Mag_Z"),
                                temp(350, 800, 1, 0,WHITE, "Temperature"),
-                               elevationGraph(screenWidth/2, 0, screenWidth/2, screenHeight/2-25, WHITE),
-                               temperatureGraph(screenWidth/2, 0, screenHeight/2, screenHeight/2-25, WHITE)
+                               elevationGraph(screenWidth/2, screenHeight/2, screenWidth/2, screenHeight/2-25, WHITE)
 {
-    graphs.push_back(elevationGraph);
-    graphs.push_back(temperatureGraph);
+   
 }
 
 void SensorScreen::drawComponents()
@@ -46,10 +44,9 @@ void SensorScreen::drawComponents()
     temp.draw();
 
     // draw all of the graphs
-    for (auto graph : graphs)
-    {
-        graph.draw();
-    }
+    elevationGraph.draw();
+
+    gps.drawLaunchSite();
 }
 
 

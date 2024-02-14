@@ -5,6 +5,7 @@
 
 #include "components/textDisplay.h"
 #include "components/graph.h"
+#include "components/gps.h"
 
 class SensorScreen {
 public:
@@ -28,10 +29,7 @@ public:
     void updateValues();
 
 private:
-    std::vector<Graph> graphs;
-
     Graph elevationGraph;
-    Graph temperatureGraph;
 
     /**
      * The text boxes that will display rocket data.
@@ -49,6 +47,8 @@ private:
     TextDisplay mag_y;
     TextDisplay mag_z;
     TextDisplay temp;
+
+    GPS gps; 
 
     int textDisplayWidth;
     int textDisplayHeight;

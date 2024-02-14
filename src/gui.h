@@ -3,6 +3,7 @@
 #include "raylib.h"
 #include "rocket3d.h"
 #include "sensorDisplay.h"
+#include "components/gps.h"
 #include "components/button.h"
 
 typedef enum GameScreen { TITLE, ROCKET3D, SENSORVALUES } GameScreen;
@@ -19,6 +20,7 @@ private:
     Button sensorButton;
     Button rocket3DButton;
     Button titleButton;
+
 
     RocketScreen rocketModel;
     SensorScreen sensorDisplay;

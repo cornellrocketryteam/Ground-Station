@@ -4,44 +4,41 @@
 #include <map> 
 #include <unordered_map>
 
+
 /**
- * The enumeration that will allow a failure mode in case the altimeter fails.
+ * TODO: Log sensor Data in SD card 
 */
-typedef enum ElevationState { ELEVATION_SUCESS, ELEVATION_FAILURE} ElevationState; 
 /**
- * The enumeration that will allow a failure mode in case the GPS fails.
+ * Will represent is a sensor is working or failing. If a sensor is failing, it is 
+ * in fail mode, and we will display "FAILURE" for that sensor. 
 */
-typedef enum GPSState { GPS_SUCCESS, GPS_FAILURE} GPSState; 
-/**
- * The type of the package
-*/
-typedef unsigned char uchar;
+typedef enum WorkingState {WORKING, FAILURE} WorkingState; 
 
 /**
  * Converts 4 unsigned char bytes to a float value 
 */
-float bytesToFloat(uchar b0, uchar b1, uchar b2, uchar b3);
+float bytesToFloat(std::byte b0, std::byte b1, std::byte b2, std::byte b3); 
 
 
 /**
  * The Class that stores the static member function that will read serial data, and then
- * update the serialValues map with said data for the GUI's components to draw accurately. 
+ * u pdate the serialValues map with said data for the GUI's components to draw accurately. 
 */
 class SerialRead {
     private: 
         /**
          * Byte array that we will have to unpack 
         */
-       static uchar package[56]; 
+       static std::byte package[56]; 
 
         /**
          * Will represent the current altimeter state 
         */
-       ElevationState elevationState; 
+       WorkingState elevationState; 
         /**
          * Will represent the current GPS state
         */
-       GPSState gpsState; 
+       WorkingState gpsState; 
     public: 
         /**
          * Stores the values that are read from RATS. 

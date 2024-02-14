@@ -41,5 +41,9 @@ class GPS {
      * Sets the path and loads the image, and initializes the current longitude and lattitude values
     */
     GPS(); 
+    /**
+     * Unloads all images
+    */
+    ~GPS(); 
 
 }; 

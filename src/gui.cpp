@@ -71,6 +71,7 @@ void GUI::draw()
             //draws all of the sensor components
             sensorDisplay.drawComponents();
 
+
             // navigation back to title page
             if (titleButton.isClicked())
             {
