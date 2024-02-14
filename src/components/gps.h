@@ -9,6 +9,7 @@ class GPS {
      * The Image variable to store the image of the launch site
     */
     Image launchSiteImage; 
+    Texture launchSiteTexture; 
 
     /**
      * The current longitude and latitude position of the rocket 

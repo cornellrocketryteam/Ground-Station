@@ -3,7 +3,7 @@
 #include "../dataprocessing.h"
 
 void GPS::drawLaunchSite(){
-      ImageDrawRectangle(&launchSiteImage, GetScreenWidth(), 0, GetScreenWidth()/2, GetScreenHeight()/2, RAYWHITE);
+      DrawTexture(launchSiteTexture, 800, 0, RAYWHITE);
 }
 
 void GPS::drawRocketPosition(){
@@ -20,9 +20,10 @@ GPS::GPS(){
      * TODO: Fix this 
     */
     launchSiteImage = LoadImage("GroundStation2.0/img/launchSite.png"); 
-    std::cout << "IMAGE " << launchSiteImage.data << std::endl; 
-    ImageResize(&launchSiteImage, GetScreenWidth() / 2, GetScreenHeight() / 2);
+    ImageResize(&launchSiteImage,800,500); 
+    launchSiteTexture = LoadTextureFromImage(launchSiteImage);
+    UnloadImage(launchSiteImage);
 }
 GPS::~GPS(){
-     UnloadImage(launchSiteImage); 
+     UnloadTexture(launchSiteTexture); 
 }
