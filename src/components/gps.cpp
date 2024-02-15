@@ -4,6 +4,7 @@
 
 void GPS::drawLaunchSite(){
       DrawTexture(launchSiteTexture, 800, 0, RAYWHITE);
+      DrawRectangleLinesEx((Rectangle){800,0,(float)imageWidth,(float)imageHeight}, 3,BLACK); 
 }
 
 void GPS::drawRocketPosition(){
@@ -17,10 +18,13 @@ void GPS::updatePosition(){
 
 GPS::GPS(){
     /**
-     * TODO: Fix this 
+     * TODO: Change this to be based on the current screen's width and height s
     */
+    imageWidth = 800;
+    imageHeight = 500; 
+
     launchSiteImage = LoadImage("GroundStation2.0/img/launchSite.png"); 
-    ImageResize(&launchSiteImage,800,500); 
+    ImageResize(&launchSiteImage,imageWidth,imageHeight); 
     launchSiteTexture = LoadTextureFromImage(launchSiteImage);
     UnloadImage(launchSiteImage);
 }

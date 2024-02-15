@@ -10,6 +10,11 @@ class GPS {
     */
     Image launchSiteImage; 
     Texture launchSiteTexture; 
+    /**
+     * The launchSiteImage width and height
+    */
+    int imageWidth; 
+    int imageHeight; 
 
     /**
      * The current longitude and latitude position of the rocket 

@@ -7,6 +7,7 @@ Graph::Graph(float x, float y, float width, float height, Color color) : bounds(
 void Graph::draw()
 {
     DrawRectangleRec(bounds, color);
+    DrawRectangleLinesEx(bounds, 3,BLACK); 
     plotLine();
 }
 
