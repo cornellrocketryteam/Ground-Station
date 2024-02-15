@@ -55,7 +55,7 @@ void StatusBar::drawBar(){
             DrawCircle(drawX, drawY, statusLights.at(acc).getRadius(), RED); 
         }
         // Draw the name of the bar 
-        DrawText( statusLights.at(acc).getName(), drawX, drawY - 50, 20,BLUE);
+        DrawText( statusLights.at(acc).getName(), drawX-25, drawY - 50, 20,BLUE);
         drawX += 200; 
         acc += 1; 
     }
