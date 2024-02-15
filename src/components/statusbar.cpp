@@ -3,21 +3,29 @@
 /**
  * Constructor to create the Status Lights in the StatusBar constructor
 */
-StatusLight createStatusLight(const char* name, float radius, bool isWorking){
-    StatusLight temp; 
-    temp.name = name; 
-    temp.radius = radius; 
-    temp.isWorking = isWorking;
-    return temp; 
+StatusLight::StatusLight(const char* _name, float _radius, bool _isWorking){
+    name = _name; 
+    radius = _radius; 
+    isWorking = _isWorking; 
+}
+
+bool StatusLight::getWorking(){
+    return isWorking; 
+}
+float StatusLight::getRadius(){
+    return radius; 
+}
+const char* StatusLight::getName(){
+    return name; 
 }
 
 StatusBar::StatusBar(int posX, int posY, int wid, int hght){
-     StatusLight GPS = createStatusLight("GPS",10,true); 
-     StatusLight Altimeter = createStatusLight("Altimeter",10,true); 
-     StatusLight Temperature = createStatusLight("Temperature",10,true); 
-     StatusLight Gyroscope = createStatusLight("Gyroscope",10,true); 
-     StatusLight IMU = createStatusLight("IMU",10,true); 
-     StatusLight SD = createStatusLight("SD",10,true); 
+     StatusLight GPS("GPS",10,true); 
+     StatusLight Altimeter("Altimeter",10,true); 
+     StatusLight Temperature("Temperature",10,true); 
+     StatusLight Gyroscope("Gyroscope",10,true); 
+     StatusLight IMU("IMU",10,true); 
+     StatusLight SD("SD",10,true); 
 
     statusLights.push_back(GPS); 
     statusLights.push_back(Altimeter); 
@@ -41,22 +49,15 @@ void StatusBar::drawBar(){
 
     int acc = 0; 
     while (acc < statusLights.size()){
-        if (statusLights.at(acc).isWorking){
-            DrawCircle(drawX, drawY, statusLights.at(acc).radius, GREEN); 
+        if (statusLights.at(acc).getWorking()){
+            DrawCircle(drawX, drawY, statusLights.at(acc).getRadius(), GREEN); 
         } else {
-            DrawCircle(drawX, drawY, statusLights.at(acc).radius, RED); 
+            DrawCircle(drawX, drawY, statusLights.at(acc).getRadius(), RED); 
         }
         // Draw the name of the bar 
-        DrawText( statusLights.at(acc).name, drawX, drawY - 50, 20,BLUE);
+        DrawText( statusLights.at(acc).getName(), drawX, drawY - 50, 20,BLUE);
         drawX += 200; 
         acc += 1; 
     }
 }
 
-void StatusBar::updateSensor(const char* name ){
-    for (auto i : statusLights){
-        if (i.name == name){
-            
-        }
-    }
-}

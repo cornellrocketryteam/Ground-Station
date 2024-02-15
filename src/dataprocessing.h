@@ -20,7 +20,6 @@ typedef enum WorkingState {WORKING, FAILURE} WorkingState;
 */
 float bytesToFloat(std::byte b0, std::byte b1, std::byte b2, std::byte b3); 
 
-
 /**
  * The Class that stores the static member function that will read serial data, and then
  * u pdate the serialValues map with said data for the GUI's components to draw accurately. 
@@ -33,15 +32,15 @@ class SerialRead {
        static std::byte package[56]; 
 
         /**
-         * Will represent the current altimeter state 
+         * Will represent the states of each sensor, six in total
         */
-       WorkingState elevationState; 
-        /**
-         * Will represent the current GPS state
-        */
-       WorkingState gpsState; 
+       static WorkingState AltimeterState; 
+       static WorkingState GpsState; 
+       static WorkingState IMUStat; 
+       static WorkingState SDCardState; 
+       static WorkingState AccelerometerState;
+       static WorkingState TemperatureState;
 
-        
     public: 
         /**
          * Stores the values that are read from RATS. 

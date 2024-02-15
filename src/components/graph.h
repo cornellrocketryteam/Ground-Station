@@ -24,6 +24,12 @@ private:
      * The bounds of the graph
     */
     Rectangle bounds;
+    /**
+     * The color of the graph's background
+    */
     Color color;
+    /*
+    * The data points that will be plotted 
+    */
     std::vector<float> dataValues;
 };
