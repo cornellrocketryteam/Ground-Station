@@ -5,9 +5,13 @@ Graph::Graph(float x, float y, float width, float height, Color color) : bounds(
 }
 
 void Graph::draw()
-{
-    DrawRectangleRec(bounds, color);
-    DrawRectangleLinesEx(bounds, 3,BLACK); 
+{   // This will draw a rounded border 
+    // DrawRectangleRounded(bounds, 0.5, 1, color);
+    // DrawRectangleRoundedLines(bounds, 0.5,1,3, BLACK); 
+
+    // Draw a Rectangle 
+    DrawRectangleRec(bounds, color); 
+    DrawRectangleLinesEx(bounds,3,BLACK);
     plotLine();
 }
 
@@ -18,11 +22,11 @@ void Graph::plotLine(){
     DrawLine(bounds.x, tenThousandLine, bounds.x + bounds.width, tenThousandLine, RED);
 
     // Temporarily draw the line
-    int i = bounds.x; 
-    int j = bounds.y+bounds.height; 
+    float i = bounds.x; 
+    float j = bounds.y+bounds.height; 
     while (i < bounds.x + bounds.width){
-        DrawCircle(i, j,0.1, BLACK) ;
-        i += 1; 
+        DrawCircle(i, j,1, BLACK) ;
+        i += 2; 
         j -= 1; 
     }
 }

@@ -14,8 +14,8 @@ SensorScreen::SensorScreen() : latitude(100, 300, 1, 0, RAYWHITE, "Latitude"),
                                mag_y(500, 300, 1, 0,WHITE, "Mag_Y"),
                                mag_z(500, 400, 1, 0,WHITE, "Mag_Z"),
                                temp(500, 500, 1, 0,WHITE, "Temperature"),
-                               elevationGraph(screenWidth/2, screenHeight/2, screenWidth/2, screenHeight/2-25, WHITE),
-                               statusBar(100, 900, 1400, 100)
+                               elevationGraph(screenWidth/2, screenHeight/2, screenWidth/2, screenHeight/2-100, WHITE),
+                               statusBar(100, 950, 1400, 100)
 {
    
 }

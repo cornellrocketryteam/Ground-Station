@@ -34,6 +34,8 @@ StatusBar::StatusBar(int posX, int posY, int wid, int hght){
 
 void StatusBar::drawBar(){
 
+    DrawRectangle(barPositionX - 50,barPositionY - 50,200*statusLights.size(), 100, WHITE);
+
     int drawX = barPositionX;  
     int drawY = barPositionY; 
 
