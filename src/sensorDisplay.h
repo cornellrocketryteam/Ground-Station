@@ -6,6 +6,7 @@
 #include "components/textDisplay.h"
 #include "components/graph.h"
 #include "components/gps.h"
+#include "components/statusbar.h"
 
 class SensorScreen {
 public:
@@ -49,6 +50,8 @@ private:
     TextDisplay temp;
 
     GPS gps; 
+
+    StatusBar statusBar; 
 
     int textDisplayWidth;
     int textDisplayHeight;

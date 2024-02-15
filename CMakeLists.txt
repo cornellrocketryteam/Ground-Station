@@ -21,7 +21,9 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/components/graph.cpp
         src/components/graph.h
         src/components/gps.cpp
-        src/components/gps.h)
+        src/components/gps.h
+        src/components/statusbar.h
+        src/components/statusbar.cpp)
 
 target_link_libraries(${PROJECT_NAME} raylib)
 

@@ -6,15 +6,16 @@ SensorScreen::SensorScreen() : latitude(100, 300, 1, 0, RAYWHITE, "Latitude"),
                                elevation(100, 500, 1, 0,RAYWHITE, "Elevation"),
                                accel_x(100, 600, 1, 0,RAYWHITE, "Accel_X"),
                                accel_y(100, 700, 1, 0,RAYWHITE, "Accel_Y"),
-                               accel_z(100, 800, 1, 0,WHITE, "Accel_Z"),
-                               gyro_x(100, 900, 1, 0,WHITE, "Gyro_X"),
-                               gyro_y(350, 300, 1, 0,WHITE, "Gyro_Y"),
-                               gyro_z(350, 400, 1, 0,WHITE, "Gyro_Z"),
-                               mag_x(350, 500, 1, 0,WHITE, "Mag_X"),
-                               mag_y(350, 600, 1, 0,WHITE, "Mag_Y"),
-                               mag_z(350, 700, 1, 0,WHITE, "Mag_Z"),
-                               temp(350, 800, 1, 0,WHITE, "Temperature"),
-                               elevationGraph(screenWidth/2, screenHeight/2, screenWidth/2, screenHeight/2-25, WHITE)
+                               accel_z(300, 300, 1, 0,WHITE, "Accel_Z"),
+                               gyro_x(300, 400, 1, 0,WHITE, "Gyro_X"),
+                               gyro_y(300, 500, 1, 0,WHITE, "Gyro_Y"),
+                               gyro_z(300, 600, 1, 0,WHITE, "Gyro_Z"),
+                               mag_x(300, 700, 1, 0,WHITE, "Mag_X"),
+                               mag_y(500, 300, 1, 0,WHITE, "Mag_Y"),
+                               mag_z(500, 400, 1, 0,WHITE, "Mag_Z"),
+                               temp(500, 500, 1, 0,WHITE, "Temperature"),
+                               elevationGraph(screenWidth/2, screenHeight/2, screenWidth/2, screenHeight/2-25, WHITE),
+                               statusBar(100, 900, 1400, 100)
 {
    
 }
@@ -46,7 +47,11 @@ void SensorScreen::drawComponents()
     // draw all of the graphs
     elevationGraph.draw();
 
+    // draw the GPS launch site
     gps.drawLaunchSite();
+
+    //Draw the status bar of the sensors
+    statusBar.drawBar();
 }
 
 

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <map> 
 #include <unordered_map>
+#include <vector> 
 
 
 /**
@@ -39,6 +40,8 @@ class SerialRead {
          * Will represent the current GPS state
         */
        WorkingState gpsState; 
+
+        
     public: 
         /**
          * Stores the values that are read from RATS. 
