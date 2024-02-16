@@ -14,6 +14,10 @@
  * in fail mode, and we will display "FAILURE" for that sensor. 
 */
 typedef enum WorkingState {WORKING, FAILURE} WorkingState; 
+/**
+ * Flight Mode State
+*/
+typedef enum FlightMode {StartupMode, StandbyMode, AscentMode,DrogueDeployedMode, MainDeployedMode,FaultMode} FlightMode; 
 
 /**
  * Converts 4 unsigned char bytes to a float value 
@@ -36,10 +40,12 @@ class SerialRead {
         */
        static WorkingState AltimeterState; 
        static WorkingState GpsState; 
-       static WorkingState IMUStat; 
+       static WorkingState IMUState; 
        static WorkingState SDCardState; 
        static WorkingState AccelerometerState;
        static WorkingState TemperatureState;
+
+       static FlightMode FlightState;
 
     public: 
         /**
@@ -55,6 +61,13 @@ class SerialRead {
          * via reading serial data  
         */
         static void setPack();  
-        
+        /**
+         * Return the current FlightState
+        */
+        static FlightMode getFlightState();
+        /**
+         * Initializes the enumerations for sensors 
+        */
+       //static void initializeSensorEnums(); 
 
 }; 

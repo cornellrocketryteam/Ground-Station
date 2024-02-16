@@ -14,10 +14,11 @@ SensorScreen::SensorScreen() : latitude(100, 300, 1, 0, RAYWHITE, "Latitude"),
                                mag_y(500, 300, 1, 0,WHITE, "Mag_Y"),
                                mag_z(500, 400, 1, 0,WHITE, "Mag_Z"),
                                temp(500, 500, 1, 0,WHITE, "Temperature"),
+                               flightMode(1300,900,1,0,WHITE,"Flight Mode"),
                                elevationGraph(screenWidth/2, screenHeight/2, screenWidth/2, screenHeight/2-100, WHITE),
                                statusBar(100, 950, 1400, 100)
 {
-   
+   //SerialRead::initializeSensorEnums();
 }
 
 void SensorScreen::drawComponents()
@@ -95,4 +96,16 @@ void SensorScreen::updateValues()
 
     float temper = SerialRead::serialValues["temp"]; 
     temp.setText("Temperature: " + std::to_string(temper)); 
+
+    // std::string flightString; 
+    // switch(SerialRead::getFlightState()){
+    //     case (StartupMode) : flightString = "Startup"; 
+    //     case (StandbyMode) :flightString = "Standby"; 
+    //     case (AscentMode) :flightString = "Ascent"; 
+    //     case (DrogueDeployedMode) :flightString = "Drogue Deployed"; 
+    //     case (MainDeployedMode) :flightString = "Main Deployed"; 
+    //     case (FaultMode) :flightString = "Fault"; 
+    // }
+    // flightMode.setText("Flight Mode: " + flightString); 
+
 }

@@ -68,3 +68,19 @@ float bytesToFloat(std::byte b0, std::byte b1, std::byte b2, std::byte b3)
 
     return output;
 }
+
+// FlightMode SerialRead::getFlightState(){
+//     return FlightState; 
+// }
+
+// void SerialRead::initializeSensorEnums(){
+//     AltimeterState = WORKING; 
+//     GpsState = WORKING; 
+//     IMUState = WORKING; 
+//     SDCardState = WORKING; 
+//     AccelerometerState = WORKING;
+//     TemperatureState = WORKING;
+
+//     FlightState = StartupMode;
+
+// }

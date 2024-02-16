@@ -49,6 +49,8 @@ private:
     TextDisplay mag_z;
     TextDisplay temp;
 
+    TextDisplay flightMode; 
+
     GPS gps; 
 
     StatusBar statusBar; 
