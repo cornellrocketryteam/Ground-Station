@@ -57,10 +57,10 @@ class SerialRead {
         */
         static void updateSerialValues(); 
         /**
-         * Will set the package received from RATS to be the [package] member 
+         * Will read the package received from RATS to be the [package] member 
          * via reading serial data  
         */
-        static void setPack();  
+        static void readPack();  
         /**
          * Return the current FlightState
         */

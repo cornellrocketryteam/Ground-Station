@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD 17)
 # Build raylib
 add_subdirectory(lib/raylib)
 
+include_directories(lib/WiringPi/wiringPi)
+
 # Create the executable
 add_executable(${PROJECT_NAME} src/main.cpp
                 src/dataprocessing.cpp
@@ -25,7 +27,8 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/components/statusbar.h
         src/components/statusbar.cpp)
 
-target_link_libraries(${PROJECT_NAME} raylib)
+ # need to change this
+target_link_libraries(${PROJECT_NAME} raylib /Users/benjaminzou/GroundStation2.0/lib/WiringPi)
 
 # Checks if OSX and links appropriate frameworks (only required on MacOS)
 if (APPLE)

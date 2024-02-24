@@ -1,5 +1,6 @@
 #include "statusbar.h"
 
+
 /**
  * Constructor to create the Status Lights in the StatusBar constructor
 */
@@ -23,14 +24,14 @@ StatusBar::StatusBar(int posX, int posY, int wid, int hght){
      StatusLight GPS("GPS",10,true); 
      StatusLight Altimeter("Altimeter",10,true); 
      StatusLight Temperature("Temperature",10,true); 
-     StatusLight Gyroscope("Gyroscope",10,true); 
+     StatusLight Accelerometer("Accelerometer",10,true); 
      StatusLight IMU("IMU",10,true); 
      StatusLight SD("SD",10,true); 
 
     statusLights.push_back(GPS); 
     statusLights.push_back(Altimeter); 
     statusLights.push_back(Temperature); 
-    statusLights.push_back(Gyroscope); 
+    statusLights.push_back(Accelerometer); 
     statusLights.push_back(IMU); 
     statusLights.push_back(SD); 
 

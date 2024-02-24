@@ -1,5 +1,8 @@
 #include "dataprocessing.h"
+#include <wiringPi.h>
 
+#define RX 0
+#define TX 1
 /**
 Format of Data to unpack:
 
@@ -53,8 +56,20 @@ void SerialRead::updateSerialValues()
     
 }
 
-void SerialRead::setPack(){
+void SerialRead::readPack(){
+    //Checks if WiringPi was set up correctly 
+    if (wiringPiSetup() == -1) {
+        std::cout << "Error initializing WiringPi." << std::endl;     
+    }
+    // Initializes the pins 
+     pinMode(RX, INPUT); 
+     pinMode(TX, OUTPUT); 
 
+    // Will read from the RX pin 
+     while(1){
+        int temp = digitalRead(RX); 
+     }
+    
 }
 // try (float) casting 
 float bytesToFloat(std::byte b0, std::byte b1, std::byte b2, std::byte b3)
