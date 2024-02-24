@@ -37,38 +37,20 @@ Mag Z
 
 std::unordered_map<std::string, float> SerialRead::serialValues;
 
-// Need to read in data from the package 
-void SerialRead::updateSerialValues()
-{
-    serialValues["latitude"] = 0;
-    serialValues["longitude"] = 0;
-    serialValues["elevation"] = 0;
-    serialValues["accel_x"] = 0;
-    serialValues["accel_y"] = 0;
-    serialValues["accel_z"] = 0;
-    serialValues["gyro_x"] = 0;
-    serialValues["gyro_y"] = 0;
-    serialValues["gyro_z"] = 0;
-    serialValues["mag_x"] = 0;
-    serialValues["mag_y"] = 0;
-    serialValues["mag_z"] = 0;
-    serialValues["temp"] = 0;
-    
-}
 
 void SerialRead::readPack(){
     //Checks if WiringPi was set up correctly 
-    if (wiringPiSetup() == -1) {
-        std::cout << "Error initializing WiringPi." << std::endl;     
-    }
-    // Initializes the pins 
-     pinMode(RX, INPUT); 
-     pinMode(TX, OUTPUT); 
+    // if (wiringPiSetup() == -1) {
+    //     std::cout << "Error initializing WiringPi." << std::endl;     
+    // }
+    // // Initializes the pins 
+    //  pinMode(RX, INPUT); 
+    //  pinMode(TX, OUTPUT); 
 
-    // Will read from the RX pin 
-     while(1){
-        int temp = digitalRead(RX); 
-     }
+    // // Will read from the RX pin and update the Map
+    //  while(1){
+    //     int temp = digitalRead(RX); 
+    //  }
     
 }
 // try (float) casting 

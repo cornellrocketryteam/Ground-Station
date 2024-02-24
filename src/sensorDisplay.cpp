@@ -23,9 +23,6 @@ SensorScreen::SensorScreen() : latitude(100, 300, 1, 0, RAYWHITE, "Latitude"),
 
 void SensorScreen::drawComponents()
 {
-    // read in the sensor values
-    SerialRead::updateSerialValues();
-
     //update the texts boxes based on the new sensor values
     updateValues();
 

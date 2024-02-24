@@ -53,10 +53,6 @@ class SerialRead {
         */
         static std::unordered_map<std::string, float> serialValues;
         /**
-         * Updates the serialValues map by reading in data from the package 
-        */
-        static void updateSerialValues(); 
-        /**
          * Will read the package received from RATS to be the [package] member 
          * via reading serial data  
         */
