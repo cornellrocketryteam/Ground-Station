@@ -8,27 +8,18 @@ set(CMAKE_CXX_STANDARD 17)
 # Build raylib
 add_subdirectory(lib/raylib)
 
-include_directories(lib/WiringPi/wiringPi)
-
 # Create the executable
 add_executable(${PROJECT_NAME} src/main.cpp
-                src/dataprocessing.cpp
-                src/gui.cpp
-                src/rocket3d.cpp
-                src/sensorDisplay.cpp
-        src/components/button.cpp
-        src/components/button.h
-        src/components/textDisplay.cpp
-        src/components/textDisplay.h
-        src/components/graph.cpp
-        src/components/graph.h
-        src/components/gps.cpp
-        src/components/gps.h
-        src/components/statusbar.h
-        src/components/statusbar.cpp)
+        src/gui.cpp
+        src/statusbar.cpp
+        src/datagrid.cpp
+        src/graph.cpp
+        src/rocket.cpp
+        src/gps.cpp)
 
- # need to change this
-target_link_libraries(${PROJECT_NAME} raylib /Users/benjaminzou/GroundStation2.0/lib/WiringPi)
+target_include_directories(${PROJECT_NAME} PRIVATE src)
+
+target_link_libraries(${PROJECT_NAME} raylib)
 
 # Checks if OSX and links appropriate frameworks (only required on MacOS)
 if (APPLE)
@@ -38,4 +29,3 @@ if (APPLE)
     target_link_libraries(${PROJECT_NAME} "-framework GLUT")
     target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
 endif()
-

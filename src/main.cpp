@@ -5,6 +5,7 @@
 ********************************************************************************************/
 
 #include "gui.h"
+#include "raylib.h"
 
 int main()
 {
@@ -12,12 +13,19 @@ int main()
     InitWindow(1600, 1000, "Ground Station");
     SetTargetFPS(60);
 
-
-    auto gui = GUI(1600, 1000);
+    GUI gui;
 
     while (!WindowShouldClose())
     {
-        gui.draw();
+        BeginDrawing();
+        ClearBackground({56, 55, 52});
+
+        int screenWidth = GetScreenWidth();
+        int screenHeight = GetScreenHeight();
+
+        gui.draw(0, 0, screenWidth, screenHeight);
+
+        EndDrawing();
     }
 
     CloseWindow();

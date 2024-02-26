@@ -1,87 +1,26 @@
 #include "gui.h"
 
-GUI::GUI(int screenWidth, int screenHeight) : currentScreen(TITLE),
-             sensorButton(100, screenHeight / 2 , 200, 100, WHITE, "Sensor Page"),
-             rocket3DButton(screenWidth - 210, screenHeight - 110 , 200, 100, WHITE, "3D Model"),
-             titleButton(100, 100, 200, 100, WHITE, "Back to Title Page"),
-             backgroundColor({56, 55, 52})
+#include "raylib.h"
+
+void GUI::draw(int posX, int posY, int width, int height)
 {
-}
+    // GPS
+    // DrawRectangle(posX + 0.04*width, posY + 0.04*height, 0.35*width, 0.3*height, GRAY);
+    gps.draw(posX + 0.04*width, posY + 0.04*height, 0.35*width, 0.3*height);
 
-void GUI::draw()
-{
-    int screenWidth = GetScreenWidth();
-    int screenHeight = GetScreenHeight();
+    // 3D Model
+    // DrawRectangle(posX + 0.43*width, posY + 0.04*height, 0.53*width, 0.35*height, GRAY);
+    rocket.draw(posX + 0.43*width, posY + 0.04*height, 0.53*width, 0.35*height);
 
-    BeginDrawing();
+    // Data grid
+    // DrawRectangle(0.04*screenWidth, 0.38*screenHeight, 0.35*screenWidth, 0.4*screenHeight, GRAY);
+    data_grid.draw(posX + 0.04*width, posY + 0.38*height, 0.35*width, 0.4*height);
 
-    // paint the background window's color
-    ClearBackground(backgroundColor);
+    // Altitude graph
+    // DrawRectangle(posX + 0.43*width, posY + 0.43*height, 0.53*width, 0.35*height, GRAY);
+    graph.draw(posX + 0.43*width, posY + 0.43*height, 0.53*width, 0.35*height);
 
-    // Draws to the screen based on the current state
-    switch (currentScreen)
-    {
-    case TITLE:
-        DrawText("Cornell Rocketry Ground Station", 10, 10, 60, WHITE);
-
-        // toggles the mini state. Starts as true 
-        if (rocketModel.isMini == false){
-        rocketModel.toggleMiniState();
-        } 
-
-        sensorButton.draw();
-        rocket3DButton.draw();
-
-        rocketModel.drawMiniVersion();
-        // Button press logic
-        if (sensorButton.isClicked())
-        {
-            currentScreen = SENSORVALUES;
-        }
-        if (rocket3DButton.isClicked())
-        {
-            currentScreen = ROCKET3D;
-        }
-        break;
-    case ROCKET3D:
-        if (rocketModel.isMini == true){
-        rocketModel.toggleMiniState();
-        } 
-
-        // draws the 3d map of the rocket
-        rocketModel.draw();
-
-        DrawText("Live 3D Model", 20, 20, 60, WHITE);
-        titleButton.draw();
-
-        //Draw the rocket data in the bottom right of the screen
-        rocketModel.displayRocketTexts();
-
-        // navigation back to title page
-        if (titleButton.isClicked())
-        {
-            currentScreen = TITLE;
-        }
-        break;
-    case SENSORVALUES:
-        {
-            DrawText("Sensor Readings", 20, 20, 60, WHITE);
-            titleButton.draw();
-
-            //draws all of the sensor components
-            sensorDisplay.drawComponents();
-
-
-            // navigation back to title page
-            if (titleButton.isClicked())
-            {
-                currentScreen = TITLE;
-            }
-        }
-        break;
-    default:
-        break;
-    }
-
-    EndDrawing();
+    // Status bar
+    // DrawRectangle(0.04*screenWidth, 0.82*screenHeight, 0.92*screenWidth, 0.14*screenHeight, GRAY);
+    status_bar.draw(posX + 0.04*width, posY + 0.82*height, 0.92*width, 0.14*height);
 }

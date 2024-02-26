@@ -1,7 +1,7 @@
-#include "rocket3d.h"
+#include "rocket.h"
 #include "raymath.h"
 
-RocketScreen::RocketScreen() {
+Rocket::Rocket() {
     camera = { 0 };
 
     // initializes the camera's fields
@@ -16,9 +16,6 @@ RocketScreen::RocketScreen() {
 
     terrainPosition = {0.0, -10,0}; 
 
-    //starts as unmovable
-    isMini = false; 
-
     // sets the size of the map
     mapSize = 1000.0f;
 
@@ -30,17 +27,17 @@ RocketScreen::RocketScreen() {
     std::cout << "WORKING DIRECTORY = " << GetWorkingDirectory() << std::endl;
 
     //loadTerrain();
-    terrainModel = LoadModel("GroundStation2.0/img/desert.obj");
-    terrainTexture = LoadTexture("GroundStation2.0/img/as_ao.png");
+    terrainModel = LoadModel("img/desert.obj");
+    terrainTexture = LoadTexture("img/as_ao.png");
     terrainModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = terrainTexture;
 
     //loadRocket();
-    rocketModel = LoadModel("GroundStation2.0/img/rocketModel.obj");
-    rocketTexture = LoadTexture("GroundStation2.0/img/rocket.png");
+    rocketModel = LoadModel("img/rocketModel.obj");
+    rocketTexture = LoadTexture("img/rocket.png");
     rocketModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = rocketTexture;
 }
 
-RocketScreen::~RocketScreen()
+Rocket::~Rocket()
 {
     UnloadModel(terrainModel);
     UnloadTexture(terrainTexture);
@@ -48,47 +45,30 @@ RocketScreen::~RocketScreen()
     UnloadTexture(rocketTexture);
 }
 
-
 /**
  * Drawing methods for the rocket
 */
-void RocketScreen::draw()
+void Rocket::draw(int posX, int posY, int width, int height)
 {
-    BeginMode3D(camera);
-        
-        // rotates the rocket. 
-        rocketModel.transform = MatrixRotateXYZ((Vector3){ DEG2RAD*xRotation, DEG2RAD*yRotation, DEG2RAD*zRotation });
-        
-        //Draw the model of the rocket
-        DrawModel(rocketModel, rocketPosition,0.01f,WHITE); 
-        DrawModel(terrainModel,terrainPosition,50.0f,WHITE);
+    BeginScissorMode(posX, posY, width, height);
+        BeginMode3D(camera);
 
-        //Draw the path of the rocket
-        drawRocketPath();
+            // rotates the rocket.
+            rocketModel.transform = MatrixRotateXYZ({ DEG2RAD*xRotation, DEG2RAD*yRotation, DEG2RAD*zRotation });
 
-        moveRocket(); 
-    EndMode3D();
+            //Draw the model of the rocket
+            DrawModel(rocketModel, rocketPosition, 0.01f, WHITE);
+            DrawModel(terrainModel, terrainPosition, 50.0f, WHITE);
 
+            //Draw the path of the rocket
+            drawRocketPath();
+
+            moveRocket();
+        EndMode3D();
+    EndScissorMode();
 }
 
-void RocketScreen::drawMiniVersion(){
-    BeginMode3D(camera);
-        // rotates the rocket. 
-        rocketModel.transform = MatrixRotateXYZ((Vector3){ DEG2RAD*xRotation, DEG2RAD*yRotation, DEG2RAD*zRotation });
-
-        //Draw the model of the rocket
-        DrawModel(rocketModel, rocketPosition,0.005f,WHITE); 
-        DrawModel(terrainModel,terrainPosition,1.5f,WHITE);
-
-        //Draw the path of the rocket
-        //drawRocketPath();
-
-        moveRocket(); 
-    EndMode3D();
-}
-
-
-void RocketScreen::drawRocketPath()
+void Rocket::drawRocketPath()
 {
     // TODO: Fix this to push back only the Corners
     //pathPositions.push_back(rocketPosition); 
@@ -96,7 +76,7 @@ void RocketScreen::drawRocketPath()
 
     // Draws all of the past path positions
     for (auto i : pathPositions){
-        DrawSphere(i,0.15,RED); 
+        DrawSphere(i, 0.15, RED);
     }
 }
 
@@ -104,11 +84,8 @@ void RocketScreen::drawRocketPath()
  * Movement functions for the rocket
 */
 
-void RocketScreen::moveRocket()
+void Rocket::moveRocket()
 {
-    if (isMini){
-        return;
-    }
     if (IsKeyDown(KEY_UP)){
         rocketPosition.y += 1; 
         camera.position.y += 1;
@@ -126,7 +103,7 @@ void RocketScreen::moveRocket()
     }
 }
 
-void RocketScreen::resetRocketPosition()
+void Rocket::resetRocketPosition()
 {
     rocketPosition.x = 0.0; 
     rocketPosition.y = 0.0; 
@@ -147,42 +124,12 @@ void RocketScreen::resetRocketPosition()
 /**
  * The loading and unloading methods for models and textures
 */
-std::string RocketScreen::getRocketElevation()
+std::string Rocket::getRocketElevation()
 {
     return "Elevation: " + std::to_string(rocketPosition.y);
 }
 
-void RocketScreen::displayRocketTexts()
+void Rocket::displayRocketTexts()
 {
     DrawText(getRocketElevation().c_str(),1300,900,25,BLACK);
-}
-
-void RocketScreen::toggleMiniState(){
-    if (isMini){
-        // we enter full screen state 
-        isMini = false; 
-      
-        camera.position.y -= 10; 
-        camera.position.z += 10; 
-
-        camera.target.y +=13; 
-        camera.target.z -= 13;
-
-        terrainPosition.y -= 2; 
-        
-    } else {
-        // we now enter the mini state 
-        isMini = true; 
-
-        camera.position.y += 10; 
-        camera.position.z -= 10; 
-
-        camera.target.y -= 13; 
-        camera.target.z += 13; 
-
-        terrainPosition.y += 2;
-
-    
-        
-    }
 }

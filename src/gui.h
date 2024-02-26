@@ -1,30 +1,19 @@
 #pragma once
 
-#include "raylib.h"
-#include "rocket3d.h"
-#include "sensorDisplay.h"
-#include "components/gps.h"
-#include "components/button.h"
-
-typedef enum GameScreen { TITLE, ROCKET3D, SENSORVALUES } GameScreen;
+#include "datagrid.h"
+#include "statusbar.h"
+#include "graph.h"
+#include "rocket.h"
+#include "gps.h"
 
 class GUI {
 public:
-    GUI(int screenWidth, int screenHeight);
-    void draw();
+    void draw(int posX, int posY, int width, int height);
 
 private:
-    // the Colors for the window
-    Color backgroundColor;
-
-    Button sensorButton;
-    Button rocket3DButton;
-    Button titleButton;
-
-
-    RocketScreen rocketModel;
-    SensorScreen sensorDisplay;
-
-    // the enumeration of game states
-    GameScreen currentScreen;
+    StatusBar status_bar;
+    DataGrid data_grid;
+    Graph graph;
+    Rocket rocket;
+    GPS gps;
 };

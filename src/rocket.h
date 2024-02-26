@@ -4,20 +4,15 @@
 #include <iostream>
 #include <vector>
 
-class RocketScreen {
+class Rocket {
 public:
-    RocketScreen();
-    ~RocketScreen();
+    Rocket();
+    ~Rocket();
 
     /**
      * Draws the components and world of this 3D model. Does not include BeginDrawing() or EndDrawing().
     */
-    void draw();
-
-    /**
-     * Draw the miniature version of the rocket screen
-    */
-   void drawMiniVersion(); 
+    void draw(int posX, int posY, int width, int height);
 
     /**
      * moves the Rocket based on data
@@ -44,14 +39,6 @@ public:
     */
     void drawRocketPath();
 
-    /**
-     * Toggles the state of the mini value
-    */
-   void toggleMiniState();
-
-    // States whether the rocket display is in mini mode or fullscreen mode
-    bool isMini; 
-
 private:
     // the 3D camera
     Camera3D camera;
@@ -70,7 +57,6 @@ private:
     Model terrainModel;
     Texture2D terrainTexture;
 
-   
 
     // represents how big the map's grid will be
     float mapSize;
