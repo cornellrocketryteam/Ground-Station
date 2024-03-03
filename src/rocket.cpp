@@ -56,9 +56,27 @@ void Rocket::draw(int posX, int posY, int width, int height)
             // rotates the rocket.
             rocketModel.transform = MatrixRotateXYZ({ DEG2RAD*xRotation, DEG2RAD*yRotation, DEG2RAD*zRotation });
 
-            //Draw the model of the rocket
-            DrawModel(rocketModel, rocketPosition, 0.01f, WHITE);
+            //Draw the model of the rocket when ENLARGED
+            if (enlarged){
+            // Reset the camera position  
+            camera.position = (Vector3){ 0.0f, 15.0f + cameraYAdded, 30.0f};
+            camera.target = (Vector3){ 0.0f, 5.0f+ cameraYAdded, 0.0f }; 
+
+            // Clear the screen 
+            ClearBackground({56, 55, 52});
+
+            DrawModel(rocketModel, rocketPosition, 0.008f, WHITE);
             DrawModel(terrainModel, terrainPosition, 50.0f, WHITE);
+            
+            } else {
+            //Draw the UN-ENLARGED rocket
+            camera.position = (Vector3){-6.0f, 5.0f+ cameraYAdded, 30.0f}; 
+            camera.target = (Vector3){-7.0f, -4.5f + cameraYAdded, 0.0f}; 
+
+            DrawModel(rocketModel, rocketPosition, 0.003f, WHITE);
+            DrawModel(terrainModel, terrainPosition, 25.0f, WHITE);
+            }
+
 
             //Draw the path of the rocket
             drawRocketPath();
@@ -77,7 +95,12 @@ void Rocket::drawRocketPath()
 
     // Draws all of the past path positions
     for (auto i : pathPositions){
-        DrawSphere(i, 0.15, RED);
+        if (enlarged){
+            DrawSphere(i, 0.15, RED);
+        } 
+        else {
+            DrawSphere(i, 0.09, RED);
+        }
     }
 }
 
@@ -89,12 +112,10 @@ void Rocket::moveRocket()
 {
     if (IsKeyDown(KEY_UP)){
         rocketPosition.y += 1; 
-        camera.position.y += 1;
-        camera.target.y += 1; 
+        cameraYAdded += 1; 
     } else if (IsKeyDown(KEY_DOWN)){
         rocketPosition.y -= 1; 
-        camera.position.y -= 1;
-        camera.target.y -= 1;
+        cameraYAdded -= 1; 
     } else if (IsKeyDown(KEY_LEFT)){
         xRotation += 1; 
     } else if (IsKeyDown(KEY_RIGHT)){
@@ -107,27 +128,10 @@ void Rocket::moveRocket()
         } else {
             enlarged = true; 
         }
+        // Wait to stop constant key press
         WaitTime(0.1); 
-    }
+    } 
 }
-
-void Rocket::resetRocketPosition()
-{
-    rocketPosition.x = 0.0; 
-    rocketPosition.y = 0.0; 
-    rocketPosition.z = 0.0; 
-
-    camera.position.x = 0.0; 
-    camera.position.y = 0.0; 
-    camera.position.z = 0.0; 
-
-    xRotation = 270; 
-    yRotation = 0;
-    zRotation = 0; 
-
-    pathPositions.clear();
-}
-
 
 /**
  * The loading and unloading methods for models and textures

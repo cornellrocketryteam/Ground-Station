@@ -20,11 +20,6 @@ public:
     void moveRocket();
 
     /**
-     * Reset the rocket position
-    */
-    void resetRocketPosition();
-
-    /**
      * Returns a string of the Rocket's elevation in the format "Elevation: x"
     */
     std::string getRocketElevation();
@@ -70,6 +65,10 @@ private:
     float xRotation;
     float yRotation;
     float zRotation;
+
+    float cameraXAdded; 
+    float cameraYAdded;
+    float cameraZAdded; 
 
     // vector to store the past positions of the rocket for drawing
     std::vector<Vector3> pathPositions;
