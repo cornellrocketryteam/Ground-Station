@@ -38,6 +38,10 @@ public:
      * Draws the rocket's path of movement
     */
     void drawRocketPath();
+    /**
+     * Returns if the display is enlarged 
+    */
+    bool isEnlarged(); 
 
 private:
     // the 3D camera
@@ -57,6 +61,7 @@ private:
     Model terrainModel;
     Texture2D terrainTexture;
 
+    bool enlarged = false; 
 
     // represents how big the map's grid will be
     float mapSize;

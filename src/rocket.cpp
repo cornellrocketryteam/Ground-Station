@@ -27,13 +27,13 @@ Rocket::Rocket() {
     std::cout << "WORKING DIRECTORY = " << GetWorkingDirectory() << std::endl;
 
     //loadTerrain();
-    terrainModel = LoadModel("img/desert.obj");
-    terrainTexture = LoadTexture("img/as_ao.png");
+    terrainModel = LoadModel("GroundStation2.0/img/desert.obj");
+    terrainTexture = LoadTexture("GroundStation2.0/img/as_ao.png");
     terrainModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = terrainTexture;
 
     //loadRocket();
-    rocketModel = LoadModel("img/rocketModel.obj");
-    rocketTexture = LoadTexture("img/rocket.png");
+    rocketModel = LoadModel("GroundStation2.0/img/rocketModel.obj");
+    rocketTexture = LoadTexture("GroundStation2.0/img/rocket.png");
     rocketModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = rocketTexture;
 }
 
@@ -71,8 +71,9 @@ void Rocket::draw(int posX, int posY, int width, int height)
 void Rocket::drawRocketPath()
 {
     // TODO: Fix this to push back only the Corners
-    //pathPositions.push_back(rocketPosition); 
     pathPositions.push_back(rocketPosition);
+   
+
 
     // Draws all of the past path positions
     for (auto i : pathPositions){
@@ -100,6 +101,13 @@ void Rocket::moveRocket()
         yRotation += 1; 
     } else if (IsKeyDown(KEY_SPACE)){
         zRotation += 1; 
+    } else if (IsKeyDown(KEY_W)){
+        if (isEnlarged()){
+            enlarged = false;
+        } else {
+            enlarged = true; 
+        }
+        WaitTime(0.1); 
     }
 }
 
@@ -132,4 +140,8 @@ std::string Rocket::getRocketElevation()
 void Rocket::displayRocketTexts()
 {
     DrawText(getRocketElevation().c_str(),1300,900,25,BLACK);
+}
+
+bool Rocket::isEnlarged(){
+    return enlarged; 
 }
