@@ -35,19 +35,19 @@ class SerialRead {
         */
        static std::byte package[56]; 
 
-        /**
+    public: 
+         /**
          * Will represent the states of each sensor, six in total
         */
-       static WorkingState AltimeterState; 
-       static WorkingState GpsState; 
-       static WorkingState IMUState; 
-       static WorkingState SDCardState; 
-       static WorkingState AccelerometerState;
-       static WorkingState TemperatureState;
+        static WorkingState AltimeterState; 
+        static WorkingState GpsState; 
+        static WorkingState IMUState; 
+        static WorkingState SDCardState; 
+        static WorkingState AccelerometerState;
+        static WorkingState TemperatureState;
 
-       static FlightMode FlightState;
+        static FlightMode FlightState;
 
-    public: 
         /**
          * Stores the values that are read from RATS. 
         */
@@ -57,13 +57,5 @@ class SerialRead {
          * via reading serial data  
         */
         static void readPack();  
-        /**
-         * Return the current FlightState
-        */
-        static FlightMode getFlightState();
-        /**
-         * Initializes the enumerations for sensors 
-        */
-       //static void initializeSensorEnums(); 
 
 }; 

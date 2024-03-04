@@ -50,6 +50,8 @@ Rocket::~Rocket()
 */
 void Rocket::draw(int posX, int posY, int width, int height)
 {
+    moveRocket();
+    
     BeginScissorMode(posX, posY, width, height);
         BeginMode3D(camera);
 
@@ -65,29 +67,28 @@ void Rocket::draw(int posX, int posY, int width, int height)
 
             //Draw the model of the rocket when ENLARGED
             if (enlarged){
-            // Reset the camera position  
-            camera.position = (Vector3){ 0.0f, 15.0f + cameraYAdded, 30.0f};
-            camera.target = (Vector3){ 0.0f, 5.0f+ cameraYAdded, 0.0f }; 
+                // Reset the camera position  
+                camera.position = (Vector3){ 0.0f, 15.0f + cameraYAdded, 30.0f};
+                camera.target = (Vector3){ 0.0f, 5.0f+ cameraYAdded, 0.0f }; 
 
-            // Clear the screen 
-            ClearBackground({56, 55, 52});
+                // Clear the screen 
+                ClearBackground({56, 55, 52});
 
-            DrawModel(rocketModel, rocketPosition, 0.008f, WHITE);
-            DrawModel(terrainModel, terrainPosition, 50.0f, WHITE);
+                DrawModel(rocketModel, rocketPosition, 0.008f, WHITE);
+                DrawModel(terrainModel, terrainPosition, 50.0f, WHITE);
 
             } else {
-            //Draw the UN-ENLARGED rocket
-            camera.position = (Vector3){-6.0f, 5.0f+ cameraYAdded, 30.0f}; 
-            camera.target = (Vector3){-7.0f, -4.5f + cameraYAdded, 0.0f}; 
+                //Draw the UN-ENLARGED rocket
+                camera.position = (Vector3){-6.0f, 5.0f+ cameraYAdded, 30.0f}; 
+                camera.target = (Vector3){-7.0f, -4.5f + cameraYAdded, 0.0f}; 
 
-            DrawModel(rocketModel, rocketPosition, 0.003f, WHITE);
-            DrawModel(terrainModel, terrainPosition, 25.0f, WHITE);
+                DrawModel(rocketModel, rocketPosition, 0.003f, WHITE);
+                DrawModel(terrainModel, terrainPosition, 25.0f, WHITE);
             }
 
             //Draw the path of the rocket
             drawRocketPath();
 
-            moveRocket();
         EndMode3D();
     EndScissorMode();
 }

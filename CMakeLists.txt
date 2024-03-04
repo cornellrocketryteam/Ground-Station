@@ -8,6 +8,9 @@ set(CMAKE_CXX_STANDARD 17)
 # Build raylib
 add_subdirectory(lib/raylib)
 
+# Include headers
+include_directories(lib/WiringPi/wiringPi) 
+
 # Create the executable
 add_executable(${PROJECT_NAME} src/main.cpp
         src/gui.cpp
@@ -29,3 +32,4 @@ if (APPLE)
     target_link_libraries(${PROJECT_NAME} "-framework GLUT")
     target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
 endif()
+
