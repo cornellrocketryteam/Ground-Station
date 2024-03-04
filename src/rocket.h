@@ -37,6 +37,10 @@ public:
      * Returns if the display is enlarged 
     */
     bool isEnlarged(); 
+    /**
+     * Toggles the enlarged field when a click is registered
+    */
+    void clickToggle(); 
 
 private:
     // the 3D camera
@@ -69,6 +73,14 @@ private:
     float cameraXAdded; 
     float cameraYAdded;
     float cameraZAdded; 
+
+  /**
+   * Used to determine when a click should be registered
+  */
+    float drawnX; 
+    float drawnY; 
+    float drawnWidth; 
+    float drawnHeight; 
 
     // vector to store the past positions of the rocket for drawing
     std::vector<Vector3> pathPositions;
