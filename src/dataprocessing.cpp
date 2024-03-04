@@ -30,6 +30,28 @@ Gyro Z
 Mag X
 Mag Y
 Mag Z 
+
+For the EVENTS:
+0: Key armed
+1: Altitude armed
+2: Alt init failed
+3: Alt reading failed
+4: Alt turned off
+5: IMU init failed
+6: IMU reading failed
+7: IMU turned off
+8: Accel init failed
+9: Accel reading failed
+10: Accel turned off
+11: Therm init failed
+12: Therm reading failed
+13: Therm turned off
+14: SD init failed
+15: SD write failed
+16: RFM init failed
+17: RFM transmit failed
+
+0 means false, 1 means true 
 */
 
 void SerialRead::readPack(){
@@ -44,9 +66,58 @@ void SerialRead::readPack(){
 
     //BEGIN READ
 
-    //TODO: Process the Metadata 
-    u_int32_t metaData = digitalRead(RX); 
+    //3 Bytes of MetaData
+    u_int8_t metaData1 = digitalRead8(RX); 
+    u_int8_t metaData2 = digitalRead8(RX); 
 
+    // Test the right-most bit of metaData1
+    for (int i = 0; i < 8; i++){
+        if (metaData1 & 0x01){
+            // rightmost bit is 1
+        }
+        metaData1 = metaData1 >> 1; 
+    }
+
+    // Test the right-most bit of metaData2
+    for (int i = 0; i < 8; i++){
+        if (metaData2 & 0x01){
+            // rightmost bit is 1
+        }
+        metaData2 = metaData2 >> 1; 
+    }
+
+    float timestamp = digitalRead8(RX); 
+
+    //3 Bytes of Events
+    u_int8_t Events1 = digitalRead8(RX); 
+    u_int8_t Events2 = digitalRead8(RX); 
+    u_int8_t Events3 = digitalRead8(RX); 
+
+    // Test the right-most bit of Events1
+    for (int i = 0; i < 8; i++){
+        if (Events1 & 0x01){
+            // rightmost bit is 1
+        }
+        Events1 = Events1  >> 1; 
+    }
+
+    // Test the right-most bit of Events2
+    for (int i = 0; i < 8; i++){
+        if (Events2 & 0x01){
+            // rightmost bit is 1
+        }
+        Events2 = Events2 >> 1; 
+    }
+
+    // Test the right-most bit of Events3
+    for (int i = 0; i < 8; i++){
+        if (Events3 & 0x01){
+            // rightmost bit is 1
+        }
+        Events3 = Events3 >> 1; 
+    }
+
+    // Read the flaot values 
     float alt = digitalRead(RX); 
     float lat = digitalRead(RX); 
     float longi = digitalRead(RX); 
@@ -74,17 +145,7 @@ void SerialRead::readPack(){
     serialValues["mag_x"] = magx; 
     serialValues["mag_y"] = magy; 
     serialValues["mag_z"] = magz; 
+    serialValues["timestamp"] = timestamp; 
     
 }
 
-float bytesToFloat(std::byte b0, std::byte b1, std::byte b2, std::byte b3)
-{
-    float output;
-
-    *((std::byte*)(&output) + 3) = b0;
-    *((std::byte*)(&output) + 2) = b1;
-    *((std::byte*)(&output) + 1) = b2;
-    *((std::byte*)(&output) + 0) = b3;
-
-    return output;
-}

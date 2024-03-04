@@ -20,11 +20,6 @@ typedef enum WorkingState {WORKING, FAILURE} WorkingState;
 typedef enum FlightMode {StartupMode, StandbyMode, AscentMode,DrogueDeployedMode, MainDeployedMode,FaultMode} FlightMode; 
 
 /**
- * Converts 4 unsigned char bytes to a float value 
-*/
-float bytesToFloat(std::byte b0, std::byte b1, std::byte b2, std::byte b3); 
-
-/**
  * The Class that stores the static member function that will read serial data, and then
  * u pdate the serialValues map with said data for the GUI's components to draw accurately. 
 */
