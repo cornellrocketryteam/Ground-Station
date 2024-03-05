@@ -1,10 +1,18 @@
 #include "dataprocessing.h"
-#include <wiringPi.h>
+#include <iostream>
+#include <fstream>
 
 #define RX 0
 #define TX 1
 
+#define APPLE 
+#ifndef APPLE 
+#include <wiringPi.h>
+
 std::unordered_map<std::string, float> SerialRead::serialValues;
+
+// The file which we will write Data to 
+std::fstream writeFile("data/flightData.txt", std::ios::out); 
 
 // Initialize all sensors to working 
 WorkingState AltimeterState = WORKING;
@@ -76,12 +84,12 @@ void SerialRead::readPack(){
     for (int i = 0; i < 8; i++){
         if (Events1 & 0x01){
             switch(i){
-                case 0: IMUState = FAILURE; 
-                case 1: IMUState = FAILURE; 
-                case 2: IMUState = FAILURE; 
-                case 3: AltimeterState = FAILURE; 
-                case 4: AltimeterState = FAILURE; 
-                case 5: AltimeterState = FAILURE; 
+                case 0: //IMUState = FAILURE; 
+                case 1: //IMUState = FAILURE; 
+                case 2: //IMUState = FAILURE; 
+                case 3: //AltimeterState = FAILURE; 
+                case 4: //AltimeterState = FAILURE; 
+                case 5: //AltimeterState = FAILURE; 
                 case 6: // When altitude is armed 
                 case 7: // When key is armed 
             }
@@ -93,14 +101,14 @@ void SerialRead::readPack(){
     for (int i = 0; i < 8; i++){
         if (Events2 & 0x01){
             switch(i){
-                case 0: SDCardState = FAILURE; 
-                case 1: SDCardState = FAILURE; 
-                case 2: TemperatureState = FAILURE; 
-                case 3: TemperatureState = FAILURE; 
-                case 4: TemperatureState = FAILURE; 
-                case 5: AccelerometerState = FAILURE;
-                case 6: AccelerometerState = FAILURE; 
-                case 7: AccelerometerState = FAILURE;
+                case 0: //SDCardState = FAILURE; 
+                case 1: //SDCardState = FAILURE; 
+                case 2: //TemperatureState = FAILURE; 
+                case 3: //TemperatureState = FAILURE; 
+                case 4: //TemperatureState = FAILURE; 
+                case 5: //AccelerometerState = FAILURE;
+                case 6: //AccelerometerState = FAILURE; 
+                case 7: //AccelerometerState = FAILURE;
             }
         }
         Events2 = Events2 >> 1; 
@@ -111,8 +119,8 @@ void SerialRead::readPack(){
         if (Events3 & 0x01){
             switch(i){
                 // 0 through 5 are unimportant 
-                case 6: RadioState = FAILURE; 
-                case 7: RadioState = FAILURE; 
+                case 6: //RadioState = FAILURE; 
+                case 7: //RadioState = FAILURE; 
             }
         }
         Events3 = Events3 >> 1; 
@@ -149,4 +157,4 @@ void SerialRead::readPack(){
     serialValues["timestamp"] = timestamp; 
     
 }
-
+#endif

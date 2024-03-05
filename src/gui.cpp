@@ -1,9 +1,12 @@
 #include "gui.h"
+#include "dataprocessing.h"
 
 #include "raylib.h"
 
 void GUI::draw(int posX, int posY, int width, int height)
 {
+    //SerialRead::readPack(); 
+
     // GPS
     // DrawRectangle(posX + 0.04*width, posY + 0.04*height, 0.35*width, 0.3*height, GRAY);
     gps.draw(posX + 0.04*width, posY + 0.04*height, 0.35*width, 0.3*height);
