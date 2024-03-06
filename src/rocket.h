@@ -17,7 +17,7 @@ public:
     /**
      * moves the Rocket based on data
     */
-    void moveRocket();
+    void processEvents();
 
     /**
      * Returns a string of the Rocket's elevation in the format "Elevation: x"
@@ -37,10 +37,6 @@ public:
      * Returns if the display is enlarged 
     */
     bool isEnlarged(); 
-    /**
-     * Toggles the enlarged field when a click is registered
-    */
-    void clickToggle(); 
 
 private:
     // the 3D camera

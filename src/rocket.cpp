@@ -50,8 +50,6 @@ Rocket::~Rocket()
 */
 void Rocket::draw(int posX, int posY, int width, int height)
 {
-    moveRocket();
-    
     BeginScissorMode(posX, posY, width, height);
         BeginMode3D(camera);
 
@@ -59,8 +57,6 @@ void Rocket::draw(int posX, int posY, int width, int height)
             drawnY = posY; 
             drawnWidth = width; 
             drawnHeight = height; 
-
-            clickToggle(); 
 
             // rotates the rocket.
             rocketModel.transform = MatrixRotateXYZ({ DEG2RAD*xRotation, DEG2RAD*yRotation, DEG2RAD*zRotation });
@@ -88,7 +84,6 @@ void Rocket::draw(int posX, int posY, int width, int height)
 
             //Draw the path of the rocket
             drawRocketPath();
-
         EndMode3D();
     EndScissorMode();
 }
@@ -113,7 +108,7 @@ void Rocket::drawRocketPath()
  * Movement functions for the rocket
 */
 
-void Rocket::moveRocket()
+void Rocket::processEvents()
 {
     if (IsKeyDown(KEY_UP)){
         rocketPosition.y += 1; 
@@ -127,7 +122,23 @@ void Rocket::moveRocket()
         yRotation += 1; 
     } else if (IsKeyDown(KEY_SPACE)){
         zRotation += 1; 
-    } 
+    }
+
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+        float mouseX = GetMousePosition().x;
+        float mouseY = GetMousePosition().y;
+
+        // Make sure the mouse click is in bounds
+        if (mouseX >= drawnX && mouseX <= drawnX + drawnWidth && mouseY >= drawnY && mouseY <= drawnY + drawnHeight){
+            if (isEnlarged()){
+                enlarged = false;
+            } else {
+                enlarged = true;
+            }
+            // Wait to stop constant key press
+            WaitTime(0.1);
+        }
+    }
 }
 
 /**
@@ -145,22 +156,4 @@ void Rocket::displayRocketTexts()
 
 bool Rocket::isEnlarged(){
     return enlarged; 
-}
-
-void Rocket::clickToggle(){
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
-        float mouseX = GetMousePosition().x; 
-        float mouseY = GetMousePosition().y; 
-
-        // Make sure the mouse click is in bounds 
-        if (mouseX >= drawnX && mouseX <= drawnX + drawnWidth && mouseY >= drawnY && mouseY <= drawnY + drawnHeight){
-            if (isEnlarged()){
-                enlarged = false;
-            } else {
-                enlarged = true; 
-            }
-            // Wait to stop constant key press
-            WaitTime(0.1); 
-        }
-    }
 }

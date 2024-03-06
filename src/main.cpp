@@ -17,6 +17,8 @@ int main()
 
     while (!WindowShouldClose())
     {
+        gui.processEvents();
+
         BeginDrawing();
         ClearBackground({56, 55, 52});
 

@@ -3,6 +3,10 @@
 
 #include "raylib.h"
 
+void GUI::processEvents() {
+    rocket.processEvents();
+}
+
 void GUI::draw(int posX, int posY, int width, int height)
 {
     //SerialRead::readPack(); 
