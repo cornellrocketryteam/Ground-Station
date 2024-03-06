@@ -1,5 +1,6 @@
 #pragma once
 
+#include <deque>
 #include <iostream>
 #include <map> 
 #include <unordered_map>
@@ -39,10 +40,16 @@ class SerialRead {
         */
         static std::unordered_map<std::string, float> serialValues;
         /**
-         * Will read the package received from RATS to be the [package] member 
-         * via reading serial data  
+         * Read the package received from RATS 
+         * via WiringPi and updates the serialValues map. Also adds to the elevationQueue.  
         */
         static void readPack();  
+
+        /**
+         * FIFO queue to store the elevation with respsect to time. 
+         * 5 minutes of data will be stored, with 60 seconds of elevation for each minute. 
+        */
+       static std::deque<float> elevationQueue; 
 
 }; 
 

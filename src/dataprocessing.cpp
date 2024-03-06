@@ -7,6 +7,7 @@
 
 std::unordered_map<std::string, float> SerialRead::serialValues;
 
+std::deque<float> SerialRead::elevationQueue; 
 
 #define APPLE 
 #ifndef APPLE 
@@ -157,6 +158,15 @@ void SerialRead::readPack(){
     serialValues["mag_y"] = magy; 
     serialValues["mag_z"] = magz; 
     serialValues["timestamp"] = timestamp; 
+
+    // If the queue does not yet have 300 elements, then do not remove anything 
+    if (elevationQueue.size() < 300){
+        elevationQueue.push_back(timestamp); 
+    } else {
+    // Once 300 elements have been reached, begin to take off oldest element and add newest element 
+        elevationQueue.pop_front(); 
+        elevationQueue.push_back(timestamp); 
+    }
     
 }
 #endif
