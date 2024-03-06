@@ -1,5 +1,5 @@
 #include "datagrid.h"
-
+#include <math.h>
 #include "raylib.h"
 
 /**

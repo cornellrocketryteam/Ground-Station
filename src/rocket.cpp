@@ -27,13 +27,13 @@ Rocket::Rocket() {
     std::cout << "WORKING DIRECTORY = " << GetWorkingDirectory() << std::endl;
 
     //loadTerrain();
-    terrainModel = LoadModel("GroundStation2.0/img/desert.obj");
-    terrainTexture = LoadTexture("GroundStation2.0/img/as_ao.png");
+    terrainModel = LoadModel("img/desert.obj");
+    terrainTexture = LoadTexture("img/as_ao.png");
     terrainModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = terrainTexture;
 
     //loadRocket();
-    rocketModel = LoadModel("GroundStation2.0/img/rocketModel.obj");
-    rocketTexture = LoadTexture("GroundStation2.0/img/rocket.png");
+    rocketModel = LoadModel("img/rocketModel.obj");
+    rocketTexture = LoadTexture("img/rocket.png");
     rocketModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = rocketTexture;
 }
 

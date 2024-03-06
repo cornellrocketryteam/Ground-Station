@@ -1,5 +1,5 @@
 #include "graph.h"
-
+#include <math.h>
 #include <string>
 
 constexpr int lowerGraphYBound = 0;
