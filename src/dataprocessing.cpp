@@ -5,11 +5,13 @@
 #define RX 0
 #define TX 1
 
+std::unordered_map<std::string, float> SerialRead::serialValues;
+
+
 #define APPLE 
 #ifndef APPLE 
 #include <wiringPi.h>
 
-std::unordered_map<std::string, float> SerialRead::serialValues;
 
 // The file which we will write Data to 
 std::fstream writeFile("data/flightData.txt", std::ios::out); 

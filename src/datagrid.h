@@ -1,5 +1,5 @@
 #pragma once
-
+#include "dataprocessing.h"
 #include <vector>
 #include <string>
 
@@ -18,6 +18,10 @@ public:
      * Gets the value
     */
     float getValue();
+    /**
+     * Sets the Value 
+    */
+    void setValue(float val); 
 
 private:
     std::string title;
@@ -36,7 +40,10 @@ public:
      * Draws the current bar and all of its StatusLights in the statusLights vector
     */
     void draw(int posX, int posY, int width, int height);
-
+    /**
+     * Updates all of the values with the Serial Map
+    */
+    void updateValues();
 private:
     /**
      * Vector to store the status lights
