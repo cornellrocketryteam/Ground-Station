@@ -48,11 +48,11 @@ void Graph::draw(int posX, int posY, int width, int height)
     float stepLength = (width - offsetFromLeft) / 300.0; 
 
     // change loop guard to (300 - track >= 0)
-    while (SerialRead::elevationQueue.size() - track >= 0){
-        DrawCircle((posX + width) - track*stepLength, graphYToScreenY(posY,height,SerialRead::elevationQueue.at(SerialRead::elevationQueue.size()-track)), 0.1, RED); 
+    while (300 - track >= 0){
+        //DrawCircle((posX + width) - track*stepLength, graphYToScreenY(posY,height,SerialRead::elevationQueue.at(SerialRead::elevationQueue.size()-track)), 0.1, RED); 
         
         // Random circle tester 
-        // DrawCircle((posX + width) - track*stepLength, graphYToScreenY(posY, height, rand() % 12000),1,RED);
+        DrawCircle((posX + width) - track*stepLength, graphYToScreenY(posY, height, rand() % 12000),1,RED);
         track += 1; 
     }
 
