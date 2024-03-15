@@ -15,5 +15,6 @@ The Ground Station GUI used to display rocket data and telemetry.
 
 1. Run ```git clone --recursive git@github.com:cornellrocketryteam/Ground-Station.git```
 2. Run ```cmake -B build && cmake --build build```
-3. Run the executable by running ```./build/GroundStation```
+3. ```cmake .. -DGRAPHICS=GRAPHICS_API_OPENGL_21```
+4. Run the executable by running ```./build/GroundStation```
 
