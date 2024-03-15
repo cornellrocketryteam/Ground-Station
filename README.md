@@ -10,6 +10,7 @@ The Ground Station GUI used to display rocket data and telemetry.
 
 - git
 - cmake
+<br>
  On the PI:
 - ```sudo apt install libwayland-dev```
 - ```sudo apt install libxkbcommon-x11-dev```
