@@ -54,7 +54,7 @@ void SerialRead::readPack(){
     fprintf (stderr, "Unable to open serial device: %s\n", strerror (errno)) ;
     }
 
-    if (wiringPiSetup () == -1)					/* initializes wiringPi setup */
+if (wiringPiSetup () == -1)					/* initializes wiringPi setup */
     {
     fprintf (stdout, "Unable to start wiringPi: %s\n", strerror (errno)) ;
     }
@@ -64,11 +64,11 @@ void SerialRead::readPack(){
         for (int i = 1; i <= 8; i++){
             if (preAmble1 & 0x01){
                 switch(i) {
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
+                    case 1: //Altitude Armed
+                    case 2: // GPS is Valid
+                    case 3: SDCardState = WORKING; // SD Card State
+                    case 4: 
+                    case 5: 
                     case 6:
                     case 7:
                     case 8:
@@ -149,16 +149,32 @@ void SerialRead::readPack(){
         float alt = bytesToFloat();
         float lat = bytesToFloat();
         float longi = bytesToFloat();
-        float elev = bytesToFloat();
+
+        float satInView = bytesToFloat(); 
+
+        //float elev = bytesToFloat();
+
         float accelx = bytesToFloat();
         float accely = bytesToFloat();
         float accelz = bytesToFloat();
+
         float gyrox = bytesToFloat();
         float gyroy = bytesToFloat();
         float gyroz = bytesToFloat();
+
+        float accelXIMU = bytesToFloat(); 
+        float accelYIMU = bytesToFloat(); 
+        float accelZIMU = bytesToFloat(); 
+
+        float oriX = bytesToFloat(); 
+        float oriY = bytesToFloat(); 
+        float oriZ = bytesToFloat(); 
+
         float magx = bytesToFloat();
         float magy = bytesToFloat();
         float magz = bytesToFloat();
+
+        float temp = bytesToFloat(); 
 
         SerialRead::serialValues["longitude"] = longi; 
         SerialRead::serialValues["latitude"] = lat; 
