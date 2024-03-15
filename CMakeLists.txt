@@ -11,9 +11,9 @@ set(CMAKE_CXX_STANDARD 17)
 add_subdirectory(lib/raylib)
 
 if (NOT APPLE)
-    file(GLOB WIRING_PI_SRC lib/WiringPi.src/*.c)
+    file(GLOB WIRING_PI_SRC lib/WiringPi/wiringPi/*.c)
     add_library(WiringPi SHARED ${WIRING_PI_SRC})
-    target_include_directories(WiringPi PUBLIC lib/WiringPi/src)
+    target_include_directories(WiringPi PUBLIC lib/WiringPi/wiringPi)
 endif()
 
 # Create the executable

@@ -64,14 +64,14 @@ if (wiringPiSetup () == -1)					/* initializes wiringPi setup */
         for (int i = 1; i <= 8; i++){
             if (preAmble1 & 0x01){
                 switch(i) {
-                    case 1: //Altitude Armed
-                    case 2: // GPS is Valid
-                    case 3: SDCardState = WORKING; // SD Card State
-                    case 4: 
-                    case 5: 
-                    case 6:
-                    case 7:
-                    case 8:
+                    // case 1: //Altitude Armed
+                    // case 2: // GPS is Valid
+                    // case 3: SDCardState = WORKING; // SD Card State
+                    // case 4: 
+                    // case 5: 
+                    // case 6:
+                    // case 7:
+                    // case 8:
                 }
             }
             preAmble1 >> 1; 
@@ -81,14 +81,14 @@ if (wiringPiSetup () == -1)					/* initializes wiringPi setup */
         for (int i = 1; i <= 8; i++){
             if (preAmble2 & 0x01){
                 switch(i) {
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                    case 6: SDCardState = FAILURE; 
-                    case 7: 
-                    case 8:
+                    // case 1:
+                    // case 2:
+                    // case 3:
+                    // case 4:
+                    // case 5:
+                    // case 6: SDCardState = FAILURE; 
+                    // case 7: 
+                    // case 8:
                 }
             }
             preAmble2 >> 1; 
@@ -100,14 +100,14 @@ if (wiringPiSetup () == -1)					/* initializes wiringPi setup */
         for (int i = 1; i <= 8; i++){
             if (events1 & 0x01){
                 switch(i) {
-                    case 1:
-                    case 2:
-                    case 3:AltimeterState = FAILURE; 
-                    case 4:AltimeterState = FAILURE; 
-                    case 5:AltimeterState = FAILURE; 
-                    case 6:IMUState = FAILURE;
-                    case 7:IMUState = FAILURE; 
-                    case 8:IMUState = FAILURE; 
+                    // case 1:
+                    // case 2:
+                    // case 3:AltimeterState = FAILURE; 
+                    // case 4:AltimeterState = FAILURE; 
+                    // case 5:AltimeterState = FAILURE; 
+                    // case 6:IMUState = FAILURE;
+                    // case 7:IMUState = FAILURE; 
+                    // case 8:IMUState = FAILURE; 
                 }
             }
             events1 >> 1; 
@@ -117,13 +117,13 @@ if (wiringPiSetup () == -1)					/* initializes wiringPi setup */
         for (int i = 1; i <= 8; i++){
             if (events2 & 0x01){
                 switch(i) {
-                    case 1:AccelerometerState = FAILURE; 
-                    case 2:AccelerometerState = FAILURE; 
-                    case 3:AccelerometerState = FAILURE; 
-                    case 4:TemperatureState = FAILURE;
-                    case 6:TemperatureState = FAILURE;
-                    case 7:TemperatureState = FAILURE;
-                    case 8:SDCardState = FAILURE; 
+                    // case 1:AccelerometerState = FAILURE; 
+                    // case 2:AccelerometerState = FAILURE; 
+                    // case 3:AccelerometerState = FAILURE; 
+                    // case 4:TemperatureState = FAILURE;
+                    // case 6:TemperatureState = FAILURE;
+                    // case 7:TemperatureState = FAILURE;
+                    // case 8:SDCardState = FAILURE; 
                 }
             }
             events2 >> 1; 
@@ -133,14 +133,14 @@ if (wiringPiSetup () == -1)					/* initializes wiringPi setup */
         for (int i = 1; i <= 8; i++){
             if (events3 & 0x01){
                 switch(i) {
-                    case 1:SDCardState = FAILURE;
-                    case 2:RadioState = FAILURE;
-                    case 3:RadioState = FAILURE; 
-                    case 4:
-                    case 5:
-                    case 6:
-                    case 7:
-                    case 8:
+                    // case 1:SDCardState = FAILURE;
+                    // case 2:RadioState = FAILURE;
+                    // case 3:RadioState = FAILURE; 
+                    // case 4:
+                    // case 5:
+                    // case 6:
+                    // case 7:
+                    // case 8:
                 }
             }
             events3 >> 1; 

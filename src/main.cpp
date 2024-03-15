@@ -13,6 +13,7 @@ int main()
     InitWindow(1600, 1000, "Ground Station");
     SetTargetFPS(60);
 
+    GUI gui; 
 
     while (!WindowShouldClose())
     {
