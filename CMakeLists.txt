@@ -11,9 +11,9 @@ set(CMAKE_CXX_STANDARD 17)
 add_subdirectory(lib/raylib)
 
 if (NOT APPLE)
-    file(GLOB WIRING_PI_SRC lib/WiringPi/wiringPi/*.c)
-    add_library(WiringPi SHARED ${WIRING_PI_SRC})
-    target_include_directories(WiringPi PUBLIC lib/WiringPi/wiringPi)
+    file(GLOB PIGPIO_SRC lib/pigpio/*.c)
+    add_library(PiGPIO SHARED ${PIGPIO_SRC})
+    target_include_directories(PiGPIO PUBLIC lib/pigpio)
 endif()
 
 # Create the executable
@@ -29,7 +29,7 @@ add_executable(${PROJECT_NAME} src/main.cpp
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
 if (NOT APPLE)
-    target_link_libraries(${PROJECT_NAME} raylib WiringPi)
+    target_link_libraries(${PROJECT_NAME} raylib PiGPIO)
 else()
     target_link_libraries(${PROJECT_NAME} raylib)
 endif() 

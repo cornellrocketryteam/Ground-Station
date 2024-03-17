@@ -15,6 +15,9 @@ The Ground Station GUI used to display rocket data and telemetry.
   ```sudo apt install libwayland-dev```
   ```sudo apt install libxkbcommon-x11-dev```
 
+<br> 
+Make sure to git clone wiringPi and raylib on the Pi
+
 ## Compiling
 
 1. Run ```git clone --recursive git@github.com:cornellrocketryteam/Ground-Station.git```

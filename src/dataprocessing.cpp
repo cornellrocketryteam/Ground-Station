@@ -19,13 +19,12 @@ FlightMode FlightState = StartupMode;
 #define APPLE
 #ifndef APPLE
 
-#include <wiringPi.h>
-#include <wiringSerial.h>
+#include <pigpio.h> 
 
 typedef unsigned char uchar;
 
-int serial_port ; /* Serial port to read from */
-char data; /* The data that we will read */
+int serialPort = serOpen ("/dev/ttyS0", 9600,0); 
+char* data; /* The data that we will read */
 
 /*
 Reads 4 unsigned characters from the serial port, and then converts those bytes 
@@ -35,10 +34,10 @@ float bytesToFloat()
 {
     float output;
 
-    uchar b0 = serialGetchar (serial_port);
-    uchar b1 = serialGetchar (serial_port);
-    uchar b2 = serialGetchar (serial_port);
-    uchar b3 = serialGetchar (serial_port);
+    uchar b0 = serRead (serialPort,data,1);
+    uchar b1 = serRead (serialPort,data,1);
+    uchar b2 = serRead (serialPort,data,1);
+    uchar b3 = serRead (serialPort,data,1);
 
     *((uchar*)(&output) + 3) = b0;
     *((uchar*)(&output) + 2) = b1;
@@ -49,18 +48,14 @@ float bytesToFloat()
 }
 
 void SerialRead::readPack(){
-    if ((serial_port = serialOpen ("/dev/ttyS0", 9600)) < 0)	/* open serial port */
-    {
-    fprintf (stderr, "Unable to open serial device: %s\n", strerror (errno)) ;
-    }
 
-if (wiringPiSetup () == -1)					/* initializes wiringPi setup */
+    if (serialPort< 0)	/* open serial port */
     {
-    fprintf (stdout, "Unable to start wiringPi: %s\n", strerror (errno)) ;
+    printf ("Unable to open serial device") ;
     }
-
-    if(serialDataAvail (serial_port) ){          
-        u_char preAmble1 = serialGetchar (serial_port);	
+    
+    if(serDataAvailable (serialPort) ){          
+        u_char preAmble1 = serRead (serialPort,data,1);
         for (int i = 1; i <= 8; i++){
             if (preAmble1 & 0x01){
                 switch(i) {
@@ -77,7 +72,7 @@ if (wiringPiSetup () == -1)					/* initializes wiringPi setup */
             preAmble1 >> 1; 
         }
 
-        u_char preAmble2 = serialGetchar (serial_port);
+        u_char preAmble2 = serRead (serialPort,data,1);
         for (int i = 1; i <= 8; i++){
             if (preAmble2 & 0x01){
                 switch(i) {
@@ -96,7 +91,7 @@ if (wiringPiSetup () == -1)					/* initializes wiringPi setup */
 
         float timestamp = bytesToFloat(); 
 
-        u_char events1  = serialGetchar (serial_port);
+        u_char events1  = serRead (serialPort,data,1);
         for (int i = 1; i <= 8; i++){
             if (events1 & 0x01){
                 switch(i) {
@@ -113,7 +108,7 @@ if (wiringPiSetup () == -1)					/* initializes wiringPi setup */
             events1 >> 1; 
         }
 
-        u_char events2  = serialGetchar (serial_port);	
+        u_char events2  = serRead (serialPort,data,1);
         for (int i = 1; i <= 8; i++){
             if (events2 & 0x01){
                 switch(i) {
@@ -129,7 +124,7 @@ if (wiringPiSetup () == -1)					/* initializes wiringPi setup */
             events2 >> 1; 
         }
 
-        u_char events3  = serialGetchar (serial_port);	
+        u_char events3  = serRead (serialPort,data,1);
         for (int i = 1; i <= 8; i++){
             if (events3 & 0x01){
                 switch(i) {
@@ -179,7 +174,6 @@ if (wiringPiSetup () == -1)					/* initializes wiringPi setup */
         SerialRead::serialValues["longitude"] = longi; 
         SerialRead::serialValues["latitude"] = lat; 
         SerialRead::serialValues["altitude"] = alt; 
-        SerialRead::serialValues["elevation"] = elev; 
         SerialRead::serialValues["gyro_x"] = gyrox; 
         SerialRead::serialValues["gyro_y"] = gyroy; 
         SerialRead::serialValues["gyro_z"] = gyroz; 
