@@ -4,14 +4,17 @@ project(GroundStation)
 message(PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
 
 # Set C/C++ standards
-set(CMAKE_C_STANDARD 17)
+#set(CMAKE_C_STANDARD 17)
 set(CMAKE_CXX_STANDARD 17)
 
 # Build raylib
 add_subdirectory(lib/raylib)
 
 if (NOT APPLE)
-    file(GLOB PIGPIO_SRC lib/pigpio/*.c)
+    #file(GLOB PIGPIO_SRC lib/pigpio/*.c)
+    set(PIGPIO_SRC lib/pigpio/pigpio.c 
+    lib/pigpio/command.c
+    lig/pigpio/pigpiod.c) 
     add_library(PiGPIO SHARED ${PIGPIO_SRC})
     target_include_directories(PiGPIO PUBLIC lib/pigpio)
 endif()

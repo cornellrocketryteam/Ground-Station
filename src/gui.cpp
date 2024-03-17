@@ -9,7 +9,7 @@ void GUI::processEvents() {
 
 void GUI::draw(int posX, int posY, int width, int height)
 {
-    //SerialRead::readPack(); 
+    SerialRead::readPack(); 
 
     // GPS
     // DrawRectangle(posX + 0.04*width, posY + 0.04*height, 0.35*width, 0.3*height, GRAY);

@@ -17,11 +17,10 @@ The Ground Station GUI used to display rocket data and telemetry.
 
 <br> 
 Make sure to git clone wiringPi and raylib on the Pi
-
+<br> The serial port on the RPI4 that the Pico uses is /dev/ttyACM0
 ## Compiling
 
-1. Run ```git clone --recursive git@github.com:cornellrocketryteam/Ground-Station.git```
-2. Run ```cmake -B build && cmake --build build```
-3. ```cmake .. -DGRAPHICS=GRAPHICS_API_OPENGL_21```
-4. Run the executable by running ```./build/GroundStation```
+1. Run ```git clone --recursive git@github.com:cornellrocketryteam/Ground-Station.git``` in the lib folder, and git clone pigpio 
+2. Run ```cmake .. -DGRAPHICS=GRAPHICS_API_OPENGL_21``` in the build folder, then ```make -j4 ``` 
+3. Run the executable by running ```./build/GroundStation```
 

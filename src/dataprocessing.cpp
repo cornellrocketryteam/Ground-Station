@@ -21,11 +21,15 @@ FlightMode FlightState = StartupMode;
 
 #include <pigpio.h> 
 
+#endif 
+
 typedef unsigned char uchar;
 
-int serialPort = serOpen ("/dev/ttyS0", 9600,0); 
+int serialPort; 
 char* data; /* The data that we will read */
 
+
+#ifndef APPLE 
 /*
 Reads 4 unsigned characters from the serial port, and then converts those bytes 
 into a float. 
@@ -46,8 +50,11 @@ float bytesToFloat()
 
     return output;
 }
+#endif
 
 void SerialRead::readPack(){
+    #ifndef APPLE 
+    serialPort =  serOpen ("/dev/ttyS0", 9600,0); 
 
     if (serialPort< 0)	/* open serial port */
     {
@@ -185,6 +192,8 @@ void SerialRead::readPack(){
         SerialRead::serialValues["mag_z"] = magz;
         SerialRead::serialValues["timestamp"] = timestamp; 
     }
+    serClose(serialPort); 
+    #endif 
 }
 
-#endif 
+
