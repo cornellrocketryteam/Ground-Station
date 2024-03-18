@@ -54,7 +54,7 @@ float bytesToFloat()
 
 void SerialRead::readPack(){
     #ifndef APPLE 
-    serialPort =  serOpen ("/dev/ttyS0", 9600,0); 
+    serialPort =  serOpen ("/dev/ACM0", 9600,0); 
 
     if (serialPort< 0)	/* open serial port */
     {

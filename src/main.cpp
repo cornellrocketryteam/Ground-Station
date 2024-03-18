@@ -48,6 +48,9 @@ int main()
     }
 
     CloseWindow();
+    #ifndef TEST 
+        gpioTerminate();
+    #endif 
 
     return 0;
 }
