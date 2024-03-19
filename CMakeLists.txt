@@ -11,10 +11,9 @@ set(CMAKE_CXX_STANDARD 17)
 add_subdirectory(lib/raylib)
 
 if (NOT APPLE)
-    #file(GLOB PIGPIO_SRC lib/pigpio/*.c)
     set(PIGPIO_SRC lib/pigpio/pigpio.c 
     lib/pigpio/command.c
-    lig/pigpio/pigpiod.c) 
+    lib/pigpio/pigpiod.c) 
     add_library(PiGPIO SHARED ${PIGPIO_SRC})
     target_include_directories(PiGPIO PUBLIC lib/pigpio)
 endif()
@@ -27,7 +26,8 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/graph.cpp
         src/rocket.cpp
         src/gps.cpp
-        src/dataprocessing.cpp)
+        src/dataprocessing.cpp
+        src/sfr.cpp)
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
