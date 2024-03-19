@@ -32,3 +32,7 @@ void GUI::draw(int posX, int posY, int width, int height)
         rocket.draw(posX , posY , width, height);
     }
 }
+
+GUI::~GUI(){
+    sfr::cleaner();
+}
