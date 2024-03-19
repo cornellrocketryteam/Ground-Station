@@ -55,15 +55,18 @@ float SerialRead::bytesToFloat()
 
 void SerialRead::readPack(){ 
     if(serDataAvailable (serialPort) ){          
-        char preamble1[1]; 
-        char preamble2[1];
+        char preamble[2];
+
         char events1[1];
         char events2[1];
         char events3[1]; 
         
-        serRead(serialPort,preamble1,1); 
+        serRead(serialPort,preamble,2); 
+
+        u_int8_t sumOfFlightStatus; 
+
         for (int i = 0; i < 8; i++){
-            if (0x01 & preamble1[0]){
+            if (0x01 & preamble[0]){
                 switch(i){
                     case 0: AltimeterState = WORKING; 
                     case 1: GpsState = WORKING; 
@@ -74,15 +77,12 @@ void SerialRead::readPack(){
                     case 6: AccelerometerState = FAILURE;
                     case 7: IMUState = WORKING; 
                 }
-                preamble1[0] >> 1; 
+                preamble[0] >> 1; 
             }
         }
-
-        serRead(serialPort,preamble2,1); 
         u_int8_t sumOfFlightStatus; 
-
         for (int i = 8; i < 16; i++){
-            if (0x01 & preamble2[0]){
+            if (0x01 & preamble[1]){
                 switch(i){
                     case 8: IMUState = FAILURE; 
                     case 9: GpsState = WORKING; 
@@ -93,7 +93,7 @@ void SerialRead::readPack(){
                     case 14: sumOfFlightStatus += 2; 
                     case 15: sumOfFlightStatus += 1; 
                 }
-                preamble2[0] >> 1; 
+                preamble[1] >> 1; 
             }
         }
         /*Process the bytes for flight status */
