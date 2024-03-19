@@ -2,198 +2,166 @@
 #include <iostream>
 #include <fstream>
 
-std::unordered_map<std::string, float> SerialRead::serialValues;
 
-std::deque<float> SerialRead::elevationQueue; 
-
-WorkingState AltimeterState = WORKING; 
-WorkingState GpsState = WORKING; 
-WorkingState IMUState = WORKING; 
-WorkingState SDCardState = WORKING; 
-WorkingState AccelerometerState = WORKING;
-WorkingState TemperatureState = WORKING;
-WorkingState RadioState = WORKING; 
-
-FlightMode FlightState = StartupMode;
-
-#define APPLE
+//#define APPLE
 #ifndef APPLE
-
 #include <pigpio.h> 
 
-#endif 
+SerialRead::SerialRead(){
+    if (gpioInitialise() < 0){
+            printf("Pigpio not initialized."); 
+    } else {
+            printf("Pigpio succesffuly initialized.");
+    }
+    
+    serialPort = serOpen("/dev/ttyACM0",9600,0); 
 
-typedef unsigned char uchar;
+    AltimeterState = FAILURE; 
+    GpsState = FAILURE; 
+    IMUState = FAILURE;  
+    SDCardState = FAILURE; 
+    AccelerometerState = FAILURE; 
+    TemperatureState = FAILURE; 
+    RadioState = FAILURE;  
+    FlightState = StartupMode; 
+}
 
-int serialPort; 
-char* data; /* The data that we will read */
+SerialRead::~SerialRead(){
+    serClose(serialPort); 
 
+    gpioTerminate();
+}
 
-#ifndef APPLE 
-/*
-Reads 4 unsigned characters from the serial port, and then converts those bytes 
-into a float. 
-*/
-float bytesToFloat()
+float SerialRead::getValue(std::string name){
+    return serialValues[name]; 
+}
+
+float SerialRead::bytesToFloat()
 {
     float output;
+    char* data; 
+    serRead(serialPort,data,4); 
 
-    uchar b0 = serRead (serialPort,data,1);
-    uchar b1 = serRead (serialPort,data,1);
-    uchar b2 = serRead (serialPort,data,1);
-    uchar b3 = serRead (serialPort,data,1);
-
-    *((uchar*)(&output) + 3) = b0;
-    *((uchar*)(&output) + 2) = b1;
-    *((uchar*)(&output) + 1) = b2;
-    *((uchar*)(&output) + 0) = b3;
+    output = atof(data); 
 
     return output;
 }
-#endif
 
-void SerialRead::readPack(){
-    #ifndef APPLE 
-    serialPort =  serOpen ("/dev/ACM0", 9600,0); 
+void SerialRead::readPack(){ 
 
-    if (serialPort< 0)	/* open serial port */
-    {
-    printf ("Unable to open serial device") ;
+    if (serialPort< 0) { /* open serial port */
+        printf ("Unable to open serial device") ;
+    } else {
+        printf("Opened serial port"); 
     }
-    
-    if(serDataAvailable (serialPort) ){          
-        u_char preAmble1 = serRead (serialPort,data,1);
-        for (int i = 1; i <= 8; i++){
-            if (preAmble1 & 0x01){
-                switch(i) {
-                    // case 1: //Altitude Armed
-                    // case 2: // GPS is Valid
-                    // case 3: SDCardState = WORKING; // SD Card State
-                    // case 4: 
-                    // case 5: 
-                    // case 6:
-                    // case 7:
-                    // case 8:
+
+    while(1) {
+        if(serDataAvailable (serialPort) ){          
+            char* preamble1; 
+            char* preamble2;
+            char* events1;
+            char* events2;
+            char* events3; 
+            
+            serRead(serialPort,preamble1,1); 
+            for (int i = 0; i < 8; i++){
+                if (0x01 & *preamble1){
+                    switch(i){
+                        case 0: AltimeterState = WORKING; 
+                        case 1: GpsState = WORKING; 
+                        case 2: SDCardState = WORKING; 
+                        case 3: TemperatureState = WORKING; 
+                        case 4: TemperatureState = FAILURE; 
+                        case 5: AccelerometerState = WORKING; 
+                        case 6: AccelerometerState = FAILURE;
+                        case 7: IMUState = WORKING; 
+                    }
+                    *preamble1 >> 1; 
                 }
             }
-            preAmble1 >> 1; 
-        }
 
-        u_char preAmble2 = serRead (serialPort,data,1);
-        for (int i = 1; i <= 8; i++){
-            if (preAmble2 & 0x01){
-                switch(i) {
-                    // case 1:
-                    // case 2:
-                    // case 3:
-                    // case 4:
-                    // case 5:
-                    // case 6: SDCardState = FAILURE; 
-                    // case 7: 
-                    // case 8:
+            serRead(serialPort,preamble2,1); 
+            u_int8_t sumOfFlightStatus; 
+
+            for (int i = 8; i < 16; i++){
+                if (0x01 & *preamble2){
+                    switch(i){
+                        case 8: IMUState = FAILURE; 
+                        case 9: GpsState = WORKING; 
+                        case 10: GpsState = FAILURE; 
+                        case 11: AltimeterState = WORKING; 
+                        case 12: AltimeterState = FAILURE; 
+                        case 13: sumOfFlightStatus += 4;
+                        case 14: sumOfFlightStatus += 2; 
+                        case 15: sumOfFlightStatus += 1; 
+                    }
+                    *preamble2 >> 1; 
                 }
             }
-            preAmble2 >> 1; 
-        }
-
-        float timestamp = bytesToFloat(); 
-
-        u_char events1  = serRead (serialPort,data,1);
-        for (int i = 1; i <= 8; i++){
-            if (events1 & 0x01){
-                switch(i) {
-                    // case 1:
-                    // case 2:
-                    // case 3:AltimeterState = FAILURE; 
-                    // case 4:AltimeterState = FAILURE; 
-                    // case 5:AltimeterState = FAILURE; 
-                    // case 6:IMUState = FAILURE;
-                    // case 7:IMUState = FAILURE; 
-                    // case 8:IMUState = FAILURE; 
-                }
+            /*Process the bytes for flight status */
+            switch(sumOfFlightStatus){
+                case 0: FlightState = StartupMode; 
+                case 1: FlightState = StandbyMode; 
+                case 2: FlightState = AscentMode; 
+                case 3: FlightState = DrogueDeployedMode; 
+                case 4: FlightState = MainDeployedMode; 
+                case 5: FlightState = FaultMode; 
             }
-            events1 >> 1; 
+
+            float timestamp = bytesToFloat(); 
+
+            serRead(serialPort,events1,1); 
+            serRead(serialPort,events2,1); 
+            serRead(serialPort,events3,1); 
+
+            float alt = bytesToFloat();
+            float lat = bytesToFloat();
+            float longi = bytesToFloat();
+
+            float satInView = bytesToFloat(); 
+
+            float accelx = bytesToFloat();
+            float accely = bytesToFloat();
+            float accelz = bytesToFloat();
+
+            float gyrox = bytesToFloat();
+            float gyroy = bytesToFloat();
+            float gyroz = bytesToFloat();
+
+            float accelXIMU = bytesToFloat(); 
+            float accelYIMU = bytesToFloat(); 
+            float accelZIMU = bytesToFloat(); 
+
+            float oriX = bytesToFloat(); 
+            float oriY = bytesToFloat(); 
+            float oriZ = bytesToFloat(); 
+
+            float magx = bytesToFloat();
+            float magy = bytesToFloat();
+            float magz = bytesToFloat();
+
+            float temp = bytesToFloat(); 
+
+            serialValues["longitude"] = longi; 
+            serialValues["latitude"] = lat; 
+            serialValues["altitude"] = alt; 
+            serialValues["gyro_x"] = gyrox; 
+            serialValues["gyro_y"] = gyroy; 
+            serialValues["gyro_z"] = gyroz; 
+            serialValues["accel_x"] = accelx; 
+            serialValues["accel_y"] = accely; 
+            serialValues["accel_z"] = accelz; 
+            serialValues["mag_x"] = magx;
+            serialValues["mag_y"] = magy; 
+            serialValues["mag_z"] = magz;
+            serialValues["timestamp"] = timestamp; 
+
+            break; /*Exit the loop once we have read the serial data */
+        } else {
+            printf("Serial port not available, could not read"); 
         }
-
-        u_char events2  = serRead (serialPort,data,1);
-        for (int i = 1; i <= 8; i++){
-            if (events2 & 0x01){
-                switch(i) {
-                    // case 1:AccelerometerState = FAILURE; 
-                    // case 2:AccelerometerState = FAILURE; 
-                    // case 3:AccelerometerState = FAILURE; 
-                    // case 4:TemperatureState = FAILURE;
-                    // case 6:TemperatureState = FAILURE;
-                    // case 7:TemperatureState = FAILURE;
-                    // case 8:SDCardState = FAILURE; 
-                }
-            }
-            events2 >> 1; 
-        }
-
-        u_char events3  = serRead (serialPort,data,1);
-        for (int i = 1; i <= 8; i++){
-            if (events3 & 0x01){
-                switch(i) {
-                    // case 1:SDCardState = FAILURE;
-                    // case 2:RadioState = FAILURE;
-                    // case 3:RadioState = FAILURE; 
-                    // case 4:
-                    // case 5:
-                    // case 6:
-                    // case 7:
-                    // case 8:
-                }
-            }
-            events3 >> 1; 
-        }
-
-        float alt = bytesToFloat();
-        float lat = bytesToFloat();
-        float longi = bytesToFloat();
-
-        float satInView = bytesToFloat(); 
-
-        //float elev = bytesToFloat();
-
-        float accelx = bytesToFloat();
-        float accely = bytesToFloat();
-        float accelz = bytesToFloat();
-
-        float gyrox = bytesToFloat();
-        float gyroy = bytesToFloat();
-        float gyroz = bytesToFloat();
-
-        float accelXIMU = bytesToFloat(); 
-        float accelYIMU = bytesToFloat(); 
-        float accelZIMU = bytesToFloat(); 
-
-        float oriX = bytesToFloat(); 
-        float oriY = bytesToFloat(); 
-        float oriZ = bytesToFloat(); 
-
-        float magx = bytesToFloat();
-        float magy = bytesToFloat();
-        float magz = bytesToFloat();
-
-        float temp = bytesToFloat(); 
-
-        SerialRead::serialValues["longitude"] = longi; 
-        SerialRead::serialValues["latitude"] = lat; 
-        SerialRead::serialValues["altitude"] = alt; 
-        SerialRead::serialValues["gyro_x"] = gyrox; 
-        SerialRead::serialValues["gyro_y"] = gyroy; 
-        SerialRead::serialValues["gyro_z"] = gyroz; 
-        SerialRead::serialValues["accel_x"] = accelx; 
-        SerialRead::serialValues["accel_y"] = accely; 
-        SerialRead::serialValues["accel_z"] = accelz; 
-        SerialRead::serialValues["mag_x"] = magx;
-        SerialRead::serialValues["mag_y"] = magy; 
-        SerialRead::serialValues["mag_z"] = magz;
-        SerialRead::serialValues["timestamp"] = timestamp; 
     }
-    serClose(serialPort); 
-    #endif 
 }
 
+#endif 
 

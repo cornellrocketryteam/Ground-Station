@@ -7,28 +7,11 @@
 #include "gui.h"
 #include "raylib.h"
 
-#define TEST 
-
-#ifndef TEST 
-#include <pigpio.h> 
-#endif 
-
 int main()
 {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT);
     InitWindow(1600, 1000, "Ground Station"); /*Initialize the raylib window*/
     SetTargetFPS(60);
-
-    #ifndef TEST 
-        if (gpioInitialise() < 0)
-        {
-            printf("Pigpio not initialized."); 
-        }
-        else
-        {
-            printf("Pigpio succesffuly initialized.")
-        }
-    #endif 
 
     GUI gui; 
 
@@ -48,9 +31,5 @@ int main()
     }
 
     CloseWindow();
-    #ifndef TEST 
-        gpioTerminate();
-    #endif 
-
     return 0;
 }

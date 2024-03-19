@@ -1,4 +1,5 @@
 #include "datagrid.h"
+#include "sfr.h"
 #include <math.h>
 #include "raylib.h"
 
@@ -61,30 +62,6 @@ void DataGrid::draw(int posX, int posY, int width, int height)
 
 void DataGrid::updateValues(){
     for (auto elem : data_points){
-        if (elem.getTitle() == "Longitude") {
-            elem.setValue(SerialRead::serialValues["longitude"]); 
-        } else if (elem.getTitle() == "Latitude") {
-            elem.setValue(SerialRead::serialValues["latitude"]); 
-        } else if (elem.getTitle() == "Altitude") {
-            elem.setValue(SerialRead::serialValues["altitude"]); 
-        } else if (elem.getTitle() == "Gyro X") {
-            elem.setValue(SerialRead::serialValues["gyro_x"]); 
-        } else if (elem.getTitle() == "Gyro Y") {
-            elem.setValue(SerialRead::serialValues["gyro_y"]); 
-        } else if (elem.getTitle() == "Gyro Z") {
-            elem.setValue(SerialRead::serialValues["gyro_z"]); 
-        } else if (elem.getTitle() == "Accel X") {
-            elem.setValue(SerialRead::serialValues["accel_x"]); 
-        } else if (elem.getTitle() == "Accel Y") {
-            elem.setValue(SerialRead::serialValues["accel_y"]); 
-        } else if (elem.getTitle() == "Accel Z") {
-            elem.setValue(SerialRead::serialValues["accel_z"]); 
-        } else if (elem.getTitle() == "Mag X") {
-            elem.setValue(SerialRead::serialValues["mag_x"]); 
-        } else if (elem.getTitle() == "Mag Y") {
-            elem.setValue(SerialRead::serialValues["mag_y"]); 
-        } else if (elem.getTitle() == "Mag Z") {
-            elem.setValue(SerialRead::serialValues["mag_z"]); 
-        } 
+        elem.setValue(sfr::serialRead->getValue(elem.getTitle()));
     }
 }

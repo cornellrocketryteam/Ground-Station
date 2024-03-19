@@ -6,98 +6,39 @@
 #include <unordered_map>
 #include <vector> 
 
-/**
- * Will represent is a sensor is working or failing. If a sensor is failing, it is 
- * in fail mode, and we will display "FAILURE" for that sensor. 
-*/
-typedef enum WorkingState {WORKING, FAILURE} WorkingState; 
-/**
- * Flight Mode State
-*/
-typedef enum FlightMode {StartupMode, StandbyMode, AscentMode,DrogueDeployedMode, MainDeployedMode,FaultMode, Armed} FlightMode; 
-
-/**
- * The Class that stores the static member function that will read serial data, and then
- * u pdate the serialValues map with said data for the GUI's components to draw accurately. 
-*/
 class SerialRead {
-    public: 
-         /**
-         * Will represent the states of each sensor, six in total
-        */
-        static WorkingState AltimeterState; 
-        static WorkingState GpsState; 
-        static WorkingState IMUState; 
-        static WorkingState SDCardState; 
-        static WorkingState AccelerometerState;
-        static WorkingState TemperatureState;
-        static WorkingState RadioState; 
+    private: 
 
-        static FlightMode FlightState;
+        typedef enum WorkingState {WORKING, FAILURE} WorkingState; 
 
-        /**
-         * Stores the values that are read from RATS. 
-        */
-        static std::unordered_map<std::string, float> serialValues;
-        /**
-         * Read the package received from RATS 
-         * via WiringPi and updates the serialValues map. Also adds to the elevationQueue.  
-        */
-        static void readPack();  
+        typedef enum FlightMode {StartupMode, StandbyMode, AscentMode,DrogueDeployedMode, MainDeployedMode,FaultMode, Armed} FlightMode; 
 
-        /**
-         * FIFO queue to store the elevation with respsect to time. 
-         * 5 minutes of data will be stored, with 60 seconds of elevation for each minute. 
-        */
-       static std::deque<float> elevationQueue; 
+        WorkingState AltimeterState; 
+        WorkingState GpsState; 
+        WorkingState IMUState; 
+        WorkingState SDCardState; 
+        WorkingState AccelerometerState;
+        WorkingState TemperatureState;
+        WorkingState RadioState; 
+
+        FlightMode FlightState;
+
+        std::unordered_map<std::string, float> serialValues;
+
+        int serialPort; /*The serial port to read from*/
+    public:
+
+        void readPack();  /*Read the packet from RATS with pigpio*/
+
+        float bytesToFloat(); /*Reads 4 bytes then converts to a float*/
+
+        float getValue(std::string name); /*Gets the float value from the serialValues*/
+
+        SerialRead(); /*Open the serial port /dev/ttyACM0*/
+
+        ~SerialRead(); /*Close the serial port*/
+
+        std::deque<float> elevationQueue; /*Stores the elevation points to graph*/
+
 
 }; 
-
-
-/**
- * 6 bytes: Metadata
-3 bits: flight mode
-10 bits: Sensor statuses (2 bits each)
-1 bit: SD state
-1 bit: key armed
-1 bit: altitude armed
-4 bytes: timestamp
-3 bytes: Events
-(Will come up with enumeration)
-52 bytes: Sensor readings (4 bytes each)
-Altitude
-Latitude
-Longitude
-Elevation
-Accel X
-Accel Y
-Accel Z
-Gyro X
-Gyro Y
-Gyro Z
-Mag X
-Mag Y
-Mag Z 
-
-For the EVENTS:
-0: Key armed
-1: Altitude armed
-2: Alt init failed
-3: Alt reading failed
-4: Alt turned off
-5: IMU init failed
-6: IMU reading failed
-7: IMU turned off
-8: Accel init failed
-9: Accel reading failed
-10: Accel turned off
-11: Therm init failed
-12: Therm reading failed
-13: Therm turned off
-14: SD init failed
-15: SD write failed
-16: RFM init failed
-17: RFM transmit failed
-
-0 means false, 1 means true 
-*/
