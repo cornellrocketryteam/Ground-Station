@@ -21,5 +21,5 @@ The Ground Station GUI used to display rocket data and telemetry.
 ## Compiling
 1. Run ```git clone --recursive git@github.com:cornellrocketryteam/Ground-Station.git``` in the lib folder, and git clone pigpio 
 2. Run ```cmake .. -DGRAPHICS=GRAPHICS_API_OPENGL_21``` in the build folder, then ```make -j4 ``` 
-3. Run the executable by running ```./build/GroundStation```
+3. Run the executable by running ```sudo ./build/GroundStation```
 
