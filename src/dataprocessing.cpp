@@ -65,152 +65,156 @@ void SerialRead::updateElevationQueue(float val){
 }
 
 void SerialRead::readPack(){ 
-    if(serDataAvailable (serialPort) ){          
-        char preamble[2];     /*Read the preamble packets*/
-        serRead(serialPort,preamble,2); 
+    while (1) {
+        if(serDataAvailable (serialPort) ){          
+            char preamble[2];     /*Read the preamble packets*/
+            serRead(serialPort,preamble,2); 
 
-        for (int i = 0; i < 8; i++){
-            if (0x01 & preamble[0]){
-                switch(i){
-                    case 0: AltimeterState = WORKING; 
-                    case 1: GpsState = WORKING; 
-                    case 2: SDCardState = WORKING; 
-                    case 3: TemperatureState = WORKING; 
-                    case 4: TemperatureState = FAILURE; 
-                    case 5: AccelerometerState = WORKING; 
-                    case 6: AccelerometerState = FAILURE;
-                    case 7: IMUState = WORKING; 
+            for (int i = 0; i < 8; i++){
+                if (0x01 & preamble[0]){
+                    switch(i){
+                        case 0: AltimeterState = WORKING; 
+                        case 1: GpsState = WORKING; 
+                        case 2: SDCardState = WORKING; 
+                        case 3: TemperatureState = WORKING; 
+                        case 4: TemperatureState = FAILURE; 
+                        case 5: AccelerometerState = WORKING; 
+                        case 6: AccelerometerState = FAILURE;
+                        case 7: IMUState = WORKING; 
+                    }
+                    preamble[0] >> 1; 
                 }
-                preamble[0] >> 1; 
             }
-        }
-        u_int8_t sumOfFlightStatus; 
-        for (int i = 8; i < 16; i++){
-            if (0x01 & preamble[1]){
-                switch(i){
-                    case 8: IMUState = FAILURE; 
-                    case 9: GpsState = WORKING; 
-                    case 10: GpsState = FAILURE; 
-                    case 11: AltimeterState = WORKING; 
-                    case 12: AltimeterState = FAILURE; 
-                    case 13: sumOfFlightStatus += 4;
-                    case 14: sumOfFlightStatus += 2; 
-                    case 15: sumOfFlightStatus += 1; 
+            u_int8_t sumOfFlightStatus; 
+            for (int i = 8; i < 16; i++){
+                if (0x01 & preamble[1]){
+                    switch(i){
+                        case 8: IMUState = FAILURE; 
+                        case 9: GpsState = WORKING; 
+                        case 10: GpsState = FAILURE; 
+                        case 11: AltimeterState = WORKING; 
+                        case 12: AltimeterState = FAILURE; 
+                        case 13: sumOfFlightStatus += 4;
+                        case 14: sumOfFlightStatus += 2; 
+                        case 15: sumOfFlightStatus += 1; 
+                    }
+                    preamble[1] >> 1; 
                 }
-                preamble[1] >> 1; 
             }
-        }
-        /*Process the bytes for flight status */
-        switch(sumOfFlightStatus){
-            case 0: FlightState = StartupMode; 
-            case 1: FlightState = StandbyMode; 
-            case 2: FlightState = AscentMode; 
-            case 3: FlightState = DrogueDeployedMode; 
-            case 4: FlightState = MainDeployedMode; 
-            case 5: FlightState = FaultMode; 
-        }
+            /*Process the bytes for flight status */
+            switch(sumOfFlightStatus){
+                case 0: FlightState = StartupMode; 
+                case 1: FlightState = StandbyMode; 
+                case 2: FlightState = AscentMode; 
+                case 3: FlightState = DrogueDeployedMode; 
+                case 4: FlightState = MainDeployedMode; 
+                case 5: FlightState = FaultMode; 
+            }
 
-        float timestamp = bytesToFloat(); 
+            float timestamp = bytesToFloat(); 
 
-        char events[3]; /*Read the events bytes*/
-        serRead(serialPort,events,3);  
+            char events[3]; /*Read the events bytes*/
+            serRead(serialPort,events,3);  
 
-        for (int i = 0; i<8; i++){
-            if (0x01 & events[0]){
-                switch(i){
-                    //case 0:
-                    //case 1:
-                    case 2: AltimeterState = FAILURE; 
-                    case 3: AltimeterState = FAILURE; 
-                    case 4: AltimeterState = FAILURE; 
-                    case 5: IMUState = FAILURE; 
-                    case 6: IMUState = FAILURE; 
-                    case 7: IMUState = FAILURE; 
+            for (int i = 0; i<8; i++){
+                if (0x01 & events[0]){
+                    switch(i){
+                        //case 0:
+                        //case 1:
+                        case 2: AltimeterState = FAILURE; 
+                        case 3: AltimeterState = FAILURE; 
+                        case 4: AltimeterState = FAILURE; 
+                        case 5: IMUState = FAILURE; 
+                        case 6: IMUState = FAILURE; 
+                        case 7: IMUState = FAILURE; 
+                    }
+                    events[0]>>1; 
                 }
-                events[0]>>1; 
             }
-        }
-        for (int i = 8; i<16; i++){
-            if (0x01 & events[1]){
-                switch(i){
-                    case 8: AccelerometerState = FAILURE; 
-                    case 9: AccelerometerState = FAILURE; 
-                    case 10: AccelerometerState = FAILURE; 
-                    case 11: TemperatureState = FAILURE; 
-                    case 12: TemperatureState = FAILURE; 
-                    case 13: TemperatureState = FAILURE; 
-                    case 14: SDCardState = FAILURE;
-                    case 15: SDCardState = FAILURE;
+            for (int i = 8; i<16; i++){
+                if (0x01 & events[1]){
+                    switch(i){
+                        case 8: AccelerometerState = FAILURE; 
+                        case 9: AccelerometerState = FAILURE; 
+                        case 10: AccelerometerState = FAILURE; 
+                        case 11: TemperatureState = FAILURE; 
+                        case 12: TemperatureState = FAILURE; 
+                        case 13: TemperatureState = FAILURE; 
+                        case 14: SDCardState = FAILURE;
+                        case 15: SDCardState = FAILURE;
+                    }
+                    events[1]>>1; 
                 }
-                events[1]>>1; 
             }
-        }
-        for (int i = 16; i<18; i++){
-            if (0x01 & events[2]){
-                switch(i){
-                    case 16: RadioState = FAILURE; 
-                    case 17: RadioState = FAILURE; 
+            for (int i = 16; i<18; i++){
+                if (0x01 & events[2]){
+                    switch(i){
+                        case 16: RadioState = FAILURE; 
+                        case 17: RadioState = FAILURE; 
+                    }
+                    events[2]>>1; 
                 }
-                events[2]>>1; 
             }
-        }
 
-        float alt = bytesToFloat();
-        float lat = bytesToFloat();
-        float longi = bytesToFloat();
+            float alt = bytesToFloat();
+            float lat = bytesToFloat();
+            float longi = bytesToFloat();
 
-        float satInView = bytesToFloat(); 
+            float satInView = bytesToFloat(); 
 
-        float accelx = bytesToFloat();
-        float accely = bytesToFloat();
-        float accelz = bytesToFloat();
+            float accelx = bytesToFloat();
+            float accely = bytesToFloat();
+            float accelz = bytesToFloat();
 
-        float gyrox = bytesToFloat();
-        float gyroy = bytesToFloat();
-        float gyroz = bytesToFloat();
+            float gyrox = bytesToFloat();
+            float gyroy = bytesToFloat();
+            float gyroz = bytesToFloat();
 
-        float accelXIMU = bytesToFloat(); 
-        float accelYIMU = bytesToFloat(); 
-        float accelZIMU = bytesToFloat(); 
+            float accelXIMU = bytesToFloat(); 
+            float accelYIMU = bytesToFloat(); 
+            float accelZIMU = bytesToFloat(); 
 
-        float oriX = bytesToFloat(); 
-        float oriY = bytesToFloat(); 
-        float oriZ = bytesToFloat(); 
+            float oriX = bytesToFloat(); 
+            float oriY = bytesToFloat(); 
+            float oriZ = bytesToFloat(); 
 
-        float magx = bytesToFloat();
-        float magy = bytesToFloat();
-        float magz = bytesToFloat();
+            float magx = bytesToFloat();
+            float magy = bytesToFloat();
+            float magz = bytesToFloat();
 
-        float temp = bytesToFloat(); 
+            float temp = bytesToFloat(); 
 
-        serialValues["Longitude"] = longi; 
-        serialValues["Latitude"] = lat; 
-        serialValues["Altitude"] = alt; 
-        serialValues["Gyro X"] = gyrox; 
-        serialValues["Gyro Y"] = gyroy; 
-        serialValues["Gyro Z"] = gyroz; 
-        serialValues["Accel X"] = accelx; 
-        serialValues["Accel Y"] = accely; 
-        serialValues["Accel Z"] = accelz; 
-        serialValues["Mag X"] = magx;
-        serialValues["Mag Y"] = magy; 
-        serialValues["Mag Z"] = magz;
-        serialValues["timestamp"] = timestamp; 
+            serialValues["Longitude"] = longi; 
+            serialValues["Latitude"] = lat; 
+            serialValues["Altitude"] = alt; 
+            serialValues["Gyro X"] = gyrox; 
+            serialValues["Gyro Y"] = gyroy; 
+            serialValues["Gyro Z"] = gyroz; 
+            serialValues["Accel X"] = accelx; 
+            serialValues["Accel Y"] = accely; 
+            serialValues["Accel Z"] = accelz; 
+            serialValues["Mag X"] = magx;
+            serialValues["Mag Y"] = magy; 
+            serialValues["Mag Z"] = magz;
+            serialValues["timestamp"] = timestamp; 
 
-        updateElevationQueue(alt);/*Update the elevation Queue with the new value*/
+            updateElevationQueue(alt);/*Update the elevation Queue with the new value*/
 
-        if (flightDataFile.is_open()){ /*Write the packet to the text file */
-            printf("flightData.txt successfully opened, beginning to write data ...\n");
+            if (flightDataFile.is_open()){ /*Write the packet to the text file */
+                printf("flightData.txt successfully opened, beginning to write data ...\n");
 
-            flightDataFile << preamble << ", " << timestamp << ", "<< events << ", "<< alt << ", "<< lat << ", "<< longi << ", "<< satInView << ", "<< accelx << ", " << accely << ", "; 
-            flightDataFile << accelz << ", " << gyrox << ", "<< gyroy << ", "<< gyroz << ", "<< accelXIMU << ", " << accelYIMU << ", "<< accelZIMU << ", "; 
-            flightDataFile << oriX << ", " << oriY << ", " << oriZ << ", " << magx << ", " << magy << ", " << magz << ", " << temp << "\n"; 
+                flightDataFile << preamble << ", " << timestamp << ", "<< events << ", "<< alt << ", "<< lat << ", "<< longi << ", "<< satInView << ", "<< accelx << ", " << accely << ", "; 
+                flightDataFile << accelz << ", " << gyrox << ", "<< gyroy << ", "<< gyroz << ", "<< accelXIMU << ", " << accelYIMU << ", "<< accelZIMU << ", "; 
+                flightDataFile << oriX << ", " << oriY << ", " << oriZ << ", " << magx << ", " << magy << ", " << magz << ", " << temp << "\n"; 
 
+            } else {
+                printf("flightData.txt was not able to be opened\n");
+            }
+
+            break; /*Exit the loop*/
         } else {
-            printf("flightData.txt was not able to be opened\n");
+            printf("Serial port not available, could not read\n"); 
         }
-    } else {
-        printf("Serial port not available, could not read\n"); 
     }
 }
 #endif 
