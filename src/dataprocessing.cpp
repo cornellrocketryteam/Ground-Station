@@ -20,13 +20,13 @@ SerialRead::SerialRead(){
         printf("Opened serial port\n"); 
     }
 
-    AltimeterState = FAILURE; 
-    GpsState = FAILURE; 
-    IMUState = FAILURE;  
-    SDCardState = FAILURE; 
-    AccelerometerState = FAILURE; 
-    TemperatureState = FAILURE; 
-    RadioState = FAILURE;  
+    AltimeterState = WORKING; 
+    GpsState = WORKING;  
+    IMUState = WORKING;  
+    SDCardState = WORKING;  
+    AccelerometerState = WORKING; 
+    TemperatureState = WORKING; 
+    RadioState = WORKING;  
     FlightState = StartupMode; 
 
     flightDataFile.open("data/flightData.txt",std::ios::out);
