@@ -41,5 +41,7 @@ class SerialRead {
 
         std::deque<float> elevationQueue; /*Stores the elevation points to graph*/
 
+        void updateElevationQueue(float val); /*Updates the elevationQueue, mainting a size of 300*/
+
 
 }; 

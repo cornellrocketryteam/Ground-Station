@@ -55,6 +55,15 @@ float SerialRead::bytesToFloat()
     return output;
 }
 
+void SerialRead::updateElevationQueue(float val){
+    if (elevationQueue.size() < 300){
+        elevationQueue.push_back(val); 
+    } else {
+        elevationQueue.push_back(val); 
+        elevationQueue.pop_front();
+    }
+}
+
 void SerialRead::readPack(){ 
     if(serDataAvailable (serialPort) ){          
         char preamble[2];     /*Read the preamble packets*/
@@ -187,6 +196,8 @@ void SerialRead::readPack(){
         serialValues["mag_y"] = magy; 
         serialValues["mag_z"] = magz;
         serialValues["timestamp"] = timestamp; 
+
+        updateElevationQueue(alt);/*Update the elevation Queue with the new value*/
 
         if (flightDataFile.is_open()){ /*Write the packet to the text file */
             printf("flightData.txt successfully opened, beginning to write data ...\n");

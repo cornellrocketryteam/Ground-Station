@@ -3,6 +3,7 @@
 #include <string>
 #include "dataprocessing.h"
 #include <random> 
+#include "sfr.h"
 
 constexpr int lowerGraphYBound = 0;
 constexpr int upperGraphYBound = 12000;
@@ -47,15 +48,8 @@ void Graph::draw(int posX, int posY, int width, int height)
     int track = 0; 
     float stepLength = (width - offsetFromLeft) / 300.0; 
 
-    // change loop guard to (300 - track >= 0)
-    while (300 - track >= 0){
-        //DrawCircle((posX + width) - track*stepLength, graphYToScreenY(posY,height,SerialRead::elevationQueue.at(SerialRead::elevationQueue.size()-track)), 0.1, RED); 
-        
-        // Random circle tester 
-        DrawCircle((posX + width) - track*stepLength, graphYToScreenY(posY, height, rand() % 12000),1,RED);
+    for (auto i : sfr::serialRead->elevationQueue){
+        DrawCircle(posX + track*stepLength,graphYToScreenY(posY,height,i),1,RED);
         track += 1; 
     }
-
-
-
 }
