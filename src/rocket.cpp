@@ -83,7 +83,7 @@ void Rocket::draw(int posX, int posY, int width, int height)
             }
 
             //Draw the path of the rocket
-            drawRocketPath();
+            //drawRocketPath();
         EndMode3D();
     EndScissorMode();
 }
