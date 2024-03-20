@@ -5,6 +5,7 @@
 #include <map> 
 #include <unordered_map>
 #include <vector> 
+#include <fstream>
 
 class SerialRead {
     private: 
@@ -26,6 +27,8 @@ class SerialRead {
         std::unordered_map<std::string, float> serialValues;
 
         int serialPort; /*The serial port to read from*/
+
+        std::ofstream flightDataFile; /*The file to write flight telemetry*/
     public:
 
         void readPack();  /*Read the packet from RATS with pigpio*/
