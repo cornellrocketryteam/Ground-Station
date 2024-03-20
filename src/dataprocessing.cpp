@@ -2,7 +2,6 @@
 #include <iostream>
 #include <fstream>
 
-
 //#define APPLE
 #ifndef APPLE
 #include <pigpio.h> 
@@ -55,7 +54,7 @@ float SerialRead::bytesToFloat()
 
 void SerialRead::readPack(){ 
     if(serDataAvailable (serialPort) ){          
-        char preamble[2];     
+        char preamble[2];     /*Read the preamble packets*/
         serRead(serialPort,preamble,2); 
 
         for (int i = 0; i < 8; i++){
@@ -101,9 +100,48 @@ void SerialRead::readPack(){
 
         float timestamp = bytesToFloat(); 
 
-        char events[3];
-
+        char events[3]; /*Read the events bytes*/
         serRead(serialPort,events,3);  
+
+        for (int i = 0; i<8; i++){
+            if (0x01 & events[0]){
+                switch(i){
+                    //case 0:
+                    //case 1:
+                    case 2: AltimeterState = FAILURE; 
+                    case 3: AltimeterState = FAILURE; 
+                    case 4: AltimeterState = FAILURE; 
+                    case 5: IMUState = FAILURE; 
+                    case 6: IMUState = FAILURE; 
+                    case 7: IMUState = FAILURE; 
+                }
+                events[0]>>1; 
+            }
+        }
+        for (int i = 8; i<16; i++){
+            if (0x01 & events[1]){
+                switch(i){
+                    case 8: AccelerometerState = FAILURE; 
+                    case 9: AccelerometerState = FAILURE; 
+                    case 10: AccelerometerState = FAILURE; 
+                    case 11: TemperatureState = FAILURE; 
+                    case 12: TemperatureState = FAILURE; 
+                    case 13: TemperatureState = FAILURE; 
+                    case 14: SDCardState = FAILURE;
+                    case 15: SDCardState = FAILURE;
+                }
+                events[1]>>1; 
+            }
+        }
+        for (int i = 16; i<18; i++){
+            if (0x01 & events[2]){
+                switch(i){
+                    case 16: RadioState = FAILURE; 
+                    case 17: RadioState = FAILURE; 
+                }
+                events[2]>>1; 
+            }
+        }
 
         float alt = bytesToFloat();
         float lat = bytesToFloat();
@@ -154,4 +192,3 @@ void SerialRead::readPack(){
 }
 
 #endif 
-
