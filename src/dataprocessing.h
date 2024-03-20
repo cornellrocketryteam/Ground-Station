@@ -9,7 +9,12 @@
 
 class SerialRead {
     private: 
+        std::unordered_map<std::string, float> serialValues;
 
+        int serialPort; /*The serial port to read from*/
+
+        std::ofstream flightDataFile; /*The file to write flight telemetry*/
+    public:
         typedef enum WorkingState {WORKING, FAILURE} WorkingState; 
 
         typedef enum FlightMode {StartupMode, StandbyMode, AscentMode,DrogueDeployedMode, MainDeployedMode,FaultMode, Armed} FlightMode; 
@@ -23,13 +28,6 @@ class SerialRead {
         WorkingState RadioState; 
 
         FlightMode FlightState;
-
-        std::unordered_map<std::string, float> serialValues;
-
-        int serialPort; /*The serial port to read from*/
-
-        std::ofstream flightDataFile; /*The file to write flight telemetry*/
-    public:
 
         void readPack();  /*Read the packet from RATS with pigpio*/
 

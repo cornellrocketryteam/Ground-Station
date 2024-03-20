@@ -26,6 +26,8 @@ public:
      * Gets the name
     */
     std::string getName();
+    /*Sets the working state of the status light*/
+    void setWorking(bool val); 
 
 private:
     std::string name;
@@ -51,4 +53,7 @@ private:
      * Vector to store the status lights
     */
     std::vector<StatusLight> status_lights;
+
+    /*Updates the status lights based on the sfr::serialRead value*/
+    void updateStatusLights();
 };

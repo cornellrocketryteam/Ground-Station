@@ -1,5 +1,5 @@
 #include "statusbar.h"
-
+#include "sfr.h"
 #include "raylib.h"
 
 /**
@@ -11,6 +11,10 @@ StatusLight::StatusLight(std::string name, float radius, bool isWorking) : name(
 
 bool StatusLight::getWorking() {
     return isWorking;
+}
+
+void StatusLight::setWorking(bool val){
+    isWorking = val; 
 }
 
 float StatusLight::getRadius() {
@@ -30,7 +34,51 @@ StatusBar::StatusBar() {
     status_lights.emplace_back("SD", 20, true);
 }
 
+void StatusBar::updateStatusLights(){
+    for (auto i : status_lights){
+        if (i.getName() == "GPS"){
+            if (sfr::serialRead->GpsState == sfr::serialRead->WORKING){
+                i.setWorking(true); 
+            } else {
+                i.setWorking(false); 
+            }
+        } else if (i.getName() == "Altimeter"){
+            if (sfr::serialRead->AltimeterState == sfr::serialRead->WORKING){
+                i.setWorking(true); 
+            } else {
+                i.setWorking(false); 
+            }
+        } else if (i.getName() == "Temperature"){
+            if (sfr::serialRead->TemperatureState == sfr::serialRead->WORKING){
+                i.setWorking(true); 
+            } else {
+                i.setWorking(false); 
+            }
+        } else if (i.getName() == "Gyroscope"){
+            if (sfr::serialRead->AccelerometerState == sfr::serialRead->WORKING){
+                i.setWorking(true); 
+            } else {
+                i.setWorking(false); 
+            }
+        } else if (i.getName() == "IMU"){
+            if (sfr::serialRead->IMUState == sfr::serialRead->WORKING){
+                i.setWorking(true); 
+            } else {
+                i.setWorking(false); 
+            }
+        } else if (i.getName() == "SD"){
+            if (sfr::serialRead->SDCardState == sfr::serialRead->WORKING){
+                i.setWorking(true); 
+            } else {
+                i.setWorking(false); 
+            }
+        } 
+    }
+}
+
 void StatusBar::draw(int posX, int posY, int width, int height) {
+    updateStatusLights();
+
     int fontSize = 20;
     int centerY = posY + height/2;
     int offsetY = height/6;
