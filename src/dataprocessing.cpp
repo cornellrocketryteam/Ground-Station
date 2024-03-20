@@ -9,17 +9,17 @@
 
 SerialRead::SerialRead(){
     if (gpioInitialise() < 0){
-            printf("Pigpio not initialized."); 
+            printf("Pigpio not initialized.\n"); 
     } else {
-            printf("Pigpio succesffuly initialized.");
+            printf("Pigpio succesffuly initialized.\n");
     }
     
     serialPort = serOpen("/dev/ttyACM0",9600,0); 
 
     if (serialPort< 0) { /* open serial port */
-        printf ("Unable to open serial device") ;
+        printf ("Unable to open serial device\n") ;
     } else {
-        printf("Opened serial port"); 
+        printf("Opened serial port\n"); 
     }
 
     AltimeterState = FAILURE; 
@@ -48,22 +48,15 @@ float SerialRead::bytesToFloat()
     char data[4]; 
     serRead(serialPort,data,4); 
 
-    output = atof(data); 
+    std::memcpy(&output,data, 4);
 
     return output;
 }
 
 void SerialRead::readPack(){ 
     if(serDataAvailable (serialPort) ){          
-        char preamble[2];
-
-        char events1[1];
-        char events2[1];
-        char events3[1]; 
-        
+        char preamble[2];     
         serRead(serialPort,preamble,2); 
-
-        u_int8_t sumOfFlightStatus; 
 
         for (int i = 0; i < 8; i++){
             if (0x01 & preamble[0]){
@@ -108,9 +101,9 @@ void SerialRead::readPack(){
 
         float timestamp = bytesToFloat(); 
 
-        serRead(serialPort,events1,1); 
-        serRead(serialPort,events2,1); 
-        serRead(serialPort,events3,1); 
+        char events[3];
+
+        serRead(serialPort,events,3);  
 
         float alt = bytesToFloat();
         float lat = bytesToFloat();
@@ -155,7 +148,7 @@ void SerialRead::readPack(){
         serialValues["timestamp"] = timestamp; 
 
     } else {
-        printf("Serial port not available, could not read"); 
+        printf("Serial port not available, could not read\n"); 
     }
     
 }
