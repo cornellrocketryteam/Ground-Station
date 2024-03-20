@@ -189,20 +189,17 @@ void SerialRead::readPack(){
         serialValues["timestamp"] = timestamp; 
 
         if (flightDataFile.is_open()){ /*Write the packet to the text file */
-        printf("flightData.txt successfully opened, beginning to write data ...");
+            printf("flightData.txt successfully opened, beginning to write data ...");
 
-        flightDataFile << preamble << timestamp << events << alt << lat << longi << satInView << accelx << accely; 
-        flightDataFile << accelz << gyrox << gyroy << gyroz << accelXIMU << accelYIMU << accelZIMU; 
-        flightDataFile << oriX << oriY << oriZ << magx << magy << magz << temp << "\n"; 
+            flightDataFile << preamble << ", " << timestamp << ", "<< events << ", "<< alt << ", "<< lat << ", "<< longi << ", "<< satInView << ", "<< accelx << ", " << accely << ", "; 
+            flightDataFile << accelz << ", " << gyrox << ", "<< gyroy << ", "<< gyroz << ", "<< accelXIMU << ", " << accelYIMU << ", "<< accelZIMU << ", "; 
+            flightDataFile << oriX << ", " << oriY << ", " << oriZ << ", " << magx << ", " << magy << ", " << magz << ", " << temp << "\n"; 
 
         } else {
         printf("flightData.txt was not able to be opened");
-    }
-
+        }
     } else {
         printf("Serial port not available, could not read\n"); 
     }
-  
 }
-
 #endif 
