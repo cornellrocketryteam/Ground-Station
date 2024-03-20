@@ -183,18 +183,18 @@ void SerialRead::readPack(){
 
         float temp = bytesToFloat(); 
 
-        serialValues["longitude"] = longi; 
-        serialValues["latitude"] = lat; 
-        serialValues["altitude"] = alt; 
-        serialValues["gyro_x"] = gyrox; 
-        serialValues["gyro_y"] = gyroy; 
-        serialValues["gyro_z"] = gyroz; 
-        serialValues["accel_x"] = accelx; 
-        serialValues["accel_y"] = accely; 
-        serialValues["accel_z"] = accelz; 
-        serialValues["mag_x"] = magx;
-        serialValues["mag_y"] = magy; 
-        serialValues["mag_z"] = magz;
+        serialValues["Longitude"] = longi; 
+        serialValues["Latitude"] = lat; 
+        serialValues["Altitude"] = alt; 
+        serialValues["Gyro X"] = gyrox; 
+        serialValues["Gyro Y"] = gyroy; 
+        serialValues["Gyro Z"] = gyroz; 
+        serialValues["Accel X"] = accelx; 
+        serialValues["Accel Y"] = accely; 
+        serialValues["Accel Z"] = accelz; 
+        serialValues["Mag X"] = magx;
+        serialValues["Mag Y"] = magy; 
+        serialValues["Mag Z"] = magz;
         serialValues["timestamp"] = timestamp; 
 
         updateElevationQueue(alt);/*Update the elevation Queue with the new value*/
@@ -207,7 +207,7 @@ void SerialRead::readPack(){
             flightDataFile << oriX << ", " << oriY << ", " << oriZ << ", " << magx << ", " << magy << ", " << magz << ", " << temp << "\n"; 
 
         } else {
-        printf("flightData.txt was not able to be opened\n");
+            printf("flightData.txt was not able to be opened\n");
         }
     } else {
         printf("Serial port not available, could not read\n"); 

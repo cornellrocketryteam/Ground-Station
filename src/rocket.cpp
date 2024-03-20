@@ -1,5 +1,6 @@
 #include "rocket.h"
 #include "raymath.h"
+#include "sfr.h"
 
 Rocket::Rocket() {
     camera = { 0 };
@@ -23,8 +24,6 @@ Rocket::Rocket() {
     xRotation = 270;
     yRotation = 0;
     zRotation = 0;
-
-    std::cout << "WORKING DIRECTORY = " << GetWorkingDirectory() << std::endl;
 
     //loadTerrain();
     terrainModel = LoadModel("img/desert.obj");

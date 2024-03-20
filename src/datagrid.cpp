@@ -62,31 +62,7 @@ void DataGrid::draw(int posX, int posY, int width, int height)
 
 void DataGrid::updateValues(){
     for (auto elem : data_points){
-        if (elem.getTitle() == "Longitude"){
-            elem.setValue(sfr::serialRead->getValue("longitude"));
-        } else if (elem.getTitle() == "Latitude"){
-            elem.setValue(sfr::serialRead->getValue("latitude"));
-        } else if (elem.getTitle() == "Altitude"){
-            elem.setValue(sfr::serialRead->getValue("altitude"));
-        } else if (elem.getTitle() == "Gyro X"){
-            elem.setValue(sfr::serialRead->getValue("gyro_x"));
-        } else if (elem.getTitle() == "Gyro Y"){
-            elem.setValue(sfr::serialRead->getValue("gyro_y"));
-        } else if (elem.getTitle() == "Gyro Z"){
-            elem.setValue(sfr::serialRead->getValue("gyro_z"));
-        } else if (elem.getTitle() == "Accel X"){
-            elem.setValue(sfr::serialRead->getValue("accel_x"));
-        } else if (elem.getTitle() == "Accel Y"){
-            elem.setValue(sfr::serialRead->getValue("accel_y"));
-        } else if (elem.getTitle() == "Accel Z"){
-            elem.setValue(sfr::serialRead->getValue("accel_z"));
-        } else if (elem.getTitle() == "Mag X"){
-            elem.setValue(sfr::serialRead->getValue("mag_x"));
-        } else if (elem.getTitle() == "Mag Y"){
-            elem.setValue(sfr::serialRead->getValue("mag_y"));
-        } else if (elem.getTitle() == "Mag Z"){
-            elem.setValue(sfr::serialRead->getValue("mag_z"));
-        } 
+        elem.setValue(sfr::serialRead->getValue(elem.getTitle()));
     }
 
 }
