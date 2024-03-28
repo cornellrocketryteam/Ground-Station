@@ -77,7 +77,4 @@ private:
     float drawnY; 
     float drawnWidth; 
     float drawnHeight; 
-
-    // vector to store the past positions of the rocket for drawing
-    std::vector<Vector3> pathPositions;
 };

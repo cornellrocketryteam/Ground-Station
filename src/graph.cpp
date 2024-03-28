@@ -1,12 +1,10 @@
 #include "graph.h"
-#include <math.h>
 #include <string>
-#include "serialread.h"
-#include <random> 
 #include "sfr.h"
 
 constexpr int lowerGraphYBound = 0;
 constexpr int upperGraphYBound = 12000;
+constexpr int graphStep = 2000;
 
 /**
  * posY is the top-left Y-coordinate of the graph
@@ -15,16 +13,11 @@ constexpr int upperGraphYBound = 12000;
 */
 int graphYToScreenY(int posY, int height, int graphY)
 {
-    int input_start = lowerGraphYBound;
-    int input_end = upperGraphYBound;
-    int output_start = posY + height;
-    int output_end = posY;
-    double slope = 1.0 * (output_end - output_start) / (input_end - input_start);
-    return output_start + round(slope * (graphY - input_start));
+    float percentageOfHeight = float(graphY - lowerGraphYBound) / (upperGraphYBound - lowerGraphYBound);
+    return posY + height - (height * percentageOfHeight);
 }
 
-void Graph::draw(int posX, int posY, int width, int height)
-{
+void Graph::draw(int posX, int posY, int width, int height) {
 
     int fontSize = 20;
     // Text on left-hand side 
@@ -32,24 +25,32 @@ void Graph::draw(int posX, int posY, int width, int height)
 
     // Outlines of graph
     int altitudeAndGraphSpacing = 5;
-    DrawRectangleLines(posX+offsetFromLeft+altitudeAndGraphSpacing, posY, width-offsetFromLeft-altitudeAndGraphSpacing, height, WHITE);
+    DrawRectangleLines(posX + offsetFromLeft + altitudeAndGraphSpacing, posY, width - offsetFromLeft - altitudeAndGraphSpacing, height, WHITE);
 
     // Draws Lines 
-    for (int i = 0; i <= upperGraphYBound; i += 2000) {
+    for (int i = lowerGraphYBound; i <= upperGraphYBound; i += graphStep) {
         int y = graphYToScreenY(posY, height, i);
         Color color = i == 10000 ? RED : WHITE;
-        DrawLine(posX+offsetFromLeft+altitudeAndGraphSpacing, y, posX+width, y, color);
+        DrawLine(posX + offsetFromLeft + altitudeAndGraphSpacing, y, posX + width, y, color);
         std::string text = std::to_string(i);
         int textWidth = MeasureText(text.c_str(), fontSize);
-        DrawText(text.c_str(), posX+offsetFromLeft-textWidth, y-fontSize/2, fontSize, color);
+        DrawText(text.c_str(), posX + offsetFromLeft - textWidth, y - fontSize / 2, fontSize, color);
     }
 
-    // Draw the elements of the elevationQueue
-    int track = 0; 
-    float stepLength = (width - offsetFromLeft) / 300.0; 
+//    for (int i = 0; i < 300; i++) {
+//        sfr::serialRead.elevationQueue.push_back(i*40);
+//    }
 
-    for (auto i : sfr::serialRead.elevationQueue){
-        DrawCircle(posX + track*stepLength,graphYToScreenY(posY,height,i),1,RED);
-        track += 1; 
+    if (sfr::serialRead.elevationQueue.size() > 1) {
+        float stepLength = float(width - offsetFromLeft - altitudeAndGraphSpacing) / 300;
+        for (auto i = sfr::serialRead.elevationQueue.size() - 1; i > 0; i--) {
+            float startPosX = float(posX) + offsetFromLeft + altitudeAndGraphSpacing + (300 - i) * stepLength;
+            float startPosY = graphYToScreenY(posY, height, sfr::serialRead.elevationQueue.at(300 - i));
+            float endPosX = float(posX) + offsetFromLeft + altitudeAndGraphSpacing + (299 - i) * stepLength;
+            float endPosY = graphYToScreenY(posY, height, sfr::serialRead.elevationQueue.at(299 - i));
+            DrawLineEx({startPosX, startPosY}, {endPosX, endPosY}, 2, BLUE);
+        }
     }
+
+//    sfr::serialRead.elevationQueue.clear();
 }

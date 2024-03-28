@@ -80,27 +80,8 @@ void Rocket::draw(int posX, int posY, int width, int height)
                 DrawModel(rocketModel, rocketPosition, 0.003f, WHITE);
                 DrawModel(terrainModel, terrainPosition, 25.0f, WHITE);
             }
-
-            //Draw the path of the rocket
-            //drawRocketPath();
         EndMode3D();
     EndScissorMode();
-}
-
-void Rocket::drawRocketPath()
-{
-    // TODO: Fix this to push back only the Corners
-    pathPositions.push_back(rocketPosition);
-   
-    // Draws all of the past path positions
-    for (auto i : pathPositions){
-        if (enlarged){
-            DrawSphere(i, 0.15, RED);
-        } 
-        else {
-            DrawSphere(i, 0.09, RED);
-        }
-    }
 }
 
 /**
