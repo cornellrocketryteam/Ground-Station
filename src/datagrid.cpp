@@ -62,7 +62,7 @@ void DataGrid::draw(int posX, int posY, int width, int height)
 
 void DataGrid::updateValues(){
     for (auto elem : data_points){
-        elem.setValue(sfr::serialRead->getValue(elem.getTitle()));
+        elem.setValue(sfr::serialRead.getValue(elem.getTitle()));
     }
 
 }

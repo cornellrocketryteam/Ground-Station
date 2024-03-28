@@ -37,37 +37,37 @@ StatusBar::StatusBar() {
 void StatusBar::updateStatusLights(){
     for (auto i : status_lights){
         if (i.getName() == "GPS"){
-            if (sfr::serialRead->GpsState == sfr::serialRead->WORKING){
+            if (sfr::serialRead.GpsState == sfr::serialRead.WORKING){
                 i.setWorking(true); 
             } else {
                 i.setWorking(false); 
             }
         } else if (i.getName() == "Altimeter"){
-            if (sfr::serialRead->AltimeterState == sfr::serialRead->WORKING){
+            if (sfr::serialRead.AltimeterState == sfr::serialRead.WORKING){
                 i.setWorking(true); 
             } else {
                 i.setWorking(false); 
             }
         } else if (i.getName() == "Temperature"){
-            if (sfr::serialRead->TemperatureState == sfr::serialRead->WORKING){
+            if (sfr::serialRead.TemperatureState == sfr::serialRead.WORKING){
                 i.setWorking(true); 
             } else {
                 i.setWorking(false); 
             }
         } else if (i.getName() == "Gyroscope"){
-            if (sfr::serialRead->AccelerometerState == sfr::serialRead->WORKING){
+            if (sfr::serialRead.AccelerometerState == sfr::serialRead.WORKING){
                 i.setWorking(true); 
             } else {
                 i.setWorking(false); 
             }
         } else if (i.getName() == "IMU"){
-            if (sfr::serialRead->IMUState == sfr::serialRead->WORKING){
+            if (sfr::serialRead.IMUState == sfr::serialRead.WORKING){
                 i.setWorking(true); 
             } else {
                 i.setWorking(false); 
             }
         } else if (i.getName() == "SD"){
-            if (sfr::serialRead->SDCardState == sfr::serialRead->WORKING){
+            if (sfr::serialRead.SDCardState == sfr::serialRead.WORKING){
                 i.setWorking(true); 
             } else {
                 i.setWorking(false); 

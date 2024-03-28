@@ -48,7 +48,7 @@ void Graph::draw(int posX, int posY, int width, int height)
     int track = 0; 
     float stepLength = (width - offsetFromLeft) / 300.0; 
 
-    for (auto i : sfr::serialRead->elevationQueue){
+    for (auto i : sfr::serialRead.elevationQueue){
         DrawCircle(posX + track*stepLength,graphYToScreenY(posY,height,i),1,RED);
         track += 1; 
     }

@@ -9,8 +9,6 @@ void GUI::processEvents() {
 
 void GUI::draw(int posX, int posY, int width, int height)
 {
-    sfr::serialRead->readPack();
-
     // GPS
     gps.draw(posX + 0.04*width, posY + 0.04*height, 0.35*width, 0.3*height);
 
@@ -31,8 +29,4 @@ void GUI::draw(int posX, int posY, int width, int height)
         // Draws the rocket enlarged 
         rocket.draw(posX , posY , width, height);
     }
-}
-
-GUI::~GUI(){
-    sfr::cleaner();
 }
