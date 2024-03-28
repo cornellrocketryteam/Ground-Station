@@ -8,40 +8,47 @@
 #include <fstream>
 
 class SerialRead {
-    private: 
-        std::unordered_map<std::string, float> serialValues;
+private:
+    std::unordered_map<std::string, float> serialValues;
 
-        int serialPort; /*The serial port to read from*/
+    int serialPort; /*The serial port to read from*/
 
-        std::ofstream flightDataFile; /*The file to write flight telemetry*/
-    public:
-        typedef enum WorkingState {WORKING, FAILURE} WorkingState; 
+    std::ofstream flightDataFile; /*The file to write flight telemetry*/
 
-        typedef enum FlightMode {StartupMode, StandbyMode, AscentMode,DrogueDeployedMode, MainDeployedMode,FaultMode, Armed} FlightMode; 
+    void updateElevationQueue(float val); /*Updates the elevationQueue, mainting a size of 300*/
 
-        WorkingState AltimeterState; 
-        WorkingState GpsState; 
-        WorkingState IMUState; 
-        WorkingState SDCardState; 
-        WorkingState AccelerometerState;
-        WorkingState TemperatureState;
-        WorkingState RadioState; 
+public:
+    enum SensorState {
+        OFF = 0,
+        VALID = 1,
+        INVALID = 2
+    };
 
-        FlightMode FlightState;
+    enum FlightMode {
+        STARTUP = 0,
+        STANDBY = 1,
+        ASCENT = 2,
+        DROGUEDEPLOYED = 3,
+        MAINDEPLOYED = 4,
+        FAULT = 5,
+    };
 
-        void readPacket();  /*Read the packet from RATS with pigpio*/
+    SensorState altimeterState;
+    SensorState gpsState;
+    SensorState imuState;
+    SensorState sdCardState;
+    SensorState accelerometerState;
+    SensorState temperatureState;
 
-        float bytesToFloat(); /*Reads 4 bytes then converts to a float*/
+    FlightMode flightMode;
 
-        float getValue(std::string name); /*Gets the float value from the serialValues*/
+    void readPacket();  /*Read the packet from RATS with pigpio*/
 
-        SerialRead(); /*Open the serial port /dev/ttyACM0*/
+    float getValue(std::string name); /*Gets the float value from the serialValues*/
 
-        ~SerialRead(); /*Close the serial port*/
+    SerialRead(); /*Open the serial port /dev/ttyACM0*/
 
-        std::deque<float> elevationQueue; /*Stores the elevation points to graph*/
+    ~SerialRead(); /*Close the serial port*/
 
-        void updateElevationQueue(float val); /*Updates the elevationQueue, mainting a size of 300*/
-
-
-}; 
+    std::deque<float> elevationQueue; /*Stores the elevation points to graph*/
+};

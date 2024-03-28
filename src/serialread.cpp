@@ -22,15 +22,6 @@ SerialRead::SerialRead(){
     }
 #endif
 
-    AltimeterState = WORKING; 
-    GpsState = WORKING;  
-    IMUState = WORKING;  
-    SDCardState = WORKING;  
-    AccelerometerState = WORKING; 
-    TemperatureState = WORKING; 
-    RadioState = WORKING;  
-    FlightState = StartupMode; 
-
     flightDataFile.open("data/flightData.txt",std::ios::out);
 }
 
@@ -47,19 +38,21 @@ float SerialRead::getValue(std::string name){
     return serialValues[name]; 
 }
 
-float SerialRead::bytesToFloat()
+template <typename T>
+T readType()
 {
-    float output;
-    char data[4];
+    T output;
+    char data[sizeof(T)];
 
 #ifndef __APPLE__
-    serRead(serialPort,data,4);
+    serRead(serialPort, data, sizeof(T));
 #endif
 
-    std::memcpy(&output,data, 4);
+    std::memcpy(&output, data, sizeof(T));
 
     return output;
 }
+
 
 void SerialRead::updateElevationQueue(float val){
     if (elevationQueue.size() < 300){
@@ -72,171 +65,162 @@ void SerialRead::updateElevationQueue(float val){
 
 void SerialRead::readPacket() {
 #ifndef __APPLE__
-    while (1) {
-        if(serDataAvailable (serialPort) ){
-            char preamble[2];     /*Read the preamble packets*/
-            serRead(serialPort,preamble,2); 
+    if(serDataAvailable (serialPort) ){
+        char metadata[2];     /*Read the metadata packets*/
+        serRead(serialPort, metadata, sizeof(metadata));
 
-            for (int i = 0; i < 8; i++){
-                if (0x01 & preamble[0]){
-                    switch(i){
-                        case 0: AltimeterState = WORKING; 
-                        case 1: GpsState = WORKING; 
-                        case 2: SDCardState = WORKING; 
-                        case 3: TemperatureState = WORKING; 
-                        case 4: TemperatureState = FAILURE; 
-                        case 5: AccelerometerState = WORKING; 
-                        case 6: AccelerometerState = FAILURE;
-                        case 7: IMUState = WORKING; 
-                    }
-                    preamble[0] >> 1; 
-                }
+        bool altitudeArmed;
+        bool gpsValid;
+        bool sdInitialized;
+
+        for (int i = 0; i < sizeof(metadata) * 8; i++){
+            switch (i) {
+                case 0:
+                    altitudeArmed =  0x01 & metadata[0];
+                    break;
+                case 1:
+                    gpsValid =  0x01 & metadata[0];
+                    break;
+                case 2:
+                    sdInitialized =  0x01 & metadata[0];
+                    break;
+                case 3:
+                    temperatureState = static_cast<SensorState>(0x03 & metadata[0]);
+                    break;
+                case 4:
+                    continue;
+                case 5:
+                    accelerometerState = static_cast<SensorState>(0x03 & metadata[0]);
+                    break;
+                case 6:
+                    continue;
+                case 7:
+                    imuState = static_cast<SensorState>(((0x01 & metadata[1]) << 1) | (0x01 & metadata[0]));
+                    break;
+                case 8:
+                    continue;
+                case 9:
+                    gpsState = static_cast<SensorState>(0x03 & metadata[1]);
+                    break;
+                case 10:
+                    continue;
+                case 11:
+                    altimeterState = static_cast<SensorState>(0x03 & metadata[1]);
+                    break;
+                case 12:
+                    continue;
+                case 13:
+                    flightMode = static_cast<FlightMode>(0x7 & metadata[1]);
+                    break;
+                case 14:
+                case 15:
+                    continue;
+                default:
+                    printf("ERROR: Reached default block of switch statement");
+                    break;
             }
-            u_int8_t sumOfFlightStatus; 
-            for (int i = 8; i < 16; i++){
-                if (0x01 & preamble[1]){
-                    switch(i){
-                        case 8: IMUState = FAILURE; 
-                        case 9: GpsState = WORKING; 
-                        case 10: GpsState = FAILURE; 
-                        case 11: AltimeterState = WORKING; 
-                        case 12: AltimeterState = FAILURE; 
-                        case 13: sumOfFlightStatus += 4;
-                        case 14: sumOfFlightStatus += 2; 
-                        case 15: sumOfFlightStatus += 1; 
-                    }
-                    preamble[1] >> 1; 
-                }
-            }
-            /*Process the bytes for flight status */
-            switch(sumOfFlightStatus){
-                case 0: FlightState = StartupMode; 
-                case 1: FlightState = StandbyMode; 
-                case 2: FlightState = AscentMode; 
-                case 3: FlightState = DrogueDeployedMode; 
-                case 4: FlightState = MainDeployedMode; 
-                case 5: FlightState = FaultMode; 
-            }
-
-            float timestamp = bytesToFloat(); 
-
-            char events[3]; /*Read the events bytes*/
-            serRead(serialPort,events,3);  
-
-            for (int i = 0; i<8; i++){
-                if (0x01 & events[0]){
-                    switch(i){
-                        //case 0:
-                        //case 1:
-                        case 2: AltimeterState = FAILURE; 
-                        case 3: AltimeterState = FAILURE; 
-                        case 4: AltimeterState = FAILURE; 
-                        case 5: IMUState = FAILURE; 
-                        case 6: IMUState = FAILURE; 
-                        case 7: IMUState = FAILURE; 
-                    }
-                    events[0]>>1; 
-                }
-            }
-            for (int i = 8; i<16; i++){
-                if (0x01 & events[1]){
-                    switch(i){
-                        case 8: AccelerometerState = FAILURE; 
-                        case 9: AccelerometerState = FAILURE; 
-                        case 10: AccelerometerState = FAILURE; 
-                        case 11: TemperatureState = FAILURE; 
-                        case 12: TemperatureState = FAILURE; 
-                        case 13: TemperatureState = FAILURE; 
-                        case 14: SDCardState = FAILURE;
-                        case 15: SDCardState = FAILURE;
-                    }
-                    events[1]>>1; 
-                }
-            }
-            for (int i = 16; i<18; i++){
-                if (0x01 & events[2]){
-                    switch(i){
-                        case 16: RadioState = FAILURE; 
-                        case 17: RadioState = FAILURE; 
-                    }
-                    events[2]>>1; 
-                }
-            }
-
-            float alt = bytesToFloat();
-            float lat = bytesToFloat();
-            float longi = bytesToFloat();
-
-            float satInView = bytesToFloat(); 
-
-            float accelx = bytesToFloat();
-            float accely = bytesToFloat();
-            float accelz = bytesToFloat();
-
-            float gyrox = bytesToFloat();
-            float gyroy = bytesToFloat();
-            float gyroz = bytesToFloat();
-
-            float accelXIMU = bytesToFloat(); 
-            float accelYIMU = bytesToFloat(); 
-            float accelZIMU = bytesToFloat(); 
-
-            float oriX = bytesToFloat(); 
-            float oriY = bytesToFloat(); 
-            float oriZ = bytesToFloat(); 
-
-            float magx = bytesToFloat();
-            float magy = bytesToFloat();
-            float magz = bytesToFloat();
-
-            float temp = bytesToFloat(); 
-
-            if (GpsState == WORKING) {
-                serialValues["Longitude"] = longi;
-                serialValues["Latitude"] = lat;
-            }
-
-            if (AltimeterState == WORKING) {
-                serialValues["Altitude"] = alt;
-            }
-
-            if (IMUState == WORKING) {
-                serialValues["Gyro X"] = gyrox;
-                serialValues["Gyro Y"] = gyroy;
-                serialValues["Gyro Z"] = gyroz;
-            }
-
-            if (AccelerometerState == WORKING) {
-                serialValues["Accel X"] = accelx;
-                serialValues["Accel Y"] = accely;
-                serialValues["Accel Z"] = accelz;
-            }
-
-            if (IMUState == WORKING) {
-                serialValues["Mag X"] = magx;
-                serialValues["Mag Y"] = magy;
-                serialValues["Mag Z"] = magz;
-            }
-
-            serialValues["timestamp"] = timestamp; 
-
-            updateElevationQueue(alt);/*Update the elevation Queue with the new value*/
-
-            if (flightDataFile.is_open()){ /*Write the packet to the text file */
-                printf("flightData.txt successfully opened, beginning to write data ...\n");
-
-                flightDataFile << preamble << ", " << timestamp << ", "<< events << ", "<< alt << ", "<< lat << ", "<< longi << ", "<< satInView << ", "<< accelx << ", " << accely << ", "; 
-                flightDataFile << accelz << ", " << gyrox << ", "<< gyroy << ", "<< gyroz << ", "<< accelXIMU << ", " << accelYIMU << ", "<< accelZIMU << ", "; 
-                flightDataFile << oriX << ", " << oriY << ", " << oriZ << ", " << magx << ", " << magy << ", " << magz << ", " << temp << "\n"; 
-
-            } else {
-                printf("flightData.txt was not able to be opened\n");
-            }
-
-            break; /*Exit the loop*/
-        } else {
-            printf("Serial port not available, could not read\n"); 
+            metadata[i / 8] >>= 1;
         }
+
+        auto timestamp = readType<uint32_t>();
+
+        char events[3]; /*Read the events bytes*/
+        serRead(serialPort, events, sizeof(events));
+
+        for (int i = 0; i < sizeof(events) * 8; i++){
+            switch(i) {
+                default:
+                    // TODO: FIGURE OUT WHAT TO DO FOR EACH EVENT
+                    break;
+            }
+            events[i / 8] >>= 1;
+        }
+
+        auto alt = readType<float>();
+
+        auto latitude = readType<int32_t>();
+        auto longitude = readType<int32_t>();
+
+        auto satInView = readType<uint8_t>();
+
+        auto accelX = readType<float>();
+        auto accelY = readType<float>();
+        auto accelZ = readType<float>();
+
+        auto gyroX = readType<float>();
+        auto gyroY = readType<float>();
+        auto gyroZ = readType<float>();
+
+        auto accelXIMU = readType<float>();
+        auto accelYIMU = readType<float>();
+        auto accelZIMU = readType<float>();
+
+        auto oriX = readType<float>();
+        auto oriY = readType<float>();
+        auto oriZ = readType<float>();
+
+        auto gravityX = readType<float>();
+        auto gravityY = readType<float>();
+        auto gravityZ = readType<float>();
+
+        auto temp = readType<float>();
+
+        serialValues["timestamp"] = float(timestamp);
+
+        if (altimeterState == VALID) {
+            serialValues["Altitude"] = alt;
+        }
+
+        if (gpsState == VALID) {
+            serialValues["Latitude"] = float(latitude);
+            serialValues["Longitude"] = float(longitude);
+            serialValues["Satellites"] = float(satInView);
+        }
+
+        if (accelerometerState == VALID) {
+            serialValues["Accel X"] = accelX;
+            serialValues["Accel Y"] = accelY;
+            serialValues["Accel Z"] = accelZ;
+        }
+
+        if (imuState == VALID) {
+            serialValues["Gyro X"] = gyroX;
+            serialValues["Gyro Y"] = gyroY;
+            serialValues["Gyro Z"] = gyroZ;
+        }
+
+        if (imuState == VALID) {
+            serialValues["Accel X IMU"] = accelXIMU;
+            serialValues["Accel Y IMU"] = accelYIMU;
+            serialValues["Accel Z IMU"] = accelZIMU;
+        }
+
+        if (imuState == VALID) {
+            serialValues["Orientation X"] = oriX;
+            serialValues["Orientation Y"] = oriY;
+            serialValues["Orientation Z"] = oriZ;
+        }
+
+        if (imuState == VALID) {
+            serialValues["Gravity X"] = gravityX;
+            serialValues["Gravity Y"] = gravityY;
+            serialValues["Gravity Z"] = gravityZ;
+        }
+
+        updateElevationQueue(alt);/*Update the elevation Queue with the new value*/
+
+        if (flightDataFile.is_open()){ /*Write the packet to the text file */
+            printf("flightData.txt successfully opened, beginning to write data ...\n");
+
+            flightDataFile << metadata << ", " << timestamp << ", "<< events << ", "<< alt << ", "<< latitude << ", "<< longitude << ", "<< satInView << ", "<< accelX << ", " << accelY << ", ";
+            flightDataFile << accelZ << ", " << gyroX << ", "<< gyroY << ", "<< gyroZ << ", "<< accelXIMU << ", " << accelYIMU << ", "<< accelZIMU << ", ";
+            flightDataFile << oriX << ", " << oriY << ", " << oriZ << ", " << gravityX << ", " << gravityY << ", " << gravityZ << ", " << temp << "\n";
+
+        } else {
+            printf("flightData.txt was not able to be opened\n");
+        }
+    } else {
+        printf("Serial port not available, could not read\n");
     }
 #endif
 }
