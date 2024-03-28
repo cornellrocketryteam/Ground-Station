@@ -29,7 +29,7 @@ class SerialRead {
 
         FlightMode FlightState;
 
-        void readPack();  /*Read the packet from RATS with pigpio*/
+        void readPacket();  /*Read the packet from RATS with pigpio*/
 
         float bytesToFloat(); /*Reads 4 bytes then converts to a float*/
 

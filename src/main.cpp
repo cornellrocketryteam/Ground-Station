@@ -18,7 +18,7 @@ int main()
 
     while (!WindowShouldClose())
     {
-        sfr::serialRead.readPack();
+        sfr::serialRead.readPacket();
         gui.processEvents();
 
         BeginDrawing();

@@ -63,7 +63,7 @@ void SerialRead::updateElevationQueue(float val){
     }
 }
 
-void SerialRead::readPack(){ 
+void SerialRead::readPacket(){
     while (1) {
         if(serDataAvailable (serialPort) ){          
             char preamble[2];     /*Read the preamble packets*/
