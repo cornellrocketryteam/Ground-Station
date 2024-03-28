@@ -9,7 +9,7 @@ public:
     /**
      * Creates the Status Light
     */
-    DataPoint(std::string title, float value);
+    DataPoint(std::string title);
     /**
      * Gets the name
     */

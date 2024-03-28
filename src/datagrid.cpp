@@ -6,7 +6,7 @@
 /**
  * Constructor to create the Status Lights in the StatusBar constructor
 */
-DataPoint::DataPoint(std::string title, float value) : title(title), value(value)
+DataPoint::DataPoint(std::string title) : title(title)
 {
 }
 
@@ -24,18 +24,18 @@ void DataPoint::setValue(float val){
 
 DataGrid::DataGrid()
 {
-    data_points.emplace_back("Longitude", 0.0);
-    data_points.emplace_back("Latitude", 0.0);
-    data_points.emplace_back("Altitude", 0.0);
-    data_points.emplace_back("Gyro X", 0.0);
-    data_points.emplace_back("Gyro Y", 0.0);
-    data_points.emplace_back("Gyro Z", 0.0);
-    data_points.emplace_back("Accel X", 0.0);
-    data_points.emplace_back("Accel Y", 0.0);
-    data_points.emplace_back("Accel Z", 0.0);
-    data_points.emplace_back("Mag X", 0.0);
-    data_points.emplace_back("Mag Y", 0.0);
-    data_points.emplace_back("Mag Z", 0.0);
+    data_points.emplace_back("Altitude");
+    data_points.emplace_back("Longitude");
+    data_points.emplace_back("Latitude");
+    data_points.emplace_back("Gyro X");
+    data_points.emplace_back("Gyro Y");
+    data_points.emplace_back("Gyro Z");
+    data_points.emplace_back("Accel X");
+    data_points.emplace_back("Accel Y");
+    data_points.emplace_back("Accel Z");
+    data_points.emplace_back("Mag X");
+    data_points.emplace_back("Mag Y");
+    data_points.emplace_back("Mag Z");
 }
 
 void DataGrid::draw(int posX, int posY, int width, int height)
@@ -60,7 +60,7 @@ void DataGrid::draw(int posX, int posY, int width, int height)
     }
 }
 
-void DataGrid::updateValues(){
+void DataGrid::updateValues() {
     for (auto elem : data_points){
         elem.setValue(sfr::serialRead.getValue(elem.getTitle()));
     }

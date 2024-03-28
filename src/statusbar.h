@@ -13,7 +13,7 @@ public:
     /**
      * Creates the Status Light
     */
-    StatusLight(std::string name, float radius, bool isWorking);
+    StatusLight(std::string name, float radius);
     /**
      * Gets the sensor's current working state
     */

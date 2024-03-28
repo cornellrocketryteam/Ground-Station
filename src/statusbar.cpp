@@ -5,7 +5,7 @@
 /**
  * Constructor to create the Status Lights in the StatusBar constructor
 */
-StatusLight::StatusLight(std::string name, float radius, bool isWorking) : name(name), radius(radius), isWorking(isWorking)
+StatusLight::StatusLight(std::string name, float radius) : name(name), radius(radius)
 {
 }
 
@@ -26,54 +26,11 @@ std::string StatusLight::getName() {
 }
 
 StatusBar::StatusBar() {
-    status_lights.emplace_back("GPS", 20, true);
-    status_lights.emplace_back("Altimeter", 20,false);
-    status_lights.emplace_back("Temperature", 20, true);
-    status_lights.emplace_back("Gyroscope", 20, true);
-    status_lights.emplace_back("IMU", 20, true);
-    status_lights.emplace_back("SD", 20, true);
-}
-
-void StatusBar::updateStatusLights(){
-    for (auto i : status_lights){
-        if (i.getName() == "GPS"){
-            if (sfr::serialRead.GpsState == sfr::serialRead.WORKING){
-                i.setWorking(true); 
-            } else {
-                i.setWorking(false); 
-            }
-        } else if (i.getName() == "Altimeter"){
-            if (sfr::serialRead.AltimeterState == sfr::serialRead.WORKING){
-                i.setWorking(true); 
-            } else {
-                i.setWorking(false); 
-            }
-        } else if (i.getName() == "Temperature"){
-            if (sfr::serialRead.TemperatureState == sfr::serialRead.WORKING){
-                i.setWorking(true); 
-            } else {
-                i.setWorking(false); 
-            }
-        } else if (i.getName() == "Gyroscope"){
-            if (sfr::serialRead.AccelerometerState == sfr::serialRead.WORKING){
-                i.setWorking(true); 
-            } else {
-                i.setWorking(false); 
-            }
-        } else if (i.getName() == "IMU"){
-            if (sfr::serialRead.IMUState == sfr::serialRead.WORKING){
-                i.setWorking(true); 
-            } else {
-                i.setWorking(false); 
-            }
-        } else if (i.getName() == "SD"){
-            if (sfr::serialRead.SDCardState == sfr::serialRead.WORKING){
-                i.setWorking(true); 
-            } else {
-                i.setWorking(false); 
-            }
-        } 
-    }
+    status_lights.emplace_back("GPS", 20);
+    status_lights.emplace_back("Altimeter", 20);
+    status_lights.emplace_back("Temperature", 20);
+    status_lights.emplace_back("Gyroscope", 20);
+    status_lights.emplace_back("IMU", 20);
 }
 
 void StatusBar::draw(int posX, int posY, int width, int height) {
@@ -100,4 +57,40 @@ void StatusBar::draw(int posX, int posY, int width, int height) {
     DrawText("Current Flight Mode:", headerX, posY + height/3 - fontSize/2, fontSize, DARKBLUE);
     int statusX = posX + 0.83*width - MeasureText("Armed", fontSize)/2;
     DrawText("Armed", statusX, posY + 2*height/3 - fontSize/2, fontSize, DARKBLUE);
+}
+
+void StatusBar::updateStatusLights(){
+    for (auto i : status_lights){
+        if (i.getName() == "GPS"){
+            if (sfr::serialRead.gpsState == sfr::serialRead.VALID){
+                i.setWorking(true);
+            } else {
+                i.setWorking(false);
+            }
+        } else if (i.getName() == "Altimeter"){
+            if (sfr::serialRead.altimeterState == sfr::serialRead.VALID){
+                i.setWorking(true);
+            } else {
+                i.setWorking(false);
+            }
+        } else if (i.getName() == "Temperature"){
+            if (sfr::serialRead.temperatureState == sfr::serialRead.VALID){
+                i.setWorking(true);
+            } else {
+                i.setWorking(false);
+            }
+        } else if (i.getName() == "Gyroscope"){
+            if (sfr::serialRead.accelerometerState == sfr::serialRead.VALID){
+                i.setWorking(true);
+            } else {
+                i.setWorking(false);
+            }
+        } else if (i.getName() == "IMU"){
+            if (sfr::serialRead.imuState == sfr::serialRead.VALID){
+                i.setWorking(true);
+            } else {
+                i.setWorking(false);
+            }
+        }
+    }
 }
