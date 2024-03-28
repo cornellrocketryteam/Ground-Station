@@ -2,15 +2,17 @@
 #include <iostream>
 
 #ifndef __APPLE__
-#include <pigpio.h> 
+#include <pigpio.h>
+#endif
 
 SerialRead::SerialRead(){
+#ifndef __APPLE__
     if (gpioInitialise() < 0){
             printf("Pigpio not initialized.\n"); 
     } else {
             printf("Pigpio succesffuly initialized.\n");
     }
-    
+
     serialPort = serOpen("/dev/ttyACM0",9600,0); 
 
     if (serialPort< 0) { /* open serial port */
@@ -18,6 +20,7 @@ SerialRead::SerialRead(){
     } else {
         printf("Opened serial port\n"); 
     }
+#endif
 
     AltimeterState = WORKING; 
     GpsState = WORKING;  
@@ -32,11 +35,12 @@ SerialRead::SerialRead(){
 }
 
 SerialRead::~SerialRead(){
-    serClose(serialPort); 
-
     flightDataFile.close();
 
+#ifndef __APPLE__
+    serClose(serialPort);
     gpioTerminate();
+#endif
 }
 
 float SerialRead::getValue(std::string name){
@@ -46,8 +50,11 @@ float SerialRead::getValue(std::string name){
 float SerialRead::bytesToFloat()
 {
     float output;
-    char data[4]; 
-    serRead(serialPort,data,4); 
+    char data[4];
+
+#ifndef __APPLE__
+    serRead(serialPort,data,4);
+#endif
 
     std::memcpy(&output,data, 4);
 
@@ -63,9 +70,10 @@ void SerialRead::updateElevationQueue(float val){
     }
 }
 
-void SerialRead::readPacket(){
+void SerialRead::readPacket() {
+#ifndef __APPLE__
     while (1) {
-        if(serDataAvailable (serialPort) ){          
+        if(serDataAvailable (serialPort) ){
             char preamble[2];     /*Read the preamble packets*/
             serRead(serialPort,preamble,2); 
 
@@ -183,18 +191,33 @@ void SerialRead::readPacket(){
 
             float temp = bytesToFloat(); 
 
-            serialValues["Longitude"] = longi; 
-            serialValues["Latitude"] = lat; 
-            serialValues["Altitude"] = alt; 
-            serialValues["Gyro X"] = gyrox; 
-            serialValues["Gyro Y"] = gyroy; 
-            serialValues["Gyro Z"] = gyroz; 
-            serialValues["Accel X"] = accelx; 
-            serialValues["Accel Y"] = accely; 
-            serialValues["Accel Z"] = accelz; 
-            serialValues["Mag X"] = magx;
-            serialValues["Mag Y"] = magy; 
-            serialValues["Mag Z"] = magz;
+            if (GpsState == WORKING) {
+                serialValues["Longitude"] = longi;
+                serialValues["Latitude"] = lat;
+            }
+
+            if (AltimeterState == WORKING) {
+                serialValues["Altitude"] = alt;
+            }
+
+            if (IMUState == WORKING) {
+                serialValues["Gyro X"] = gyrox;
+                serialValues["Gyro Y"] = gyroy;
+                serialValues["Gyro Z"] = gyroz;
+            }
+
+            if (AccelerometerState == WORKING) {
+                serialValues["Accel X"] = accelx;
+                serialValues["Accel Y"] = accely;
+                serialValues["Accel Z"] = accelz;
+            }
+
+            if (IMUState == WORKING) {
+                serialValues["Mag X"] = magx;
+                serialValues["Mag Y"] = magy;
+                serialValues["Mag Z"] = magz;
+            }
+
             serialValues["timestamp"] = timestamp; 
 
             updateElevationQueue(alt);/*Update the elevation Queue with the new value*/
@@ -215,5 +238,5 @@ void SerialRead::readPacket(){
             printf("Serial port not available, could not read\n"); 
         }
     }
+#endif
 }
-#endif 
