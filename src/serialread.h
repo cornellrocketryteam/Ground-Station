@@ -15,8 +15,6 @@ private:
 
     std::ofstream flightDataFile; /*The file to write flight telemetry*/
 
-    void updateElevationQueue(float val); /*Updates the elevationQueue, mainting a size of 300*/
-
 public:
     enum SensorState {
         OFF = 0,
@@ -36,7 +34,6 @@ public:
     SensorState altimeterState;
     SensorState gpsState;
     SensorState imuState;
-    SensorState sdCardState;
     SensorState accelerometerState;
     SensorState temperatureState;
 

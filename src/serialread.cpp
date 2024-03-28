@@ -54,15 +54,6 @@ T readType()
 }
 
 
-void SerialRead::updateElevationQueue(float val){
-    if (elevationQueue.size() < 300){
-        elevationQueue.push_back(val); 
-    } else {
-        elevationQueue.push_back(val); 
-        elevationQueue.pop_front();
-    }
-}
-
 void SerialRead::readPacket() {
 #ifndef __APPLE__
     if(serDataAvailable (serialPort) ){
@@ -207,7 +198,13 @@ void SerialRead::readPacket() {
             serialValues["Gravity Z"] = gravityZ;
         }
 
-        updateElevationQueue(alt);/*Update the elevation Queue with the new value*/
+        /*Update the elevation Queue with the new value*/
+        if (elevationQueue.size() < 300){
+            elevationQueue.push_back(alt);
+        } else {
+            elevationQueue.push_back(alt);
+            elevationQueue.pop_front();
+        }
 
         if (flightDataFile.is_open()){ /*Write the packet to the text file */
             printf("flightData.txt successfully opened, beginning to write data ...\n");
