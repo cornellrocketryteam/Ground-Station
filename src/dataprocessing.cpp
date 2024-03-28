@@ -1,8 +1,7 @@
 #include "dataprocessing.h"
 #include <iostream>
 
-//#define APPLE
-#ifndef APPLE
+#ifndef __APPLE__
 #include <pigpio.h> 
 
 SerialRead::SerialRead(){
