@@ -54,9 +54,31 @@ void StatusBar::draw(int posX, int posY, int width, int height) {
     // Current Flight Mode
     DrawRectangle(posX + 0.66*width, posY, 0.34*width, height, SKYBLUE);
     int headerX = posX + 0.83*width - MeasureText("Current Flight Mode:", fontSize)/2;
+
+    std::string flightMode;
+    switch (sfr::serialRead.flightMode) {
+        case SerialRead::STARTUP:
+            flightMode = "Startup";
+            break;
+        case SerialRead::STANDBY:
+            flightMode = "Standby";
+            break;
+        case SerialRead::ASCENT:
+            flightMode = "Ascent";
+            break;
+        case SerialRead::DROGUEDEPLOYED:
+            flightMode = "Drogue Deployed";
+            break;
+        case SerialRead::MAINDEPLOYED:
+            flightMode = "Main Deployed";
+            break;
+        case SerialRead::FAULT:
+            flightMode = "Fault";
+            break;
+    }
     DrawText("Current Flight Mode:", headerX, posY + height/3 - fontSize/2, fontSize, DARKBLUE);
-    int statusX = posX + 0.83*width - MeasureText("Armed", fontSize)/2;
-    DrawText("Armed", statusX, posY + 2*height/3 - fontSize/2, fontSize, DARKBLUE);
+    int statusX = posX + 0.83*width - MeasureText(flightMode.c_str(), fontSize)/2;
+    DrawText(flightMode.c_str(), statusX, posY + 2*height/3 - fontSize/2, fontSize, DARKBLUE);
 }
 
 void StatusBar::updateStatusLights(){
