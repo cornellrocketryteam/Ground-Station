@@ -1,5 +1,7 @@
+#pragma once
+
 #include "serialread.h"
 
 namespace sfr {
-    SerialRead serialRead;
+    extern SerialRead serialRead;
 }

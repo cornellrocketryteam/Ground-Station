@@ -24,7 +24,8 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/graph.cpp
         src/rocket.cpp
         src/gps.cpp
-        src/serialread.cpp)
+        src/serialread.cpp
+        src/sfr.cpp)
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
