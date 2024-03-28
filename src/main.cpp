@@ -6,6 +6,7 @@
 
 #include "gui.h"
 #include "raylib.h"
+#include "sfr.h"
 
 int main()
 {
@@ -17,6 +18,7 @@ int main()
 
     while (!WindowShouldClose())
     {
+        sfr::serialRead.readPack();
         gui.processEvents();
 
         BeginDrawing();
