@@ -1,6 +1,6 @@
 #include "gps.h"
 #include <iostream> 
-#include "dataprocessing.h"
+#include "serialread.h"
 
 GPS::~GPS(){
     UnloadTexture(launchSiteTexture);

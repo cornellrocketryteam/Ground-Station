@@ -1,7 +1,7 @@
 #include "graph.h"
 #include <math.h>
 #include <string>
-#include "dataprocessing.h"
+#include "serialread.h"
 #include <random> 
 #include "sfr.h"
 
