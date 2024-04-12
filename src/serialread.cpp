@@ -41,17 +41,10 @@ float SerialRead::getValue(std::string name){
 }
 
 template <typename T>
-T SerialRead::readType()
+T readType(char* data)
 {
     T output;
-    char data[sizeof(T)];
-
-#ifndef __APPLE__
-    serRead(serialPort, data, sizeof(T));
-#endif
-
     memcpy(&output, data, sizeof(T));
-
     return output;
 }
 
@@ -76,6 +69,9 @@ void SerialRead::readPacket() {
             std::cout << "Byte " << i << ": ";
             printByte(packet[i]);
         }
+
+        auto parsedNumber = readType<int32_t>(packet[13]);
+        std::cout << "Bytes 13-16 as int: " << parsedNumber << std::endl;
     }
 //    if(serDataAvailable (serialPort) ){
 //        auto metadata = readType<uint16_t>();

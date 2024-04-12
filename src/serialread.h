@@ -39,9 +39,6 @@ public:
 
     FlightMode flightMode;
 
-    template <typename T>
-    T readType(); 
-
     void readPacket();  /*Read the packet from RATS with pigpio*/
 
     float getValue(std::string name); /*Gets the float value from the serialValues*/
