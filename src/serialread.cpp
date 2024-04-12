@@ -71,7 +71,7 @@ void SerialRead::readPacket() {
 #ifndef __APPLE__
     if (serDataAvailable(serialPort)) {
         uint8_t packet[86];
-        serRead(serialPort, packet, sizeof(packet));
+        serRead(serialPort, (char *)packet, sizeof(packet));
         for (int i = 0; i < 86; i++) {
             std::cout << "Byte " << i << ": ";
             printByte(packet[i]);
