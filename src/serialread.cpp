@@ -15,7 +15,7 @@ SerialRead::SerialRead(){
             printf("Pigpio succesffuly initialized.\n");
     }
 
-    serialPort = serOpen("/dev/ttyACM0",9600,0); 
+    serialPort = serOpen("/dev/ttyACM0",115200,0);
 
     if (serialPort< 0) { /* open serial port */
         printf ("Unable to open serial device\n") ;
@@ -61,7 +61,6 @@ void printByte(uint8_t byte) {
 
 
 void SerialRead::readPacket() {
-#ifndef __APPLE__
     if (serDataAvailable(serialPort)) {
         uint8_t packet[86];
         serRead(serialPort, (char *)packet, sizeof(packet));
@@ -235,5 +234,4 @@ void SerialRead::readPacket() {
     } else {
         printf("Serial port not available, could not read\n");
     }
-#endif
 }
