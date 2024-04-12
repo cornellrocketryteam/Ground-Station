@@ -73,50 +73,51 @@ void SerialRead::readPacket() {
 //        auto parsedNumber = readType<int32_t>((char*)&packet[13]);
 //        std::cout << "Bytes 13-16 as int: " << parsedNumber << std::endl;
 
-        auto metadata = readType<uint16_t>((char*)&packet[0]);
+        char* metadata = (char*)&packet[0];
+//        auto metadata = readType<uint16_t>((char*)&packet[0]);
 
         bool altitudeArmed;
         bool gpsValid;
         bool sdInitialized;
 
-        for (int i = 0; i < sizeof(metadata) * 8; i++){
+        for (int i = 0; i < 16; i++){
             switch (i) {
                 case 0:
-                    altitudeArmed =  0x01 & metadata;
+                    altitudeArmed =  0x01 & metadata[0];
                     break;
                 case 1:
-                    gpsValid =  0x01 & metadata;
+                    gpsValid =  0x01 & metadata[0];
                     break;
                 case 2:
-                    sdInitialized =  0x01 & metadata;
+                    sdInitialized =  0x01 & metadata[0];
                     break;
                 case 3:
-                    temperatureState = static_cast<SensorState>(0x03 & metadata);
+                    temperatureState = static_cast<SensorState>(0x03 & metadata[0]);
                     break;
                 case 4:
                     continue;
                 case 5:
-                    accelerometerState = static_cast<SensorState>(0x03 & metadata);
+                    accelerometerState = static_cast<SensorState>(0x03 & metadata[0]);
                     break;
                 case 6:
                     continue;
                 case 7:
-                    imuState = static_cast<SensorState>(0x03 & metadata);
+                    imuState = static_cast<SensorState>(((0x01 & metadata[1]) << 1) | (0x01 & metadata[0]));
                     break;
                 case 8:
                     continue;
                 case 9:
-                    gpsState = static_cast<SensorState>(0x03 & metadata);
+                    gpsState = static_cast<SensorState>(0x03 & metadata[1]);
                     break;
                 case 10:
                     continue;
                 case 11:
-                    altimeterState = static_cast<SensorState>(0x03 & metadata);
+                    altimeterState = static_cast<SensorState>(0x03 & metadata[1]);
                     break;
                 case 12:
                     continue;
                 case 13:
-                    flightMode = static_cast<FlightMode>(0x7 & metadata);
+                    flightMode = static_cast<FlightMode>(0x7 & metadata[1]);
                     break;
                 case 14:
                 case 15:
@@ -125,7 +126,7 @@ void SerialRead::readPacket() {
                     printf("ERROR: Reached default block of switch statement");
                     break;
             }
-            metadata >>= 1;
+            metadata[i / 8] >>= 1;
         }
 
         auto timestamp = readType<uint32_t>((char*)&packet[2]);
