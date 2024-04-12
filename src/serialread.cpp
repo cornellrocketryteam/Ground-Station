@@ -39,7 +39,7 @@ float SerialRead::getValue(std::string name){
 }
 
 template <typename T>
-T readType()
+T SerialRead::readType()
 {
     T output;
     char data[sizeof(T)];
@@ -48,7 +48,7 @@ T readType()
     serRead(serialPort, data, sizeof(T));
 #endif
 
-    std::memcpy(&output, data, sizeof(T));
+    memcpy(&output, data, sizeof(T));
 
     return output;
 }

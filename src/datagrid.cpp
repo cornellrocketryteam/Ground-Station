@@ -33,9 +33,9 @@ DataGrid::DataGrid()
     data_points.emplace_back("Accel X");
     data_points.emplace_back("Accel Y");
     data_points.emplace_back("Accel Z");
-    data_points.emplace_back("Mag X");
-    data_points.emplace_back("Mag Y");
-    data_points.emplace_back("Mag Z");
+    data_points.emplace_back("Gravity X");
+    data_points.emplace_back("Gravity Y");
+    data_points.emplace_back("Gravity Z");
 }
 
 void DataGrid::draw(int posX, int posY, int width, int height)
