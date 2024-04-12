@@ -10,8 +10,7 @@ The Ground Station GUI used to display rocket data and telemetry.
 - cmake
 
 ## On the PI:
-- ```sudo apt install libwayland-dev```
-- ```sudo apt install libxkbcommon-x11-dev```
+- ```sudo apt install libwayland-dev libxrandr-dev libxkbcommon-x11-dev libxinerama-dev libxcursor-dev libxi-dev```
 
 ## Reminders 
 - Make sure to git clone pigpio and raylib on the Pi
