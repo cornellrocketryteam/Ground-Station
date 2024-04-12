@@ -70,7 +70,7 @@ void SerialRead::readPacket() {
             printByte(packet[i]);
         }
 
-        auto parsedNumber = readType<int32_t>(&packet[13]);
+        auto parsedNumber = readType<int32_t>((char*)&packet[13]);
         std::cout << "Bytes 13-16 as int: " << parsedNumber << std::endl;
     }
 //    if(serDataAvailable (serialPort) ){
