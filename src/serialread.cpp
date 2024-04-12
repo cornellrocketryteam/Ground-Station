@@ -1,5 +1,6 @@
 #include "serialread.h"
 #include <stdio.h> 
+#include <cstring> 
 #include <iostream>
 
 #ifndef __APPLE__
