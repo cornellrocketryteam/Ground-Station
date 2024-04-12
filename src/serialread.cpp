@@ -59,8 +59,7 @@ T SerialRead::readType()
 void SerialRead::readPacket() {
 #ifndef __APPLE__
     if(serDataAvailable (serialPort) ){
-        char metadata[2];     /*Read the metadata packets*/
-        serRead(serialPort, metadata, sizeof(metadata));
+        auto metadata = readType<uint16_t>();
 
         bool altitudeArmed;
         bool gpsValid;
@@ -69,41 +68,41 @@ void SerialRead::readPacket() {
         for (int i = 0; i < sizeof(metadata) * 8; i++){
             switch (i) {
                 case 0:
-                    altitudeArmed =  0x01 & metadata[0];
+                    altitudeArmed =  0x01 & metadata;
                     break;
                 case 1:
-                    gpsValid =  0x01 & metadata[0];
+                    gpsValid =  0x01 & metadata;
                     break;
                 case 2:
-                    sdInitialized =  0x01 & metadata[0];
+                    sdInitialized =  0x01 & metadata;
                     break;
                 case 3:
-                    temperatureState = static_cast<SensorState>(0x03 & metadata[0]);
+                    temperatureState = static_cast<SensorState>(0x03 & metadata);
                     break;
                 case 4:
                     continue;
                 case 5:
-                    accelerometerState = static_cast<SensorState>(0x03 & metadata[0]);
+                    accelerometerState = static_cast<SensorState>(0x03 & metadata);
                     break;
                 case 6:
                     continue;
                 case 7:
-                    imuState = static_cast<SensorState>(((0x01 & metadata[1]) << 1) | (0x01 & metadata[0]));
+                    imuState = static_cast<SensorState>(0x03 & metadata);
                     break;
                 case 8:
                     continue;
                 case 9:
-                    gpsState = static_cast<SensorState>(0x03 & metadata[1]);
+                    gpsState = static_cast<SensorState>(0x03 & metadata);
                     break;
                 case 10:
                     continue;
                 case 11:
-                    altimeterState = static_cast<SensorState>(0x03 & metadata[1]);
+                    altimeterState = static_cast<SensorState>(0x03 & metadata);
                     break;
                 case 12:
                     continue;
                 case 13:
-                    flightMode = static_cast<FlightMode>(0x7 & metadata[1]);
+                    flightMode = static_cast<FlightMode>(0x7 & metadata);
                     break;
                 case 14:
                 case 15:
@@ -112,7 +111,7 @@ void SerialRead::readPacket() {
                     printf("ERROR: Reached default block of switch statement");
                     break;
             }
-            metadata[i / 8] >>= 1;
+            metadata >>= 1;
         }
 
         auto timestamp = readType<uint32_t>();
