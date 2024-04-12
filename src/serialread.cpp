@@ -225,7 +225,7 @@ void SerialRead::readPacket() {
         if (flightDataFile.is_open()){ /*Write the packet to the text file */
             printf("flightData.txt successfully opened, beginning to write data ...\n");
 
-            flightDataFile << metadata << ", " << timestamp << ", "<< events << ", "<< alt << ", "<< latitude << ", "<< longitude << ", "<< satInView << ", "<< accelX << ", " << accelY << ", ";
+            flightDataFile << metadata << ", " << timestamp << ", "<< ", "<< alt << ", "<< latitude << ", "<< longitude << ", "<< satInView << ", "<< accelX << ", " << accelY << ", ";
             flightDataFile << accelZ << ", " << gyroX << ", "<< gyroY << ", "<< gyroZ << ", "<< accelXIMU << ", " << accelYIMU << ", "<< accelZIMU << ", ";
             flightDataFile << oriX << ", " << oriY << ", " << oriZ << ", " << gravityX << ", " << gravityY << ", " << gravityZ << ", " << temp << "\n";
 
