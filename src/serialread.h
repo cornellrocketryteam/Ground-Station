@@ -49,3 +49,6 @@ public:
 
     std::deque<float> elevationQueue; /*Stores the elevation points to graph*/
 };
+
+
+
