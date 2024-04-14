@@ -55,6 +55,14 @@ float converter(char* packet){
     return temp;
 }
 
+uint32_t converterINT32(char* packet){
+    uint32_t temp; 
+
+    memcpy(&temp,packet,sizeof(temp)); 
+    return temp;
+}
+
+
 void printByte(uint8_t byte) {
     for (int i = 7; i >= 0; i--) {
         if (byte & (0b1 << i)) {
@@ -83,8 +91,8 @@ void SerialRead::readPacket() {
             printf("Metadata Byte 2: "); 
             printByte(packet[1]); 
 
-            float timestamp = converter((char*)&packet[2]); 
-            printf ("%s%f%s", "Time Stamp: ",timestamp, "\n");
+            uint32_t timestamp = converterINT32((char*)&packet[2]); 
+            printf ("%s%i%s", "Time Stamp: ",timestamp, "\n");
 
             printf("Events Byte 1: "); 
             printByte(packet[6]);
