@@ -41,16 +41,16 @@ void Graph::draw(int posX, int posY, int width, int height) {
 //        sfr::serialRead.elevationQueue.push_back(i*40);
 //    }
 
-    if (sfr::serialRead.elevationQueue.size() > 1) {
-        float stepLength = float(width - offsetFromLeft - altitudeAndGraphSpacing) / 300;
-        for (auto i = sfr::serialRead.elevationQueue.size() - 1; i > 0; i--) {
-            float startPosX = float(posX) + offsetFromLeft + altitudeAndGraphSpacing + (300 - i) * stepLength;
-            float startPosY = graphYToScreenY(posY, height, sfr::serialRead.elevationQueue.at(300 - i));
-            float endPosX = float(posX) + offsetFromLeft + altitudeAndGraphSpacing + (299 - i) * stepLength;
-            float endPosY = graphYToScreenY(posY, height, sfr::serialRead.elevationQueue.at(299 - i));
-            DrawLineEx({startPosX, startPosY}, {endPosX, endPosY}, 2, BLUE);
-        }
-    }
+    // if (sfr::serialRead.elevationQueue.size() > 1) {
+    //     float stepLength = float(width - offsetFromLeft - altitudeAndGraphSpacing) / 300;
+    //     for (auto i = sfr::serialRead.elevationQueue.size() - 1; i > 0; i--) {
+    //         float startPosX = float(posX) + offsetFromLeft + altitudeAndGraphSpacing + (300 - i) * stepLength;
+    //         float startPosY = graphYToScreenY(posY, height, sfr::serialRead.elevationQueue.at(300 - i));
+    //         float endPosX = float(posX) + offsetFromLeft + altitudeAndGraphSpacing + (299 - i) * stepLength;
+    //         float endPosY = graphYToScreenY(posY, height, sfr::serialRead.elevationQueue.at(299 - i));
+    //         DrawLineEx({startPosX, startPosY}, {endPosX, endPosY}, 2, BLUE);
+    //     }
+    // }
 
 //    sfr::serialRead.elevationQueue.clear();
 }

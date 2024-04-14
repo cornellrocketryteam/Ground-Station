@@ -56,7 +56,7 @@ void StatusBar::draw(int posX, int posY, int width, int height) {
     int headerX = posX + 0.83*width - MeasureText("Current Flight Mode:", fontSize)/2;
 
     std::string flightMode;
-    switch (sfr::serialRead.flightMode) {
+    switch (sfr::serialRead->flightMode) {
         case SerialRead::STARTUP:
             flightMode = "Startup";
             break;
@@ -84,31 +84,31 @@ void StatusBar::draw(int posX, int posY, int width, int height) {
 void StatusBar::updateStatusLights(){
     for (auto i : status_lights){
         if (i.getName() == "GPS"){
-            if (sfr::serialRead.gpsState == sfr::serialRead.VALID){
+            if (sfr::serialRead->gpsState == sfr::serialRead->VALID){
                 i.setWorking(true);
             } else {
                 i.setWorking(false);
             }
         } else if (i.getName() == "Altimeter"){
-            if (sfr::serialRead.altimeterState == sfr::serialRead.VALID){
+            if (sfr::serialRead->altimeterState == sfr::serialRead->VALID){
                 i.setWorking(true);
             } else {
                 i.setWorking(false);
             }
         } else if (i.getName() == "Temperature"){
-            if (sfr::serialRead.temperatureState == sfr::serialRead.VALID){
+            if (sfr::serialRead->temperatureState == sfr::serialRead->VALID){
                 i.setWorking(true);
             } else {
                 i.setWorking(false);
             }
         } else if (i.getName() == "Gyroscope"){
-            if (sfr::serialRead.accelerometerState == sfr::serialRead.VALID){
+            if (sfr::serialRead->accelerometerState == sfr::serialRead->VALID){
                 i.setWorking(true);
             } else {
                 i.setWorking(false);
             }
         } else if (i.getName() == "IMU"){
-            if (sfr::serialRead.imuState == sfr::serialRead.VALID){
+            if (sfr::serialRead->imuState == sfr::serialRead->VALID){
                 i.setWorking(true);
             } else {
                 i.setWorking(false);

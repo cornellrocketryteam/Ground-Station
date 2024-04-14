@@ -48,5 +48,5 @@ private:
     /**
      * Vector to store the status lights
     */
-    std::vector<DataPoint> data_points;
+    std::vector<DataPoint*> data_points;
 };

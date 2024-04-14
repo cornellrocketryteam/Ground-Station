@@ -1,5 +1,5 @@
 #include "sfr.h"
 
 namespace sfr {
-    SerialRead serialRead;
+    SerialRead* serialRead = new SerialRead();
 }
