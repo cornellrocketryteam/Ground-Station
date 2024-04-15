@@ -52,7 +52,7 @@ private:
     /**
      * Vector to store the status lights
     */
-    std::vector<StatusLight> status_lights;
+    std::vector<StatusLight*> status_lights;
 
     /*Updates the status lights based on the sfr::serialRead value*/
     void updateStatusLights();

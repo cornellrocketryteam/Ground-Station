@@ -26,11 +26,11 @@ std::string StatusLight::getName() {
 }
 
 StatusBar::StatusBar() {
-    status_lights.emplace_back("GPS", 20);
-    status_lights.emplace_back("Altimeter", 20);
-    status_lights.emplace_back("Temperature", 20);
-    status_lights.emplace_back("Gyroscope", 20);
-    status_lights.emplace_back("IMU", 20);
+    status_lights.emplace_back(new StatusLight("GPS", 20));
+    status_lights.emplace_back(new StatusLight("Altimeter", 20));
+    status_lights.emplace_back(new StatusLight("Temperature", 20));
+    status_lights.emplace_back(new StatusLight("Gyroscope", 20));
+    status_lights.emplace_back(new StatusLight("IMU", 20));
 }
 
 void StatusBar::draw(int posX, int posY, int width, int height) {
@@ -41,7 +41,7 @@ void StatusBar::draw(int posX, int posY, int width, int height) {
     int offsetY = height/6;
     int width_step = (0.66*width) / (2*status_lights.size());
     for (int i = 0; i < status_lights.size(); ++i) {
-        StatusLight status_light = status_lights.at(i);
+        StatusLight status_light = *status_lights.at(i);
         Color color = status_light.getWorking() ? GREEN : RED;
         int x = width_step*(2*i+1);
 
@@ -83,35 +83,35 @@ void StatusBar::draw(int posX, int posY, int width, int height) {
 
 void StatusBar::updateStatusLights(){
     for (auto i : status_lights){
-        if (i.getName() == "GPS"){
+        if (i->getName() == "GPS"){
             if (sfr::serialRead->gpsState == sfr::serialRead->VALID){
-                i.setWorking(true);
+                i->setWorking(true);
             } else {
-                i.setWorking(false);
+                i->setWorking(false);
             }
-        } else if (i.getName() == "Altimeter"){
+        } else if (i->getName() == "Altimeter"){
             if (sfr::serialRead->altimeterState == sfr::serialRead->VALID){
-                i.setWorking(true);
+                i->setWorking(true);
             } else {
-                i.setWorking(false);
+                i->setWorking(false);
             }
-        } else if (i.getName() == "Temperature"){
+        } else if (i->getName() == "Temperature"){
             if (sfr::serialRead->temperatureState == sfr::serialRead->VALID){
-                i.setWorking(true);
+                i->setWorking(true);
             } else {
-                i.setWorking(false);
+                i->setWorking(false);
             }
-        } else if (i.getName() == "Gyroscope"){
+        } else if (i->getName() == "Gyroscope"){
             if (sfr::serialRead->accelerometerState == sfr::serialRead->VALID){
-                i.setWorking(true);
+                i->setWorking(true);
             } else {
-                i.setWorking(false);
+                i->setWorking(false);
             }
-        } else if (i.getName() == "IMU"){
+        } else if (i->getName() == "IMU"){
             if (sfr::serialRead->imuState == sfr::serialRead->VALID){
-                i.setWorking(true);
+                i->setWorking(true);
             } else {
-                i.setWorking(false);
+                i->setWorking(false);
             }
         }
     }

@@ -2,64 +2,26 @@
 #include <stdio.h> 
 #include <cstring> 
 #include <iostream>
-
-#ifndef __APPLE__
-#include <pigpio.h>
-#endif
+#include <math.h>
 
 SerialRead::SerialRead(){
-#ifndef __APPLE__
-    // if (gpioInitialise() < 0){
-    //         printf("Pigpio not initialized.\n"); 
-    // } else {
-    //         printf("Pigpio succesffuly initialized.\n");
-    // }
-
-    // serialPort = serOpen("/dev/ttyACM0",115200,0);
-
-    // if (serialPort< 0) { /* open serial port */
-    //     printf ("Unable to open serial device\n") ;
-    // } else {
-    //     printf("Opened serial port\n"); 
-    // }
-#endif
-
-    flightDataFile.open("data/flightData.txt",std::ios::out);
+    //flightDataFile.open("data/flightData.txt",std::ios::out);
 }
 
 SerialRead::~SerialRead(){
-    flightDataFile.close();
-
-#ifndef __APPLE__
-    // serClose(serialPort);
-    // gpioTerminate();
-#endif
+    //flightDataFile.close();
 }
 
 float SerialRead::getValue(std::string name){
     return serialValues[name]; 
 }
 
-// template <typename T>
-// T readType(char* data)
-// {
-//     T output;
-//     memcpy(&output, data, sizeof(T));
-//     return output;
-// }
+template<typename T> 
+T converter(char* packet){
+    T temp; 
 
-float converter(char* packet){
-    float temp; 
-
-    memcpy(&temp,packet,sizeof(temp)); 
-    return temp;
-}
-
-uint32_t converterINT32(char* packet){
-    uint32_t temp; 
-
-    memcpy(&temp,packet,sizeof(temp)); 
-    return temp;
+    memcpy(&temp, packet, sizeof(temp)); 
+    return temp; 
 }
 
 
@@ -74,24 +36,161 @@ void printByte(uint8_t byte) {
     std::cout << std::endl;
 }
 
-
 void SerialRead::readPacket() {
     unsigned char packet[86];
     FILE *ptr;
 
-    ptr = fopen("/dev/cu.usbmodem101","rb");  // r for read, b for binary
+    ptr = fopen("/dev/cu.usbmodem11101","rb");  // r for read, b for binary
 
     if (ptr != nullptr) {
 
         fread(packet,sizeof(packet),1,ptr); // read 86 bytes to our buffer
 
-            printf("Metadata Byte 1: "); 
-            printByte(packet[0]); 
+        printf("Metadata Byte 1: "); 
+        printByte(packet[0]); 
 
-            printf("Metadata Byte 2: "); 
-            printByte(packet[1]); 
+        printf("Metadata Byte 2: "); 
+        printByte(packet[1]); 
 
-            uint32_t timestamp = converterINT32((char*)&packet[2]); 
+        /*Process MetaData*/
+        int i = 0; 
+        while (i < 8){
+            switch (i){
+                case 0:
+                    if (packet[0] & 0x01){
+                        altimeterState =  VALID; 
+                    }
+                    break; 
+                case 1:
+                    if (packet[0] & 0x01){
+                        gpsState = VALID; 
+                    }
+                    break; 
+                case 2:
+                    break; 
+                case 3:
+                    if (packet[0] & 0x01){
+                        temperatureState = VALID; 
+                    } else {
+                        if ((packet[0] >> 1 ) & 0x01){
+                            temperatureState = INVALID; 
+                        } else {
+                            temperatureState = OFF; 
+                        }
+                    }
+                    i += 1; 
+                    packet[0] >>= 1; 
+                    break; 
+                case 4:
+                    break; 
+                case 5:
+                    if (packet[0] & 0x01){
+                        accelerometerState = VALID; 
+                    } else {
+                        if ((packet[0] >> 1 ) & 0x01){
+                            accelerometerState = INVALID; 
+                        } else {
+                            accelerometerState = OFF; 
+                        }
+                    }
+                    i += 1; 
+                    packet[0] >>= 1; 
+                    break; 
+                case 6:
+                    break; 
+                case 7:
+                    //Process IMU State 
+                    if (packet[0] & 0x01){
+                        imuState = VALID; 
+                    }
+                    break; 
+                }
+                packet[0] >>= 1; 
+                i+= 1; 
+            }
+
+            i=8; 
+            while (i < 16){
+            switch (i){
+                case 8:
+                    if (packet[1] & 0x01){
+                        imuState = INVALID; 
+                    }
+                    break; 
+                case 9:
+                    if (packet[1] & 0x01){
+                        gpsState = VALID; 
+                    } else {
+                        if ((packet[1] >> 1 ) & 0x01){
+                            gpsState = INVALID; 
+                        } else {
+                            gpsState  = OFF; 
+                        }
+                    }
+                    i += 1; 
+                    packet[1] >>= 1; 
+                    break; 
+                case 10:
+                    break; 
+                case 11:
+                    if (packet[1] & 0x01){
+                        altimeterState = VALID; 
+                    } else {
+                        if ((packet[1] >> 1 ) & 0x01){
+                            altimeterState = INVALID; 
+                        } else {
+                            altimeterState = OFF; 
+                        }
+                    }
+                    i += 1; 
+                    packet[1] >>= 1; 
+                    break; 
+                case 12:
+                    break; 
+                case 13: {
+                        // Process the Flight Mode 
+                        u_int8_t sum = 0; 
+                        for (int j = 0; j < 3; j++){
+                            if (packet[1] & 0x01){
+                                sum += pow(2, j); 
+                            }
+                            packet[1] >>= 1;
+                        }
+                        switch(sum){
+                            case 0:
+                                flightMode = STARTUP;
+                                break;
+                            case 1:
+                                flightMode = STANDBY;
+                                break;
+                            case 2:
+                                flightMode = ASCENT;
+                                break;
+                            case 3:
+                                flightMode = DROGUEDEPLOYED;
+                                break;
+                            case 4:
+                                flightMode = MAINDEPLOYED;
+                                break;
+                            case 5:
+                                flightMode = FAULT;
+                                break;
+                            default:
+                                break;
+                        }
+                    }   
+                    i += 3; 
+                    break; 
+                case 14:
+                    break; 
+                case 15:
+                    break; 
+                }
+                packet[1] >>= 1; 
+                i+= 1; 
+            }
+
+            uint32_t timestamp = converter<uint32_t>((char*)&packet[2]); 
             printf ("%s%i%s", "Time Stamp: ",timestamp, "\n");
 
             printf("Events Byte 1: "); 
@@ -103,61 +202,63 @@ void SerialRead::readPacket() {
             printf("Events Byte 3: "); 
             printByte(packet[8]);
 
-            float alt = converter((char*)&packet[9]);
+            float alt = converter<float>((char*)&packet[9]);
             printf ("%s%f%s", "Altitude: ",alt, "\n");
 
-            float lat = converter((char*)&packet[13]);
+            float lat = converter<float>((char*)&packet[13]);
             printf ("%s%f%s", "Latitude: ",lat, "\n");
 
-            float longi = converter((char*)&packet[17]);
+            float longi = converter<float>((char*)&packet[17]);
             printf ("%s%f%s","Longitude: ", longi, "\n");
 
-            float accelX = converter((char*)&packet[22]);
+            uint8_t satInView = converter<uint8_t>((char*)&packet[21]);
+
+            float accelX = converter<float>((char*)&packet[22]);
             printf ("%s%f%s", "Accel X: ", accelX, "\n");
 
-            float accelY = converter((char*)&packet[26]);
+            float accelY = converter<float>((char*)&packet[26]);
             printf ("%s%f%s","Accel Y: ", accelY, "\n");
 
-            float accelZ = converter((char*)&packet[30]);
+            float accelZ = converter<float>((char*)&packet[30]);
             printf ("%s%f%s","Accel Z: ", accelZ, "\n");
 
-            float gyroX = converter((char*)&packet[34]);
+            float gyroX = converter<float>((char*)&packet[34]);
             printf ("%s%f%s", "Gyro X: ", gyroX, "\n");
 
-            float gyroY = converter((char*)&packet[38]);
+            float gyroY = converter<float>((char*)&packet[38]);
             printf ("%s%f%s", "Gyro Y: ", gyroY, "\n");
 
-            float gyroZ = converter((char*)&packet[42]);
+            float gyroZ = converter<float>((char*)&packet[42]);
             printf ("%s%f%s", "Gyro Z: ", gyroZ, "\n");
 
-            float accelXIMU = converter((char*)&packet[46]);
+            float accelXIMU = converter<float>((char*)&packet[46]);
             printf ("%s%f%s","Accel X IMU: ", accelXIMU, "\n");
 
-            float accelYIMU = converter((char*)&packet[50]);
+            float accelYIMU = converter<float>((char*)&packet[50]);
             printf ("%s%f%s", "Accel Y IMU: ",accelYIMU, "\n");
 
-            float accelZIMU = converter((char*)&packet[54]);
+            float accelZIMU = converter<float>((char*)&packet[54]);
             printf ("%s%f%s","Accel Z IMU: ",  accelZIMU, "\n");
 
-            float oriX = converter((char*)&packet[58]);
+            float oriX = converter<float>((char*)&packet[58]);
             printf ("%s%f%s", "Ori X: ", oriX, "\n");
 
-            float oriY = converter((char*)&packet[62]);
+            float oriY = converter<float>((char*)&packet[62]);
             printf ("%s%f%s", "Ori Y: ", oriY, "\n");
 
-            float oriZ = converter((char*)&packet[66]);
+            float oriZ = converter<float>((char*)&packet[66]);
             printf ("%s%f%s", "Ori Z: ", oriZ, "\n");
 
-            float gravityX = converter((char*)&packet[70]);
+            float gravityX = converter<float>((char*)&packet[70]);
             printf ("%s%f%s","Gravity X: ", gravityX, "\n");
 
-            float gravityY = converter((char*)&packet[74]);
+            float gravityY = converter<float>((char*)&packet[74]);
             printf ("%s%f%s", "Gravity Y", gravityY, "\n");
 
-            float gravityZ = converter((char*)&packet[78]);
+            float gravityZ = converter<float>((char*)&packet[78]);
             printf ("%s%f%s", "Gravity Z: ", gravityZ, "\n");
 
-            float temp = converter((char*)&packet[82]);
+            float temp = converter<float>((char*)&packet[82]);
             printf ("%s%f%s", "Temperature: ",temp, "\n");
 
             serialValues["timestamp"] = float(timestamp);
@@ -172,39 +273,29 @@ void SerialRead::readPacket() {
             serialValues["Accel Y"] = accelY;
             serialValues["Accel Z"] = accelZ;
         
-
             serialValues["Gyro X"] = gyroX;
             serialValues["Gyro Y"] = gyroY;
             serialValues["Gyro Z"] = gyroZ;
-        
 
             serialValues["Accel X IMU"] = accelXIMU;
             serialValues["Accel Y IMU"] = accelYIMU;
             serialValues["Accel Z IMU"] = accelZIMU;
         
-
             serialValues["Orientation X"] = oriX;
             serialValues["Orientation Y"] = oriY;
             serialValues["Orientation Z"] = oriZ;
         
-
             serialValues["Gravity X"] = gravityX;
             serialValues["Gravity Y"] = gravityY;
             serialValues["Gravity Z"] = gravityZ;
         
 
-        /*Update the elevation Queue with the new value*/
-        // if (elevationQueue.size() < 300){
-        //     elevationQueue.push_back(alt);
-        // } else {
-        //     elevationQueue.push_back(alt);
-        //     elevationQueue.pop_front();
-        // }
+        /*TODO: Update the elevation Queue with the new value*/
 
         // if (flightDataFile.is_open()){ /*Write the packet to the text file */
         //     printf("flightData.txt successfully opened, beginning to write data ...\n");
 
-        //     flightDataFile << metadata << ", " << timestamp << ", "<< ", "<< alt << ", "<< latitude << ", "<< longitude << ", "<< satInView << ", "<< accelX << ", " << accelY << ", ";
+        //     flightDataFile << timestamp << ", "<< ", "<< alt << ", "<< lat << ", "<< longi<< ", "<< satInView << ", "<< accelX << ", " << accelY << ", ";
         //     flightDataFile << accelZ << ", " << gyroX << ", "<< gyroY << ", "<< gyroZ << ", "<< accelXIMU << ", " << accelYIMU << ", "<< accelZIMU << ", ";
         //     flightDataFile << oriX << ", " << oriY << ", " << oriZ << ", " << gravityX << ", " << gravityY << ", " << gravityZ << ", " << temp << "\n";
 
