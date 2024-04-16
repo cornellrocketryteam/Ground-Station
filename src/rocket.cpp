@@ -14,7 +14,6 @@ Rocket::Rocket() {
 
     // the rocket's initial position
     rocketPosition = { 0.0f, 2.0f, 0.0f };
-
     terrainPosition = {0.0, -10,0}; 
 
     // sets the size of the map
@@ -90,19 +89,19 @@ void Rocket::draw(int posX, int posY, int width, int height)
 
 void Rocket::processEvents()
 {
-    if (IsKeyDown(KEY_UP)){
-        rocketPosition.y += 1; 
-        cameraYAdded += 1; 
-    } else if (IsKeyDown(KEY_DOWN)){
-        rocketPosition.y -= 1; 
-        cameraYAdded -= 1; 
-    } else if (IsKeyDown(KEY_LEFT)){
-        xRotation += 1; 
-    } else if (IsKeyDown(KEY_RIGHT)){
-        yRotation += 1; 
-    } else if (IsKeyDown(KEY_SPACE)){
-        zRotation += 1; 
-    }
+    // if (IsKeyDown(KEY_UP)){
+    //     rocketPosition.y += 1; 
+    //     cameraYAdded += 1; 
+    // } else if (IsKeyDown(KEY_DOWN)){
+    //     rocketPosition.y -= 1; 
+    //     cameraYAdded -= 1; 
+    // } else if (IsKeyDown(KEY_LEFT)){
+    //     xRotation += 1; 
+    // } else if (IsKeyDown(KEY_RIGHT)){
+    //     yRotation += 1; 
+    // } else if (IsKeyDown(KEY_SPACE)){
+    //     zRotation += 1; 
+    // }
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
         float mouseX = GetMousePosition().x;
@@ -119,6 +118,18 @@ void Rocket::processEvents()
             WaitTime(0.1);
         }
     }
+    cameraYAdded = sfr::serialRead->getValue("Altitude"); 
+    rocketPosition.y = sfr::serialRead->getValue("Altitude"); 
+
+    // TODO: Process longitude and latitude data for our model 
+    
+    //TODO: Process Orientation data for our model 
+    // Check which Axis are being used 
+    xRotation = sfr::serialRead->getValue("Orientation X"); 
+    yRotation = sfr::serialRead->getValue("Orientation Z"); 
+    zRotation = sfr::serialRead->getValue("Orientation Y"); 
+
+    
 }
 
 /**

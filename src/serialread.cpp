@@ -5,11 +5,11 @@
 #include <math.h>
 
 SerialRead::SerialRead(){
-    //flightDataFile.open("data/flightData.txt",std::ios::out);
+    flightDataFile = fopen("data/flightData.txt","w");
 }
 
 SerialRead::~SerialRead(){
-    //flightDataFile.close();
+    fclose(flightDataFile);
 }
 
 float SerialRead::getValue(std::string name){
@@ -23,7 +23,6 @@ T converter(char* packet){
     memcpy(&temp, packet, sizeof(temp)); 
     return temp; 
 }
-
 
 void printByte(uint8_t byte) {
     for (int i = 7; i >= 0; i--) {
@@ -47,10 +46,8 @@ void SerialRead::readPacket() {
         fread(packet,sizeof(packet),1,ptr); // read 86 bytes to our buffer
 
         printf("Metadata Byte 1: "); 
-        printByte(packet[0]); 
 
         printf("Metadata Byte 2: "); 
-        printByte(packet[1]); 
 
         /*Process MetaData*/
         int i = 0; 
@@ -203,68 +200,48 @@ void SerialRead::readPacket() {
             printByte(packet[8]);
 
             float alt = converter<float>((char*)&packet[9]);
-            printf ("%s%f%s", "Altitude: ",alt, "\n");
 
             float lat = converter<float>((char*)&packet[13]);
-            printf ("%s%f%s", "Latitude: ",lat, "\n");
 
             float longi = converter<float>((char*)&packet[17]);
-            printf ("%s%f%s","Longitude: ", longi, "\n");
 
             uint8_t satInView = converter<uint8_t>((char*)&packet[21]);
 
             float accelX = converter<float>((char*)&packet[22]);
-            printf ("%s%f%s", "Accel X: ", accelX, "\n");
 
             float accelY = converter<float>((char*)&packet[26]);
-            printf ("%s%f%s","Accel Y: ", accelY, "\n");
 
             float accelZ = converter<float>((char*)&packet[30]);
-            printf ("%s%f%s","Accel Z: ", accelZ, "\n");
 
             float gyroX = converter<float>((char*)&packet[34]);
-            printf ("%s%f%s", "Gyro X: ", gyroX, "\n");
 
             float gyroY = converter<float>((char*)&packet[38]);
-            printf ("%s%f%s", "Gyro Y: ", gyroY, "\n");
 
             float gyroZ = converter<float>((char*)&packet[42]);
-            printf ("%s%f%s", "Gyro Z: ", gyroZ, "\n");
 
             float accelXIMU = converter<float>((char*)&packet[46]);
-            printf ("%s%f%s","Accel X IMU: ", accelXIMU, "\n");
 
             float accelYIMU = converter<float>((char*)&packet[50]);
-            printf ("%s%f%s", "Accel Y IMU: ",accelYIMU, "\n");
 
             float accelZIMU = converter<float>((char*)&packet[54]);
-            printf ("%s%f%s","Accel Z IMU: ",  accelZIMU, "\n");
 
             float oriX = converter<float>((char*)&packet[58]);
-            printf ("%s%f%s", "Ori X: ", oriX, "\n");
 
             float oriY = converter<float>((char*)&packet[62]);
-            printf ("%s%f%s", "Ori Y: ", oriY, "\n");
 
             float oriZ = converter<float>((char*)&packet[66]);
-            printf ("%s%f%s", "Ori Z: ", oriZ, "\n");
 
             float gravityX = converter<float>((char*)&packet[70]);
-            printf ("%s%f%s","Gravity X: ", gravityX, "\n");
 
             float gravityY = converter<float>((char*)&packet[74]);
-            printf ("%s%f%s", "Gravity Y", gravityY, "\n");
 
             float gravityZ = converter<float>((char*)&packet[78]);
-            printf ("%s%f%s", "Gravity Z: ", gravityZ, "\n");
 
             float temp = converter<float>((char*)&packet[82]);
-            printf ("%s%f%s", "Temperature: ",temp, "\n");
 
             serialValues["timestamp"] = float(timestamp);
 
             serialValues["Altitude"] = alt;
-
 
             serialValues["Latitude"] = float(lat);
             serialValues["Longitude"] = float(longi);
@@ -292,16 +269,18 @@ void SerialRead::readPacket() {
 
         /*TODO: Update the elevation Queue with the new value*/
 
-        // if (flightDataFile.is_open()){ /*Write the packet to the text file */
-        //     printf("flightData.txt successfully opened, beginning to write data ...\n");
+        if (flightDataFile != nullptr){ /*Write the packet to the text file */
+            printf("flightData.txt successfully opened, beginning to write data ...\n");
 
-        //     flightDataFile << timestamp << ", "<< ", "<< alt << ", "<< lat << ", "<< longi<< ", "<< satInView << ", "<< accelX << ", " << accelY << ", ";
-        //     flightDataFile << accelZ << ", " << gyroX << ", "<< gyroY << ", "<< gyroZ << ", "<< accelXIMU << ", " << accelYIMU << ", "<< accelZIMU << ", ";
-        //     flightDataFile << oriX << ", " << oriY << ", " << oriZ << ", " << gravityX << ", " << gravityY << ", " << gravityZ << ", " << temp << "\n";
+            for (auto it = serialValues.begin(); it != serialValues.end(); it++){
+                fprintf(flightDataFile, "%s: %f,", it->first.c_str(), it->second);
+            }
+            fprintf(flightDataFile, "\n");
 
-        // } else {
-        //     printf("flightData.txt was not able to be opened\n");
-        // }
+
+        } else {
+            printf("flightData.txt was not able to be opened\n");
+        }
 
         fclose(ptr); 
     } 

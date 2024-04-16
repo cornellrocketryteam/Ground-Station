@@ -24,18 +24,18 @@ void DataPoint::setValue(float val){
 
 DataGrid::DataGrid()
 {
-    data_points.emplace_back(new DataPoint("Altitude"));
-    data_points.emplace_back(new DataPoint("Longitude"));
-    data_points.emplace_back(new DataPoint("Latitude"));
-    data_points.emplace_back(new DataPoint("Gyro X"));
-    data_points.emplace_back(new DataPoint("Gyro Y"));
-    data_points.emplace_back(new DataPoint("Gyro Z"));
-    data_points.emplace_back(new DataPoint("Accel X"));
-    data_points.emplace_back(new DataPoint("Accel Y"));
-    data_points.emplace_back(new DataPoint("Accel Z"));
-    data_points.emplace_back(new DataPoint("Gravity X"));
-    data_points.emplace_back(new DataPoint("Gravity Y"));
-    data_points.emplace_back(new DataPoint("Gravity Z"));
+    data_points.push_back(new DataPoint("Altitude"));
+    data_points.push_back(new DataPoint("Longitude"));
+    data_points.push_back(new DataPoint("Latitude"));
+    data_points.push_back(new DataPoint("Gyro X"));
+    data_points.push_back(new DataPoint("Gyro Y"));
+    data_points.push_back(new DataPoint("Gyro Z"));
+    data_points.push_back(new DataPoint("Accel X"));
+    data_points.push_back(new DataPoint("Accel Y"));
+    data_points.push_back(new DataPoint("Accel Z"));
+    data_points.push_back(new DataPoint("Gravity X"));
+    data_points.push_back(new DataPoint("Gravity Y"));
+    data_points.push_back(new DataPoint("Gravity Z"));
 }
 
 void DataGrid::draw(int posX, int posY, int width, int height)

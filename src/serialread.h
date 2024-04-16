@@ -5,7 +5,6 @@
 #include <map> 
 #include <unordered_map>
 #include <vector> 
-#include <fstream>
 
 class SerialRead {
 private:
@@ -13,7 +12,7 @@ private:
 
     int serialPort; /*The serial port to read from*/
 
-    std::ofstream flightDataFile; /*The file to write flight telemetry*/
+    FILE *flightDataFile; /*The file to write flight telemetry*/
 
 public:
     enum SensorState {

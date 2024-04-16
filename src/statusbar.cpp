@@ -29,7 +29,7 @@ StatusBar::StatusBar() {
     status_lights.emplace_back(new StatusLight("GPS", 20));
     status_lights.emplace_back(new StatusLight("Altimeter", 20));
     status_lights.emplace_back(new StatusLight("Temperature", 20));
-    status_lights.emplace_back(new StatusLight("Gyroscope", 20));
+    status_lights.emplace_back(new StatusLight("Accelerometer", 20));
     status_lights.emplace_back(new StatusLight("IMU", 20));
 }
 
@@ -101,7 +101,7 @@ void StatusBar::updateStatusLights(){
             } else {
                 i->setWorking(false);
             }
-        } else if (i->getName() == "Gyroscope"){
+        } else if (i->getName() == "Accelerometer"){
             if (sfr::serialRead->accelerometerState == sfr::serialRead->VALID){
                 i->setWorking(true);
             } else {
