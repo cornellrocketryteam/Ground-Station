@@ -46,10 +46,6 @@ void SerialRead::readPacket() {
       return;
     }
 
-    printf("Metadata Byte 1: ");
-
-    printf("Metadata Byte 2: ");
-
     /*Process MetaData*/
     int i = 0;
     while (i < 8) {
