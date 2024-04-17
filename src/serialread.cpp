@@ -6,7 +6,8 @@
 
 SerialRead::SerialRead() {
   flightDataFile.open("data/flightData.txt", std::ios::out);
-  serialDataFile.open("/dev/cu.usbmodem11101", std::ios::in | std::ios::binary);
+  serialDataFile.open("/dev/cu.usbmodem2101", std::ios::in | std::ios::binary);
+  serialDataFile.rdbuf()->pubsetbuf(0, 0);
 }
 
 SerialRead::~SerialRead() {
@@ -265,17 +266,16 @@ void SerialRead::readPacket() {
 
     /*TODO: Update the elevation Queue with the new value*/
 
-    if (flightDataFile.is_open()) { /*Write the packet to the text file */
-      std::cout << "flightData.txt is open, beginning to write data ..."
-                << std::endl;
+    // if (flightDataFile.is_open()) { /*Write the packet to the text file */
+    //   std::cout << "flightData.txt is open, beginning to write data ..." << std::endl;
 
-      for (auto it = serialValues.begin(); it != serialValues.end(); it++) {
-        flightDataFile << it->first.c_str() << ": " << it->second << ",";
-      }
-      flightDataFile << "\n";
-    } else {
-      std::cout << "flightData.txt is not open" << std::endl;
-      ;
-    }
+    //   for (auto it = serialValues.begin(); it != serialValues.end(); it++) {
+    //     flightDataFile << it->first.c_str() << ": " << it->second << ",";
+    //   }
+    //   flightDataFile << "\n";
+    // } else {
+    //   std::cout << "flightData.txt is not open" << std::endl;
+    //   ;
+    // }
   }
 }
