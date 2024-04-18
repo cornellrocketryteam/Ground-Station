@@ -1,17 +1,25 @@
 #pragma once
 
 #include <deque>
+#include <fstream>
 #include <iostream>
 #include <map>
 #include <vector>
+#include <fmt/core.h>
 
-enum SensorState {
+enum class SensorState {
     OFF = 0,
     VALID = 1,
     INVALID = 2
 };
 
-enum FlightMode {
+template <> struct fmt::formatter<SensorState>: formatter<string_view> {
+    // parse is inherited from formatter<string_view>.
+
+    auto format(SensorState s, format_context& ctx) const;
+};
+
+enum class FlightMode {
     STARTUP = 0,
     STANDBY = 1,
     ASCENT = 2,
@@ -20,10 +28,16 @@ enum FlightMode {
     FAULT = 5,
 };
 
+template <> struct fmt::formatter<FlightMode>: formatter<string_view> {
+    // parse is inherited from formatter<string_view>.
+
+    auto format(FlightMode f, format_context& ctx) const;
+};
+
 class SerialRead {
 private:
     int serialDataFile;
-    FILE *flightDataFile; /*The file to write flight telemetry*/
+    std::ofstream flightDataFile; /*The file to write flight telemetry*/
 
 public:
     SerialRead(); /*Open the serial port*/

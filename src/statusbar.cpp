@@ -57,22 +57,22 @@ void StatusBar::draw(int posX, int posY, int width, int height) {
 
     std::string flightMode;
     switch (sfr::serialRead->flightMode) {
-        case STARTUP:
+        case FlightMode::STARTUP:
             flightMode = "Startup";
             break;
-        case STANDBY:
+        case FlightMode::STANDBY:
             flightMode = "Standby";
             break;
-        case ASCENT:
+        case FlightMode::ASCENT:
             flightMode = "Ascent";
             break;
-        case DROGUEDEPLOYED:
+        case FlightMode::DROGUEDEPLOYED:
             flightMode = "Drogue Deployed";
             break;
-        case MAINDEPLOYED:
+        case FlightMode::MAINDEPLOYED:
             flightMode = "Main Deployed";
             break;
-        case FAULT:
+        case FlightMode::FAULT:
             flightMode = "Fault";
             break;
     }
@@ -84,15 +84,15 @@ void StatusBar::draw(int posX, int posY, int width, int height) {
 void StatusBar::updateStatusLights() {
     for (auto i : status_lights) {
         if (i->getName() == "GPS") {
-            i->setWorking(sfr::serialRead->gpsState == VALID);
+            i->setWorking(sfr::serialRead->gpsState == SensorState::VALID);
         } else if (i->getName() == "Altimeter") {
-            i->setWorking(sfr::serialRead->altimeterState == VALID);
+            i->setWorking(sfr::serialRead->altimeterState == SensorState::VALID);
         } else if (i->getName() == "Temperature") {
-            i->setWorking(sfr::serialRead->temperatureState == VALID);
+            i->setWorking(sfr::serialRead->temperatureState == SensorState::VALID);
         } else if (i->getName() == "Accelerometer") {
-            i->setWorking(sfr::serialRead->accelerometerState == VALID);
+            i->setWorking(sfr::serialRead->accelerometerState == SensorState::VALID);
         } else if (i->getName() == "IMU") {
-            i->setWorking(sfr::serialRead->imuState == VALID);
+            i->setWorking(sfr::serialRead->imuState == SensorState::VALID);
         }
     }
 }

@@ -4,20 +4,43 @@
 #include <fcntl.h>
 #include <fmt/chrono.h>
 
+auto fmt::formatter<SensorState>::format(SensorState s, format_context& ctx) const {
+    string_view state = "unknown";
+    switch (s) {
+        case SensorState::OFF: state = "OFF"; break;
+        case SensorState::VALID: state = "VALID"; break;
+        case SensorState::INVALID: state = "INVALID"; break;
+    }
+    return formatter<string_view>::format(state, ctx);
+}
+
+auto fmt::formatter<FlightMode>::format(FlightMode f, format_context& ctx) const {
+    string_view mode = "unknown";
+    switch (f) {
+        case FlightMode::STARTUP: mode = "STARTUP"; break;
+        case FlightMode::STANDBY: mode = "STANDBY"; break;
+        case FlightMode::ASCENT: mode = "ASCENT"; break;
+        case FlightMode::DROGUEDEPLOYED: mode = "DROGUEDEPLOYED"; break;
+        case FlightMode::MAINDEPLOYED: mode = "MAINDEPLOYED"; break;
+        case FlightMode::FAULT: mode = "FAULT"; break;
+    }
+    return formatter<string_view>::format(mode, ctx);
+}
+
 SerialRead::SerialRead() {
-    serialDataFile = open("/dev/cu.usbmodem1101", O_RDONLY | O_NONBLOCK);
+    serialDataFile = open("/dev/cu.usbmodem2101", O_RDONLY | O_NONBLOCK);
     auto now = std::chrono::system_clock::now();
     std::string flightDataFilePath = fmt::format("data/flightData_{:%Y_%m_%d_%H:%M}.csv", now);
-    flightDataFile = fopen(flightDataFilePath.c_str(), "w");
+    flightDataFile.open(flightDataFilePath.c_str(), std::ios::out);
+    flightDataFile << "timestamp,flightMode,altitudeArmed,gpsValid,sdInitialized,temperatureState,accelerometerState,imuState,gpsState,altimeterState,altitude,latitude,longitude,satInView,accelX,accelY,accelZ,gyroX,gyroY,gyroZ,accelXIMU,accelYIMU,accelZIMU,oriX,oriY,oriZ,gravityX,gravityY,gravityZ,temp" << std::endl;
 
-    // Establish all 0 values in the beginning
-    for (int _ = 0; _ < 500; _++){
-        elevationQueue.push_back(0.0); 
+    for (int _ = 0; _ < 500; ++_) {
+        elevationQueue.push_back(0.0);
     }
 }
 
 SerialRead::~SerialRead() {
-    fclose(flightDataFile);
+    flightDataFile.close();
     close(serialDataFile);
 }
 
@@ -109,27 +132,30 @@ void SerialRead::readPacket() {
         printf("Events Byte 3: ");
         printByte(packet[8]);
 
-        if (altimeterState == VALID) {
+        if (altimeterState == SensorState::VALID) {
             altitude = converter<float>((char *) &packet[9]);
 
-            elevationQueue.pop_front();
-            elevationQueue.push_back(altitude);
-        
+            if (elevationQueue.size() < 500) {
+                elevationQueue.push_back(altitude);
+            } else {
+                elevationQueue.pop_front();
+                elevationQueue.push_back(altitude);
+            }
         }
 
-        if (gpsState == VALID) {
+        if (gpsState == SensorState::VALID) {
             latitude = converter<float>((char *) &packet[13]);
             longitude = converter<float>((char *) &packet[17]);
             satInView = converter<uint8_t>((char *) &packet[21]);
         }
 
-        if (accelerometerState == VALID) {
+        if (accelerometerState == SensorState::VALID) {
             accelX = converter<float>((char *) &packet[22]);
             accelY = converter<float>((char *) &packet[26]);
             accelZ = converter<float>((char *) &packet[30]);
         }
 
-        if (imuState == VALID) {
+        if (imuState == SensorState::VALID) {
             gyroX = converter<float>((char *) &packet[34]);
             gyroY = converter<float>((char *) &packet[38]);
             gyroZ = converter<float>((char *) &packet[42]);
@@ -144,24 +170,12 @@ void SerialRead::readPacket() {
             gravityZ = converter<float>((char *) &packet[78]);
         }
 
-        if (temperatureState == VALID) {
+        if (temperatureState == SensorState::VALID) {
             temp = converter<float>((char *) &packet[82]);
         }
 
-        printf("Back Value of Elevation Queue: %f", elevationQueue.back()); 
-
-//        if (flightDataFile != nullptr) { /*Write the packet to the text file */
-//            printf("flightData.txt successfully opened, beginning to write data ...\n");
-//
-//            for (auto it = serialValues.begin(); it != serialValues.end(); it++) {
-//                fprintf(flightDataFile, "%s: %f,", it->first.c_str(), it->second);
-//            }
-//            fprintf(flightDataFile, "\n");
-//
-//
-//        } else {
-//            printf("flightData.txt was not able to be opened\n");
-//        }
-
+        if (flightDataFile.is_open()) {
+            flightDataFile << fmt::format("{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}",timestamp,flightMode,altitudeArmed,gpsValid,sdInitialized,temperatureState,accelerometerState,imuState,gpsState,altimeterState,altitude,latitude,longitude,satInView,accelX,accelY,accelZ,gyroX,gyroY,gyroZ,accelXIMU,accelYIMU,accelZIMU,oriX,oriY,oriZ,gravityX,gravityY,gravityZ,temp) << std::endl;
+        }
     }
 }
