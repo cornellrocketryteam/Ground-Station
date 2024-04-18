@@ -107,7 +107,7 @@ void SerialRead::readPacket() {
         if (altimeterState == VALID) {
             altitude = converter<float>((char *) &packet[9]);
 
-            if (elevationQueue.max_size() < 500) {
+            if (elevationQueue.size() < 500) {
                 elevationQueue.push_back(altitude);
             } else {
                 elevationQueue.pop_front();
