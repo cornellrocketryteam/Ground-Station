@@ -1,6 +1,3 @@
 [submodule "lib/raylib"]
 	path = lib/raylib
 	url = git@github.com:raysan5/raylib.git
-[submodule "lib/pigpio"]
-	path = lib/pigpio
-	url = git@github.com:joan2937/pigpio.git
