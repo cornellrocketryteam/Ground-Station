@@ -2,16 +2,15 @@
 
 #include <deque>
 #include <iostream>
-#include <map> 
+#include <map>
 #include <unordered_map>
-#include <vector> 
+#include <vector>
 
 class SerialRead {
 private:
     std::unordered_map<std::string, float> serialValues;
 
-    int serialPort; /*The serial port to read from*/
-
+    int serialDataFile;
     FILE *flightDataFile; /*The file to write flight telemetry*/
 
 public:
@@ -48,6 +47,3 @@ public:
 
     std::deque<float> elevationQueue; /*Stores the elevation points to graph*/
 };
-
-
-

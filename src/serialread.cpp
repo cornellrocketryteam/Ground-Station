@@ -1,27 +1,30 @@
 #include "serialread.h"
-#include <stdio.h> 
-#include <cstring> 
+#include <stdio.h>
+#include <cstring>
 #include <iostream>
 #include <math.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 SerialRead::SerialRead(){
+    serialDataFile = open("/dev/cu.usbmodem2101", O_RDONLY | O_NONBLOCK);
     flightDataFile = fopen("data/flightData.txt","w");
 }
 
 SerialRead::~SerialRead(){
     fclose(flightDataFile);
+    close(serialDataFile);
 }
 
 float SerialRead::getValue(std::string name){
-    return serialValues[name]; 
+    return serialValues[name];
 }
 
-template<typename T> 
+template<typename T>
 T converter(char* packet){
-    T temp; 
-
-    memcpy(&temp, packet, sizeof(temp)); 
-    return temp; 
+    T temp;
+    memcpy(&temp, packet, sizeof(temp));
+    return temp;
 }
 
 void printByte(uint8_t byte) {
@@ -36,116 +39,116 @@ void printByte(uint8_t byte) {
 }
 
 void SerialRead::readPacket() {
-    unsigned char packet[86];
-    FILE *ptr;
+    char packet[86];
 
-    ptr = fopen("/dev/cu.usbmodem1101","rb");  // r for read, b for binary
 
-    if (ptr != nullptr) {
-
-        fread(packet,sizeof(packet),1,ptr); // read 86 bytes to our buffer
+    if (serialDataFile != -1) {
+        // read 86 bytes to our buffer
+        if (read(serialDataFile, packet, sizeof(packet)) != sizeof(packet)) {
+            return;
+        }
 
         /*Process MetaData*/
-        int i = 0; 
+        int i = 0;
         while (i < 8){
             switch (i){
                 case 0:
                     if (packet[0] & 0x01){
-                        altimeterState =  VALID; 
+                        altimeterState =  VALID;
                     }
-                    break; 
+                    break;
                 case 1:
                     if (packet[0] & 0x01){
-                        gpsState = VALID; 
+                        gpsState = VALID;
                     }
-                    break; 
+                    break;
                 case 2:
-                    break; 
+                    break;
                 case 3:
                     if (packet[0] & 0x01){
-                        temperatureState = VALID; 
+                        temperatureState = VALID;
                     } else {
                         if ((packet[0] >> 1 ) & 0x01){
-                            temperatureState = INVALID; 
+                            temperatureState = INVALID;
                         } else {
-                            temperatureState = OFF; 
+                            temperatureState = OFF;
                         }
                     }
-                    i += 1; 
-                    packet[0] >>= 1; 
-                    break; 
+                    i += 1;
+                    packet[0] >>= 1;
+                    break;
                 case 4:
-                    break; 
+                    break;
                 case 5:
                     if (packet[0] & 0x01){
-                        accelerometerState = VALID; 
+                        accelerometerState = VALID;
                     } else {
                         if ((packet[0] >> 1 ) & 0x01){
-                            accelerometerState = INVALID; 
+                            accelerometerState = INVALID;
                         } else {
-                            accelerometerState = OFF; 
+                            accelerometerState = OFF;
                         }
                     }
-                    i += 1; 
-                    packet[0] >>= 1; 
-                    break; 
+                    i += 1;
+                    packet[0] >>= 1;
+                    break;
                 case 6:
-                    break; 
+                    break;
                 case 7:
-                    //Process IMU State 
+                    //Process IMU State
                     if (packet[0] & 0x01){
-                        imuState = VALID; 
+                        imuState = VALID;
                     }
-                    break; 
+                    break;
                 }
-                packet[0] >>= 1; 
-                i+= 1; 
+                packet[0] >>= 1;
+                i+= 1;
             }
 
-            i=8; 
+            i=8;
             while (i < 16){
             switch (i){
                 case 8:
                     if (packet[1] & 0x01){
-                        imuState = INVALID; 
+                        imuState = INVALID;
                     }
-                    break; 
+                    break;
                 case 9:
                     if (packet[1] & 0x01){
-                        gpsState = VALID; 
+                        gpsState = VALID;
                     } else {
                         if ((packet[1] >> 1 ) & 0x01){
-                            gpsState = INVALID; 
+                            gpsState = INVALID;
                         } else {
-                            gpsState  = OFF; 
+                            gpsState  = OFF;
                         }
                     }
-                    i += 1; 
-                    packet[1] >>= 1; 
-                    break; 
+                    i += 1;
+                    packet[1] >>= 1;
+                    break;
                 case 10:
-                    break; 
+                    break;
                 case 11:
                     if (packet[1] & 0x01){
-                        altimeterState = VALID; 
+                        altimeterState = VALID;
                     } else {
                         if ((packet[1] >> 1 ) & 0x01){
-                            altimeterState = INVALID; 
+                            altimeterState = INVALID;
                         } else {
-                            altimeterState = OFF; 
+                            altimeterState = OFF;
                         }
                     }
-                    i += 1; 
-                    packet[1] >>= 1; 
-                    break; 
+                    i += 1;
+                    packet[1] >>= 1;
+                    break;
                 case 12:
-                    break; 
+                    break;
                 case 13: {
-                        // Process the Flight Mode 
-                        u_int8_t sum = 0; 
+                        // Process the Flight Mode
+                        u_int8_t sum = 0;
                         for (int j = 0; j < 3; j++){
                             if (packet[1] & 0x01){
-                                sum += pow(2, j); 
+                                sum += pow(2, j);
                             }
                             packet[1] >>= 1;
                         }
@@ -171,28 +174,28 @@ void SerialRead::readPacket() {
                             default:
                                 break;
                         }
-                    }   
-                    i += 3; 
-                    break; 
+                    }
+                    i += 3;
+                    break;
                 case 14:
-                    break; 
+                    break;
                 case 15:
-                    break; 
+                    break;
                 }
-                packet[1] >>= 1; 
-                i+= 1; 
+                packet[1] >>= 1;
+                i+= 1;
             }
 
-            uint32_t timestamp = converter<uint32_t>((char*)&packet[2]); 
+            uint32_t timestamp = converter<uint32_t>((char*)&packet[2]);
             printf ("%s%i%s", "Time Stamp: ",timestamp, "\n");
 
-            printf("Events Byte 1: "); 
+            printf("Events Byte 1: ");
             printByte(packet[6]);
 
-            printf("Events Byte 2: "); 
+            printf("Events Byte 2: ");
             printByte(packet[7]);
 
-            printf("Events Byte 3: "); 
+            printf("Events Byte 3: ");
             printByte(packet[8]);
 
             float alt = converter<float>((char*)&packet[9]);
@@ -241,11 +244,11 @@ void SerialRead::readPacket() {
 
             serialValues["Latitude"] = float(lat);
             serialValues["Longitude"] = float(longi);
-        
+
             serialValues["Accel X"] = accelX;
             serialValues["Accel Y"] = accelY;
             serialValues["Accel Z"] = accelZ;
-        
+
             serialValues["Gyro X"] = gyroX;
             serialValues["Gyro Y"] = gyroY;
             serialValues["Gyro Z"] = gyroZ;
@@ -253,15 +256,15 @@ void SerialRead::readPacket() {
             serialValues["Accel X IMU"] = accelXIMU;
             serialValues["Accel Y IMU"] = accelYIMU;
             serialValues["Accel Z IMU"] = accelZIMU;
-        
+
             serialValues["Orientation X"] = oriX;
             serialValues["Orientation Y"] = oriY;
             serialValues["Orientation Z"] = oriZ;
-        
+
             serialValues["Gravity X"] = gravityX;
             serialValues["Gravity Y"] = gravityY;
             serialValues["Gravity Z"] = gravityZ;
-        
+
 
         /*TODO: Update the elevation Queue with the new value*/
 
@@ -278,9 +281,5 @@ void SerialRead::readPacket() {
             printf("flightData.txt was not able to be opened\n");
         }
 
-        fclose(ptr); 
-        ptr = nullptr; 
-    } 
+    }
 }
-
-
