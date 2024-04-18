@@ -1,14 +1,15 @@
 #include "serialread.h"
-#include <stdio.h>
 #include <cstring>
 #include <iostream>
-#include <math.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <chrono>
 
 SerialRead::SerialRead() {
     serialDataFile = open("/dev/cu.usbmodem2101", O_RDONLY | O_NONBLOCK);
-    flightDataFile = fopen("data/flightData.txt", "w");
+    auto now = std::chrono::system_clock::now();
+    std::string flightDataFilePath = std::format("data/flightData{0:%F_%T}.txt", now);
+    flightDataFile = fopen(flightDataFilePath.c_str(), "w");
 }
 
 SerialRead::~SerialRead() {

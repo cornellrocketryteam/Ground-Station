@@ -3,7 +3,7 @@ project(GroundStation)
 
 # Set C/C++ standards
 set(CMAKE_C_STANDARD 17)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 # Build raylib
 add_subdirectory(lib/raylib)
