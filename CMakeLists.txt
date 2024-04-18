@@ -3,10 +3,13 @@ project(GroundStation)
 
 # Set C/C++ standards
 set(CMAKE_C_STANDARD 17)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 
 # Build raylib
 add_subdirectory(lib/raylib)
+
+# Add fmt
+add_subdirectory(lib/fmt)
 
 # Create the executable
 add_executable(${PROJECT_NAME} src/main.cpp
@@ -21,7 +24,7 @@ add_executable(${PROJECT_NAME} src/main.cpp
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
-target_link_libraries(${PROJECT_NAME} raylib)
+target_link_libraries(${PROJECT_NAME} raylib fmt)
 
 
 # Checks if OSX and links appropriate frameworks (only required on MacOS)
