@@ -5,10 +5,15 @@
 #include <fmt/chrono.h>
 
 SerialRead::SerialRead() {
-    serialDataFile = open("/dev/cu.usbmodem2101", O_RDONLY | O_NONBLOCK);
+    serialDataFile = open("/dev/cu.usbmodem1101", O_RDONLY | O_NONBLOCK);
     auto now = std::chrono::system_clock::now();
     std::string flightDataFilePath = fmt::format("data/flightData_{:%Y_%m_%d_%H:%M}.csv", now);
     flightDataFile = fopen(flightDataFilePath.c_str(), "w");
+
+    // Establish all 0 values in the beginning
+    for (int _ = 0; _ < 500; _++){
+        elevationQueue.push_back(0.0); 
+    }
 }
 
 SerialRead::~SerialRead() {
@@ -107,12 +112,9 @@ void SerialRead::readPacket() {
         if (altimeterState == VALID) {
             altitude = converter<float>((char *) &packet[9]);
 
-            if (elevationQueue.size() < 500) {
-                elevationQueue.push_back(altitude);
-            } else {
-                elevationQueue.pop_front();
-                elevationQueue.push_back(altitude);
-            }
+            elevationQueue.pop_front();
+            elevationQueue.push_back(altitude);
+        
         }
 
         if (gpsState == VALID) {
@@ -145,6 +147,8 @@ void SerialRead::readPacket() {
         if (temperatureState == VALID) {
             temp = converter<float>((char *) &packet[82]);
         }
+
+        printf("Back Value of Elevation Queue: %f", elevationQueue.back()); 
 
 //        if (flightDataFile != nullptr) { /*Write the packet to the text file */
 //            printf("flightData.txt successfully opened, beginning to write data ...\n");

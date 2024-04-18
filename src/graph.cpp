@@ -37,20 +37,19 @@ void Graph::draw(int posX, int posY, int width, int height) {
         DrawText(text.c_str(), posX + offsetFromLeft - textWidth, y - fontSize / 2, fontSize, color);
     }
 
-//    for (int i = 0; i < 300; i++) {
-//        sfr::serialRead.elevationQueue.push_back(i*40);
-//    }
+    float stepLength = float(width - offsetFromLeft - altitudeAndGraphSpacing) / sfr::serialRead->elevationQueue.size();
 
-    // if (sfr::serialRead.elevationQueue.size() > 1) {
-    //     float stepLength = float(width - offsetFromLeft - altitudeAndGraphSpacing) / 300;
-    //     for (auto i = sfr::serialRead.elevationQueue.size() - 1; i > 0; i--) {
-    //         float startPosX = float(posX) + offsetFromLeft + altitudeAndGraphSpacing + (300 - i) * stepLength;
-    //         float startPosY = graphYToScreenY(posY, height, sfr::serialRead.elevationQueue.at(300 - i));
-    //         float endPosX = float(posX) + offsetFromLeft + altitudeAndGraphSpacing + (299 - i) * stepLength;
-    //         float endPosY = graphYToScreenY(posY, height, sfr::serialRead.elevationQueue.at(299 - i));
-    //         DrawLineEx({startPosX, startPosY}, {endPosX, endPosY}, 2, BLUE);
-    //     }
-    // }
+    /* Draw a line from the previous index to the current index, using the line spacing that we have defined. */
+    for (auto i = sfr::serialRead->elevationQueue.size() - 1; i > 0; i--) {
+        float startPosX = float(posX) + offsetFromLeft + altitudeAndGraphSpacing + (sfr::serialRead->elevationQueue.size() - i) * stepLength;
 
-//    sfr::serialRead.elevationQueue.clear();
+        float startPosY = graphYToScreenY(posY, height, sfr::serialRead->elevationQueue.at(sfr::serialRead->elevationQueue.size() - i));
+
+        float endPosX = float(posX) + offsetFromLeft + altitudeAndGraphSpacing + (sfr::serialRead->elevationQueue.size() - i - 1) * stepLength;
+
+        float endPosY = graphYToScreenY(posY, height, sfr::serialRead->elevationQueue.at(sfr::serialRead->elevationQueue.size() - i - 1));
+
+        DrawLineEx({startPosX, startPosY}, {endPosX, endPosY}, 2, BLUE);
+    }
+    
 }
