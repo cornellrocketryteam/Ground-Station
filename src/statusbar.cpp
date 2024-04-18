@@ -57,22 +57,22 @@ void StatusBar::draw(int posX, int posY, int width, int height) {
 
     std::string flightMode;
     switch (sfr::serialRead->flightMode) {
-        case SerialRead::STARTUP:
+        case STARTUP:
             flightMode = "Startup";
             break;
-        case SerialRead::STANDBY:
+        case STANDBY:
             flightMode = "Standby";
             break;
-        case SerialRead::ASCENT:
+        case ASCENT:
             flightMode = "Ascent";
             break;
-        case SerialRead::DROGUEDEPLOYED:
+        case DROGUEDEPLOYED:
             flightMode = "Drogue Deployed";
             break;
-        case SerialRead::MAINDEPLOYED:
+        case MAINDEPLOYED:
             flightMode = "Main Deployed";
             break;
-        case SerialRead::FAULT:
+        case FAULT:
             flightMode = "Fault";
             break;
     }
@@ -81,38 +81,18 @@ void StatusBar::draw(int posX, int posY, int width, int height) {
     DrawText(flightMode.c_str(), statusX, posY + 2*height/3 - fontSize/2, fontSize, DARKBLUE);
 }
 
-void StatusBar::updateStatusLights(){
-    for (auto i : status_lights){
-        if (i->getName() == "GPS"){
-            if (sfr::serialRead->gpsState == sfr::serialRead->VALID){
-                i->setWorking(true);
-            } else {
-                i->setWorking(false);
-            }
-        } else if (i->getName() == "Altimeter"){
-            if (sfr::serialRead->altimeterState == sfr::serialRead->VALID){
-                i->setWorking(true);
-            } else {
-                i->setWorking(false);
-            }
-        } else if (i->getName() == "Temperature"){
-            if (sfr::serialRead->temperatureState == sfr::serialRead->VALID){
-                i->setWorking(true);
-            } else {
-                i->setWorking(false);
-            }
-        } else if (i->getName() == "Accelerometer"){
-            if (sfr::serialRead->accelerometerState == sfr::serialRead->VALID){
-                i->setWorking(true);
-            } else {
-                i->setWorking(false);
-            }
-        } else if (i->getName() == "IMU"){
-            if (sfr::serialRead->imuState == sfr::serialRead->VALID){
-                i->setWorking(true);
-            } else {
-                i->setWorking(false);
-            }
+void StatusBar::updateStatusLights() {
+    for (auto i : status_lights) {
+        if (i->getName() == "GPS") {
+            i->setWorking(sfr::serialRead->gpsState == VALID);
+        } else if (i->getName() == "Altimeter") {
+            i->setWorking(sfr::serialRead->altimeterState == VALID);
+        } else if (i->getName() == "Temperature") {
+            i->setWorking(sfr::serialRead->temperatureState == VALID);
+        } else if (i->getName() == "Accelerometer") {
+            i->setWorking(sfr::serialRead->accelerometerState == VALID);
+        } else if (i->getName() == "IMU") {
+            i->setWorking(sfr::serialRead->imuState == VALID);
         }
     }
 }

@@ -16,10 +16,6 @@ SerialRead::~SerialRead() {
     close(serialDataFile);
 }
 
-float SerialRead::getValue(std::string name) {
-    return serialValues[name];
-}
-
 template<typename T>
 T converter(char *packet) {
     T temp;
@@ -46,10 +42,6 @@ void SerialRead::readPacket() {
         if (read(serialDataFile, packet, sizeof(packet)) != sizeof(packet)) {
             return;
         }
-
-        bool altitudeArmed;
-        bool gpsValid;
-        bool sdInitialized;
 
         for (int i = 0; i < 16; i++) {
             switch (i) {
@@ -100,7 +92,7 @@ void SerialRead::readPacket() {
             packet[i / 8] >>= 1;
         }
 
-        uint32_t timestamp = converter<uint32_t>((char *) &packet[2]);
+        timestamp = converter<uint32_t>((char *) &packet[2]);
         printf("%s%i%s", "Time Stamp: ", timestamp, "\n");
 
         printf("Events Byte 1: ");
@@ -112,75 +104,47 @@ void SerialRead::readPacket() {
         printf("Events Byte 3: ");
         printByte(packet[8]);
 
-        float alt = converter<float>((char *) &packet[9]);
+        if (altimeterState == VALID) {
+            altitude = converter<float>((char *) &packet[9]);
 
-        float lat = converter<float>((char *) &packet[13]);
+            if (elevationQueue.max_size() < 500) {
+                elevationQueue.push_back(altitude);
+            } else {
+                elevationQueue.pop_front();
+                elevationQueue.push_back(altitude);
+            }
+        }
 
-        float longi = converter<float>((char *) &packet[17]);
+        if (gpsState == VALID) {
+            latitude = converter<float>((char *) &packet[13]);
+            longitude = converter<float>((char *) &packet[17]);
+            satInView = converter<uint8_t>((char *) &packet[21]);
+        }
 
-        uint8_t satInView = converter<uint8_t>((char *) &packet[21]);
+        if (accelerometerState == VALID) {
+            accelX = converter<float>((char *) &packet[22]);
+            accelY = converter<float>((char *) &packet[26]);
+            accelZ = converter<float>((char *) &packet[30]);
+        }
 
-        float accelX = converter<float>((char *) &packet[22]);
+        if (imuState == VALID) {
+            gyroX = converter<float>((char *) &packet[34]);
+            gyroY = converter<float>((char *) &packet[38]);
+            gyroZ = converter<float>((char *) &packet[42]);
+            accelXIMU = converter<float>((char *) &packet[46]);
+            accelYIMU = converter<float>((char *) &packet[50]);
+            accelZIMU = converter<float>((char *) &packet[54]);
+            oriX = converter<float>((char *) &packet[58]);
+            oriY = converter<float>((char *) &packet[62]);
+            oriZ = converter<float>((char *) &packet[66]);
+            gravityX = converter<float>((char *) &packet[70]);
+            gravityY = converter<float>((char *) &packet[74]);
+            gravityZ = converter<float>((char *) &packet[78]);
+        }
 
-        float accelY = converter<float>((char *) &packet[26]);
-
-        float accelZ = converter<float>((char *) &packet[30]);
-
-        float gyroX = converter<float>((char *) &packet[34]);
-
-        float gyroY = converter<float>((char *) &packet[38]);
-
-        float gyroZ = converter<float>((char *) &packet[42]);
-
-        float accelXIMU = converter<float>((char *) &packet[46]);
-
-        float accelYIMU = converter<float>((char *) &packet[50]);
-
-        float accelZIMU = converter<float>((char *) &packet[54]);
-
-        float oriX = converter<float>((char *) &packet[58]);
-
-        float oriY = converter<float>((char *) &packet[62]);
-
-        float oriZ = converter<float>((char *) &packet[66]);
-
-        float gravityX = converter<float>((char *) &packet[70]);
-
-        float gravityY = converter<float>((char *) &packet[74]);
-
-        float gravityZ = converter<float>((char *) &packet[78]);
-
-        float temp = converter<float>((char *) &packet[82]);
-
-        serialValues["timestamp"] = float(timestamp);
-
-        serialValues["Altitude"] = alt;
-
-        serialValues["Latitude"] = float(lat);
-        serialValues["Longitude"] = float(longi);
-
-        serialValues["Accel X"] = accelX;
-        serialValues["Accel Y"] = accelY;
-        serialValues["Accel Z"] = accelZ;
-
-        serialValues["Gyro X"] = gyroX;
-        serialValues["Gyro Y"] = gyroY;
-        serialValues["Gyro Z"] = gyroZ;
-
-        serialValues["Accel X IMU"] = accelXIMU;
-        serialValues["Accel Y IMU"] = accelYIMU;
-        serialValues["Accel Z IMU"] = accelZIMU;
-
-        serialValues["Orientation X"] = oriX;
-        serialValues["Orientation Y"] = oriY;
-        serialValues["Orientation Z"] = oriZ;
-
-        serialValues["Gravity X"] = gravityX;
-        serialValues["Gravity Y"] = gravityY;
-        serialValues["Gravity Z"] = gravityZ;
-
-
-        /*TODO: Update the elevation Queue with the new value*/
+        if (temperatureState == VALID) {
+            temp = converter<float>((char *) &packet[82]);
+        }
 
 //        if (flightDataFile != nullptr) { /*Write the packet to the text file */
 //            printf("flightData.txt successfully opened, beginning to write data ...\n");

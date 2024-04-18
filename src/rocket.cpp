@@ -118,16 +118,16 @@ void Rocket::processEvents()
             WaitTime(0.1);
         }
     }
-    cameraYAdded = sfr::serialRead->getValue("Altitude"); 
-    rocketPosition.y = sfr::serialRead->getValue("Altitude"); 
+    cameraYAdded = sfr::serialRead->altitude;
+    rocketPosition.y = sfr::serialRead->altitude;
 
     // TODO: Process longitude and latitude data for our model 
     
     //TODO: Process Orientation data for our model 
     // Check which Axis are being used 
-    xRotation = 270 + sfr::serialRead->getValue("Orientation X"); 
-    yRotation = sfr::serialRead->getValue("Orientation Z"); 
-    zRotation = sfr::serialRead->getValue("Orientation Y"); 
+    xRotation = 270 + sfr::serialRead->oriX;
+    yRotation = sfr::serialRead->oriZ;
+    zRotation = sfr::serialRead->oriY;
     
 }
 

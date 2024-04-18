@@ -3,74 +3,37 @@
 #include <math.h>
 #include "raylib.h"
 
-/**
- * Constructor to create the Status Lights in the StatusBar constructor
-*/
-DataPoint::DataPoint(std::string title) : title(title)
-{
-}
+template <typename T>
+void drawDataPoint(std::string title, T value, int posX, int posY, int offsetY) {
+    int fontSize = 20;
 
-std::string DataPoint::getTitle() {
-    return title;
-}
+    int title_text_width = MeasureText(title.c_str(), fontSize);
+    DrawText(title.c_str(), posX - title_text_width/2, posY - fontSize/2 - offsetY, fontSize, WHITE);
 
-float DataPoint::getValue() {
-    return value;
-}
-
-void DataPoint::setValue(float val){
-    value = val; 
-}
-
-DataGrid::DataGrid()
-{
-    data_points.push_back(new DataPoint("Altitude"));
-    data_points.push_back(new DataPoint("Longitude"));
-    data_points.push_back(new DataPoint("Latitude"));
-    data_points.push_back(new DataPoint("Gyro X"));
-    data_points.push_back(new DataPoint("Gyro Y"));
-    data_points.push_back(new DataPoint("Gyro Z"));
-    data_points.push_back(new DataPoint("Accel X"));
-    data_points.push_back(new DataPoint("Accel Y"));
-    data_points.push_back(new DataPoint("Accel Z"));
-    data_points.push_back(new DataPoint("Gravity X"));
-    data_points.push_back(new DataPoint("Gravity Y"));
-    data_points.push_back(new DataPoint("Gravity Z"));
+    std::string stringValue = std::to_string(value);
+    int value_text_width = MeasureText(stringValue.c_str(), fontSize);
+    DrawText(stringValue.c_str(), posX - value_text_width/2, posY - fontSize/2 + offsetY, fontSize, WHITE);
 }
 
 void DataGrid::draw(int posX, int posY, int width, int height)
 {
-    updateValues();
-
-    int fontSize = 20;
     int width_step = width / 6;
     int height_step = height / 8;
     int offsetY = height / 32;
-    for (int i = 0; i < data_points.size(); ++i) {
-        DataPoint status_light = *(data_points.at(i));
-        int x = width_step*(2*(i%3)+1);
-        int y = height_step*(2*floor(i/3)+1);
 
-        int title_text_width = MeasureText(status_light.getTitle().c_str(), fontSize);
-        DrawText(status_light.getTitle().c_str(), posX + x - title_text_width/2, posY + y - fontSize/2 - offsetY, fontSize, WHITE);
+    drawDataPoint("Altitude", sfr::serialRead->altitude, posX + width_step, posY + height_step, offsetY);
+    drawDataPoint("Longitude", sfr::serialRead->longitude, posX + 3*width_step, posY + height_step, offsetY);
+    drawDataPoint("Latitude", sfr::serialRead->latitude, posX + 5*width_step, posY + height_step, offsetY);
 
+    drawDataPoint("Gyro X", sfr::serialRead->gyroX, posX + width_step, posY + 3*height_step, offsetY);
+    drawDataPoint("Gyro Y", sfr::serialRead->gyroY, posX + 3*width_step, posY + 3*height_step, offsetY);
+    drawDataPoint("Gyro Z", sfr::serialRead->gyroZ, posX + 5*width_step, posY + 3*height_step, offsetY);
 
-        //printf("%s%f%s", status_light.getTitle().c_str(), status_light.getValue(), "\n");
+    drawDataPoint("Accel X", sfr::serialRead->accelX, posX + width_step, posY + 5*height_step, offsetY);
+    drawDataPoint("Accel Y", sfr::serialRead->accelY, posX + 3*width_step, posY + 5*height_step, offsetY);
+    drawDataPoint("Accel Z", sfr::serialRead->accelZ, posX + 5*width_step, posY + 5*height_step, offsetY);
 
-        std::string value = std::to_string(status_light.getValue());
-        int value_text_width = MeasureText(value.c_str(), fontSize);
-        DrawText(value.c_str(), posX + x - value_text_width/2, posY + y - fontSize/2 + offsetY, fontSize, WHITE);
-    }
-}
-
-void DataGrid::updateValues() {
-    for (auto elem : data_points){
-
-        // printf("%s%f", elem.getTitle().c_str(), sfr::serialRead.getValue(elem.getTitle()));
-        
-        elem->setValue(sfr::serialRead->getValue(elem->getTitle()));
-
-        //printf("%s%f%n", elem.getTitle().c_str(), elem.getValue(), "\n");
-    }
-
+    drawDataPoint("Gravity X", sfr::serialRead->gravityX, posX + width_step, posY + 7*height_step, offsetY);
+    drawDataPoint("Gravity Y", sfr::serialRead->gravityY, posX + 3*width_step, posY + 7*height_step, offsetY);
+    drawDataPoint("Gravity Z", sfr::serialRead->gravityZ, posX + 5*width_step, posY + 7*height_step, offsetY);
 }
