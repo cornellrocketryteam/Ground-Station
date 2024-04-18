@@ -125,10 +125,9 @@ void Rocket::processEvents()
     
     //TODO: Process Orientation data for our model 
     // Check which Axis are being used 
-    xRotation = sfr::serialRead->getValue("Orientation X"); 
+    xRotation = 270 + sfr::serialRead->getValue("Orientation X"); 
     yRotation = sfr::serialRead->getValue("Orientation Z"); 
     zRotation = sfr::serialRead->getValue("Orientation Y"); 
-
     
 }
 
