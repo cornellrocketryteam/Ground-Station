@@ -10,7 +10,7 @@ void drawDataPoint(std::string title, T value, int posX, int posY, int offsetY) 
     int title_text_width = MeasureText(title.c_str(), fontSize);
     DrawText(title.c_str(), posX - title_text_width/2, posY - fontSize/2 - offsetY, fontSize, WHITE);
 
-    std::string stringValue = std::to_string(value);
+    std::string stringValue = fmt::format("{:.3f}", value);
     int value_text_width = MeasureText(stringValue.c_str(), fontSize);
     DrawText(stringValue.c_str(), posX - value_text_width/2, posY - fontSize/2 + offsetY, fontSize, WHITE);
 }
