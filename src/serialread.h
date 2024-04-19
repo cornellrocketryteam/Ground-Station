@@ -79,5 +79,10 @@ public:
     float gravityZ;
     float temp;
 
+    /* The radio values to be printed to the terminal but not displayed. */
+    float RSSI; 
+    float SNR; 
+    float frequencyError; 
+
     std::deque<float> elevationQueue; /*Stores the elevation points to graph*/
 };

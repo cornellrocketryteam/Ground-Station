@@ -4,6 +4,8 @@
 #include <fcntl.h>
 #include <fmt/chrono.h>
 
+#define PACKET_SIZE 98
+
 auto fmt::formatter<SensorState>::format(SensorState s, format_context& ctx) const {
     string_view state = "unknown";
     switch (s) {
@@ -63,7 +65,7 @@ void printByte(uint8_t byte) {
 }
 
 void SerialRead::readPacket() {
-    char packet[86];
+    char packet[PACKET_SIZE];
 
     if (serialDataFile != -1) {
         // read 86 bytes to our buffer
@@ -173,6 +175,14 @@ void SerialRead::readPacket() {
         if (temperatureState == SensorState::VALID) {
             temp = converter<float>((char *) &packet[82]);
         }
+
+        RSSI = converter<float>((char*) &packet[86]); 
+        SNR = converter<float>((char*) &packet[90]); 
+        frequencyError = converter<float>((char*) &packet[95]); 
+
+        printf("RSSI Value: %f\n", RSSI); 
+        printf("SNR Value: %f\n", SNR); 
+        printf("Frequency Error: %f\n", frequencyError); 
 
         if (flightDataFile.is_open()) {
             flightDataFile << fmt::format("{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}",timestamp,flightMode,altitudeArmed,gpsValid,sdInitialized,temperatureState,accelerometerState,imuState,gpsState,altimeterState,altitude,latitude,longitude,satInView,accelX,accelY,accelZ,gyroX,gyroY,gyroZ,accelXIMU,accelYIMU,accelZIMU,oriX,oriY,oriZ,gravityX,gravityY,gravityZ,temp) << std::endl;
