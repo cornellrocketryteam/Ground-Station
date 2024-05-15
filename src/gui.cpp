@@ -1,9 +1,5 @@
 #include "gui.h"
 
-void GUI::processEvents() {
-    rocket.processEvents();
-}
-
 void GUI::draw(int posX, int posY, int width, int height)
 {
     // Data grid
@@ -16,11 +12,5 @@ void GUI::draw(int posX, int posY, int width, int height)
     status_bar.draw(posX + 0.04*width, posY + 0.82*height, 0.92*width, 0.14*height);
 
     // 3D Model
-    if (!rocket.isEnlarged()){
-        // Draws the rocket un-enlarged
-        rocket.draw(posX + 0.43*width, posY + 0.04*height, 0.53*width, 0.35*height);
-    } else {
-        // Draws the rocket enlarged 
-        rocket.draw(posX, posY, width, height);
-    }
+    rocket.draw(posX + 0.43*width, posY + 0.04*height, 0.53*width, 0.35*height);
 }

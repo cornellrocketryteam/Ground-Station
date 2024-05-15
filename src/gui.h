@@ -7,7 +7,6 @@
 
 class GUI {
 public:
-    void processEvents();
     void draw(int posX, int posY, int width, int height);
 
 private:

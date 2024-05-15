@@ -138,12 +138,8 @@ void SerialRead::readPacket() {
             altitudeMeters = converter<float>((char *) &packet[9]);
             altitudeFeet = altitudeMeters * 3.280839895;
 
-            if (elevationQueue.size() < 500) {
-                elevationQueue.push_back(altitudeFeet);
-            } else {
-                elevationQueue.pop_front();
-                elevationQueue.push_back(altitudeFeet);
-            }
+            elevationQueue.pop_front();
+            elevationQueue.push_back(altitudeFeet);
         }
 
         if (gpsState == SensorState::VALID) {

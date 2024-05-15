@@ -41,11 +41,8 @@ void Graph::draw(int posX, int posY, int width, int height) {
     /* Draw a line from the previous index to the current index, using the line spacing that we have defined. */
     for (auto i = sfr::serialRead->elevationQueue.size() - 1; i > 0; i--) {
         float startPosX = float(posX) + offsetFromLeft + altitudeAndGraphSpacing + (sfr::serialRead->elevationQueue.size() - i) * stepLength;
-
         float startPosY = graphYToScreenY(posY, height, sfr::serialRead->elevationQueue.at(sfr::serialRead->elevationQueue.size() - i));
-
         float endPosX = float(posX) + offsetFromLeft + altitudeAndGraphSpacing + (sfr::serialRead->elevationQueue.size() - i - 1) * stepLength;
-
         float endPosY = graphYToScreenY(posY, height, sfr::serialRead->elevationQueue.at(sfr::serialRead->elevationQueue.size() - i - 1));
 
         DrawLineEx({startPosX, startPosY}, {endPosX, endPosY}, 2, BLUE);
