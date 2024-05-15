@@ -173,13 +173,9 @@ void SerialRead::readPacket() {
             temp = converter<float>((char *) &packet[82]);
         }
 
-        RSSI = converter<float>((char*) &packet[86]); 
-        SNR = converter<float>((char*) &packet[90]); 
+        rssi = converter<float>((char*) &packet[86]);
+        snr = converter<float>((char*) &packet[90]);
         frequencyError = converter<float>((char*) &packet[95]); 
-
-        printf("RSSI Value: %f\n", RSSI); 
-        printf("SNR Value: %f\n", SNR); 
-        printf("Frequency Error: %f\n", frequencyError); 
 
         if (flightDataFile.is_open()) {
             flightDataFile << fmt::format("{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}",timestamp,flightMode,altitudeArmed,gpsValid,sdInitialized,temperatureState,accelerometerState,imuState,gpsState,altimeterState,altitudeMeters,latitude,longitude,satInView,accelX,accelY,accelZ,gyroX,gyroY,gyroZ,accelXIMU,accelYIMU,accelZIMU,oriX,oriY,oriZ,gravityX,gravityY,gravityZ,temp) << std::endl;

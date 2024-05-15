@@ -18,7 +18,7 @@ void drawDataPoint(std::string title, T value, int posX, int posY, int offsetY) 
 void DataGrid::draw(int posX, int posY, int width, int height)
 {
     int width_step = width / 6;
-    int height_step = height / 8;
+    int height_step = height / 10;
     int offsetY = height / 32;
 
     drawDataPoint("Altitude (m)", sfr::serialRead->altitudeMeters, posX + width_step, posY + height_step, offsetY);
@@ -36,4 +36,8 @@ void DataGrid::draw(int posX, int posY, int width, int height)
     drawDataPoint("Gravity X (m/s²)", sfr::serialRead->gravityX, posX + width_step, posY + 7*height_step, offsetY);
     drawDataPoint("Gravity Y (m/s²)", sfr::serialRead->gravityY, posX + 3*width_step, posY + 7*height_step, offsetY);
     drawDataPoint("Gravity Z (m/s²)", sfr::serialRead->gravityZ, posX + 5*width_step, posY + 7*height_step, offsetY);
+
+    drawDataPoint("RSSI", sfr::serialRead->rssi, posX + width_step, posY + 9*height_step, offsetY);
+    drawDataPoint("SNR", sfr::serialRead->snr, posX + 3*width_step, posY + 9*height_step, offsetY);
+    drawDataPoint("Freq Error", sfr::serialRead->frequencyError, posX + 5*width_step, posY + 9*height_step, offsetY);
 }
