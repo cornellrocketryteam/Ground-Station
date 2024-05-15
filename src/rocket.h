@@ -31,9 +31,6 @@ private:
     // the rocket's representation
     Vector3 rocketPosition;
 
-    // the terrain position
-    Vector3 terrainPosition; 
-
     //Rocket's models and textures.
     Model rocketModel;
     Texture2D rocketTexture;

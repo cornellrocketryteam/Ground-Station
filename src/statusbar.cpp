@@ -39,7 +39,7 @@ void StatusBar::draw(int posX, int posY, int width, int height) {
     int fontSize = 20;
     int centerY = posY + height/2;
     int offsetY = height/6;
-    int width_step = (0.66*width) / (2*status_lights.size());
+    int width_step = (0.75*width) / (2*status_lights.size());
     for (int i = 0; i < status_lights.size(); ++i) {
         StatusLight status_light = *status_lights.at(i);
         Color color = status_light.getWorking() ? GREEN : RED;
@@ -52,8 +52,8 @@ void StatusBar::draw(int posX, int posY, int width, int height) {
     }
 
     // Current Flight Mode
-    DrawRectangle(posX + 0.66*width, posY, 0.34*width, height, SKYBLUE);
-    int headerX = posX + 0.83*width - MeasureText("Current Flight Mode:", fontSize)/2;
+    DrawRectangle(posX + 0.75*width, posY, 0.25*width, height, SKYBLUE);
+    int headerX = posX + 0.875*width - MeasureText("Current Flight Mode:", fontSize)/2;
 
     std::string flightMode;
     switch (sfr::serialRead->flightMode) {
@@ -77,7 +77,7 @@ void StatusBar::draw(int posX, int posY, int width, int height) {
             break;
     }
     DrawText("Current Flight Mode:", headerX, posY + height/3 - fontSize/2, fontSize, DARKBLUE);
-    int statusX = posX + 0.83*width - MeasureText(flightMode.c_str(), fontSize)/2;
+    int statusX = posX + 0.875*width - MeasureText(flightMode.c_str(), fontSize)/2;
     DrawText(flightMode.c_str(), statusX, posY + 2*height/3 - fontSize/2, fontSize, DARKBLUE);
 }
 

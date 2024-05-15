@@ -6,17 +6,12 @@ Rocket::Rocket() {
     camera = { 0 };
 
     // initializes the camera's fields
-    camera.position = (Vector3){ 30.0f, 15.0f, 30.0f }; // Camera position
-    camera.target = (Vector3){ 0.0f, 5.0f, 0.0f };      // Camera looking at point
+    camera.target = (Vector3){0.0f, 0.0f, 0.0f};
+    camera.position = (Vector3){0.0f, 0.0f, 30.0f};
     camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
     camera.fovy = 45.0f;                                // Camera field-of-view Y
-    camera.projection = CAMERA_PERSPECTIVE; 
+    camera.projection = CAMERA_ORTHOGRAPHIC;
 
-    // the rocket's initial position
-    rocketPosition = { 0.0f, 2.0f, 0.0f };
-    terrainPosition = {0.0, -10,0}; 
-
-    //loadRocket();
     rocketModel = LoadModel("img/rocketModel.obj");
     rocketTexture = LoadTexture("img/rocket.png");
     rocketModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = rocketTexture;
@@ -33,6 +28,8 @@ Rocket::~Rocket()
 */
 void Rocket::draw(int posX, int posY, int width, int height)
 {
+    float aspect = (float) GetScreenWidth() / (float) GetScreenHeight();
+    rocketPosition = { 10.9f*aspect, 10.0f, 0.0f };
     BeginScissorMode(posX, posY, width, height);
         BeginMode3D(camera);
             //TODO: Process Orientation data for our model
@@ -43,9 +40,9 @@ void Rocket::draw(int posX, int posY, int width, int height)
             float zRotation = sfr::serialRead->oriY;
             rocketModel.transform = MatrixRotateXYZ({ DEG2RAD*xRotation, DEG2RAD*yRotation, DEG2RAD*zRotation });
 
-            camera.position = (Vector3){-6.0f, 5.0f, 30.0f};
-            camera.target = (Vector3){-7.0f, -4.5f, 0.0f};
-            DrawModel(rocketModel, rocketPosition, 0.003f, WHITE);
+            DrawModel(rocketModel, rocketPosition, 0.007f, WHITE);
+            DrawSphere({0, 0, 0}, 2, RED);
         EndMode3D();
     EndScissorMode();
+    DrawRectangleLines(posX, posY, width, height, WHITE);
 }
