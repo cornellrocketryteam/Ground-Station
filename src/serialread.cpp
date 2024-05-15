@@ -36,7 +36,7 @@ SerialRead::SerialRead() {
     flightDataFile.open(flightDataFilePath.c_str(), std::ios::out);
     flightDataFile << "timestamp,flightMode,altitudeArmed,gpsValid,sdInitialized,temperatureState,accelerometerState,imuState,gpsState,altimeterState,altitude,latitude,longitude,satInView,accelX,accelY,accelZ,gyroX,gyroY,gyroZ,accelXIMU,accelYIMU,accelZIMU,oriX,oriY,oriZ,gravityX,gravityY,gravityZ,temp" << std::endl;
 
-    for (int _ = 0; _ < 500; ++_) {
+    for (int _ = 0; _ < 400; ++_) {
         elevationQueue.push_back(0.0);
     }
 }
