@@ -1,7 +1,4 @@
 #include "gui.h"
-#include "sfr.h"
-
-#include "raylib.h"
 
 void GUI::processEvents() {
     rocket.processEvents();
