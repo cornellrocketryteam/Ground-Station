@@ -135,13 +135,14 @@ void SerialRead::readPacket() {
         printByte(packet[8]);
 
         if (altimeterState == SensorState::VALID) {
-            altitude = converter<float>((char *) &packet[9]);
+            altitudeMeters = converter<float>((char *) &packet[9]);
+            altitudeFeet = altitudeMeters * 3.280839895;
 
             if (elevationQueue.size() < 500) {
-                elevationQueue.push_back(altitude);
+                elevationQueue.push_back(altitudeFeet);
             } else {
                 elevationQueue.pop_front();
-                elevationQueue.push_back(altitude);
+                elevationQueue.push_back(altitudeFeet);
             }
         }
 
@@ -185,7 +186,7 @@ void SerialRead::readPacket() {
         printf("Frequency Error: %f\n", frequencyError); 
 
         if (flightDataFile.is_open()) {
-            flightDataFile << fmt::format("{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}",timestamp,flightMode,altitudeArmed,gpsValid,sdInitialized,temperatureState,accelerometerState,imuState,gpsState,altimeterState,altitude,latitude,longitude,satInView,accelX,accelY,accelZ,gyroX,gyroY,gyroZ,accelXIMU,accelYIMU,accelZIMU,oriX,oriY,oriZ,gravityX,gravityY,gravityZ,temp) << std::endl;
+            flightDataFile << fmt::format("{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}",timestamp,flightMode,altitudeArmed,gpsValid,sdInitialized,temperatureState,accelerometerState,imuState,gpsState,altimeterState,altitudeMeters,latitude,longitude,satInView,accelX,accelY,accelZ,gyroX,gyroY,gyroZ,accelXIMU,accelYIMU,accelZIMU,oriX,oriY,oriZ,gravityX,gravityY,gravityZ,temp) << std::endl;
         }
     }
 }

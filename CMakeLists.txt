@@ -18,7 +18,6 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/datagrid.cpp
         src/graph.cpp
         src/rocket.cpp
-        src/gps.cpp
         src/serialread.cpp
         src/sfr.cpp)
 

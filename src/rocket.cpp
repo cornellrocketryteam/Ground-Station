@@ -118,8 +118,8 @@ void Rocket::processEvents()
             WaitTime(0.1);
         }
     }
-    cameraYAdded = sfr::serialRead->altitude;
-    rocketPosition.y = sfr::serialRead->altitude;
+    cameraYAdded = sfr::serialRead->altitudeMeters;
+    rocketPosition.y = sfr::serialRead->altitudeMeters;
 
     // TODO: Process longitude and latitude data for our model 
     

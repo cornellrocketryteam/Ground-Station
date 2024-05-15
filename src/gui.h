@@ -4,7 +4,6 @@
 #include "statusbar.h"
 #include "graph.h"
 #include "rocket.h"
-#include "gps.h"
 
 class GUI {
 public:
@@ -16,5 +15,4 @@ private:
     DataGrid data_grid;
     Graph graph;
     Rocket rocket;
-    GPS gps;
 };

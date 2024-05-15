@@ -4,7 +4,7 @@
 
 constexpr int lowerGraphYBound = 0;
 constexpr int upperGraphYBound = 12000;
-constexpr int graphStep = 2000;
+constexpr int graphStep = 1000;
 
 /**
  * posY is the top-left Y-coordinate of the graph
@@ -18,7 +18,6 @@ int graphYToScreenY(int posY, int height, int graphY)
 }
 
 void Graph::draw(int posX, int posY, int width, int height) {
-
     int fontSize = 20;
     // Text on left-hand side 
     int offsetFromLeft = MeasureText(std::to_string(upperGraphYBound).c_str(), fontSize); //  Offset by the size of our largest possible altitude

@@ -58,7 +58,8 @@ public:
     FlightMode flightMode;
 
     uint32_t timestamp;
-    float altitude;
+    float altitudeMeters;
+    float altitudeFeet;
     float latitude;
     float longitude;
     uint8_t satInView;
