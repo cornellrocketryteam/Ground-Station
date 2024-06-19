@@ -37,7 +37,7 @@ template <> struct fmt::formatter<FlightMode>: formatter<string_view> {
 class SerialRead {
 private:
     int serialDataFile;
-    int bitstreamFile;
+    std::ofstream bitstreamFile;
     std::ofstream flightDataFile; /*The file to write flight telemetry*/
 
 public:
