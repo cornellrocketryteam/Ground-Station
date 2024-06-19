@@ -76,7 +76,7 @@ void SerialRead::readPacket() {
         }
 
         if (flightDataFile.is_open()) {
-            flightDataFile << packet;
+            flightDataFile << packet << std::endl;
         }
 
         for (int i = 0; i < 16; i++) {
