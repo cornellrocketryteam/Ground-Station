@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <fmt/chrono.h>
+#include <bitset>
 
 #define PACKET_SIZE 98
 
@@ -72,11 +73,12 @@ void SerialRead::readPacket() {
         if (read(serialDataFile, packet, sizeof(packet)) != sizeof(packet)) {
             return;
         }
+
         printf("Packet: \n\n");
-        // Send data to Ground Station
         printf("\n\n\n\t\tDEBUG Binary Dump:\n\n");
         for (uint i = 0; i < PACKET_SIZE; i++) {
-            printf("%08b", packet[i]);
+            std::bitset<sizeof(unsigned int) * 8> bits(packet[i]);
+            printf("%d", bits);
         }
         printf("\n\n");
 
