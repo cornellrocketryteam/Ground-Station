@@ -33,7 +33,7 @@ SerialRead::SerialRead() {
     serialDataFile = open("/dev/cu.usbmodem2101", O_RDONLY | O_NONBLOCK);
     auto now = std::chrono::system_clock::now();
     std::string flightDataFilePath = fmt::format("data/flightData_{:%Y_%m_%d_%H:%M}.csv", now);
-    std::string bitstreamFilePath = fmt::format("data/bitstreamData_{:%Y_%m_%d_%H:%M}.csv", now);
+    std::string bitstreamFilePath = fmt::format("data/bitstreamData_{:%Y_%m_%d_%H:%M}.txt", now);
     flightDataFile.open(flightDataFilePath.c_str(), std::ios::out);
     flightDataFile << "timestamp,flightMode,altitudeArmed,gpsValid,sdInitialized,temperatureState,accelerometerState,imuState,gpsState,altimeterState,altitude,latitude,longitude,satInView,accelX,accelY,accelZ,gyroX,gyroY,gyroZ,accelXIMU,accelYIMU,accelZIMU,oriX,oriY,oriZ,gravityX,gravityY,gravityZ,temp" << std::endl;
     bitstreamFile.open(bitstreamFilePath.c_str(), std::ios::out);
